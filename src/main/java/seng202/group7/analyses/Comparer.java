@@ -9,7 +9,7 @@ import java.lang.Math;
 
 
 /**
- * This class adds a set of static methods that allow reports to be compared to each other.
+ * This class adds a set of static methods that allow reports to distance and time to be compared.
  *
  *  @author Sam McMillan
  */
@@ -35,7 +35,10 @@ public final class Comparer {
     }
 
     /**
-     *Checks for null or default values if not then returns the displacement between the two reports in km.
+     *Checks for null or default values if they are then sends a value -1, -2 or -3 (-1: crime 1 missing location values,
+     * -2: missing location values, -3: missing location values) if not then returns the displacement between the latitude and longitude values
+     * in km
+     *
      *
      * @param reportOne data to be compared with "reportTwo"
      * @param reportTwo data to be compared with "reportOne"

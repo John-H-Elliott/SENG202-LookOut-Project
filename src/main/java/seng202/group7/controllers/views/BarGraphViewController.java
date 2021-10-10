@@ -5,7 +5,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import seng202.group7.analyses.Rank;
+import seng202.group7.analyses.GraphUtil;
 import seng202.group7.analyses.Tuple;
 import seng202.group7.controllers.data.ControllerData;
 import seng202.group7.data.CustomException;
@@ -49,35 +49,35 @@ public class BarGraphViewController  {
         List<Tuple<String, Integer>> dataSet;
         switch (option) {
             case "Most Frequent Crime Types" -> {
-                dataSet = Rank.primaryFrequencyRank(data);
+                dataSet = GraphUtil.primaryFrequencyRank(data);
                 Collections.reverse(dataSet);
                 generateBarGraph(dataSet, "Most Frequent Types of Crime", "Crime Types", "Number of Crime");
             }
             case "Most Dangerous Wards" -> {
-                dataSet = Rank.wardFrequencyRank(data);
+                dataSet = GraphUtil.wardFrequencyRank(data);
                 Collections.reverse(dataSet);
                 generateBarGraph(dataSet, "Most Dangerous Wards", "Wards", "Number of Crime");
             }
             case "Most Dangerous Streets" -> {
-                dataSet = Rank.streetRank(data);
+                dataSet = GraphUtil.streetRank(data);
                 Collections.reverse(dataSet);
                 generateBarGraph(dataSet, "Most Dangerous Streets", "Streets", "Number of Crime");
             }
             case "Most Dangerous Beats" -> {
-                dataSet = Rank.beatFrequencyRank(data);
+                dataSet = GraphUtil.beatFrequencyRank(data);
                 Collections.reverse(dataSet);
                 generateBarGraph(dataSet, option, "Beats", "Number of Crime");
             }
             case "Less Frequent Crime Types" -> {
-                dataSet = Rank.primaryFrequencyRank(data);
+                dataSet = GraphUtil.primaryFrequencyRank(data);
                 generateBarGraph(dataSet, option, "Crime Types", "Number of Crime");
             }
             case "Safest Wards" -> {
-                dataSet = Rank.wardFrequencyRank(data);
+                dataSet = GraphUtil.wardFrequencyRank(data);
                 generateBarGraph(dataSet, option, "Wards", "Number of Crime");
             }
             case "Safest Beats" -> {
-                dataSet = Rank.beatFrequencyRank(data);
+                dataSet = GraphUtil.beatFrequencyRank(data);
                 generateBarGraph(dataSet, option, "Beats", "Number of Crimes");
             }
         }

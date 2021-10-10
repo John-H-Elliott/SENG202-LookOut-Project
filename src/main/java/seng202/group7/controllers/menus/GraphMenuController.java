@@ -66,11 +66,9 @@ public class GraphMenuController implements Initializable {
             MainScreen.createWarnWin(e);
         }
 
-        assert wards != null;
         Collections.sort(wards);
 
         this.crimeType.getItems().add(null);
-        assert crimeType != null;
         for (String type: crimeType) {
             this.crimeType.getItems().add(type);
         }
@@ -109,7 +107,6 @@ public class GraphMenuController implements Initializable {
         }
         beatField.getItems().clear();
         this.beatField.getItems().add(null);
-        assert beats != null;
             Collections.sort(beats);
         for (Integer beat: beats) {
             this.beatField.getItems().add(String.valueOf(beat));
@@ -137,10 +134,10 @@ public class GraphMenuController implements Initializable {
      * Method triggered when the user clicks on the display graph button, Checks what selections have been made by the user
      * in the crime type, ward and beat combo box's and displays the appropriate crime over time graph\
      */
-    public void selectLineGraph() throws IOException {
+    public void selectLineGraph() {
         try {
             ArrayList<String> choices = getChoices();
-            String query = constructQuery();
+            String query = QueryBuilder.constructGraphQuery(choices);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/views/lineGraphView.fxml"));
             root = loader.load();
             LineGraphViewController graphView = loader.getController();
@@ -150,22 +147,6 @@ public class GraphMenuController implements Initializable {
             MainScreen.createWarnWin(new CustomException("Error caused when loading the Graph View screens FXML file.", e.getClass().toString()));
         }
     }
-
-    /**
-     * Uses the selected combo values and the query builder to create the correct query
-     * @return query, a string value query
-     */
-    private String constructQuery() {
-        String query = "SELECT * FROM crimedb WHERE list_id=" + ControllerData.getInstance().getCurrentList();
-        String restrictions = QueryBuilder.where(new FilterConditions(null, null, crimeType.getValue(), null,
-            getIntegerFromString(wardField.getValue()), getIntegerFromString(beatField.getValue()), null, null));
-        if (!restrictions.equals("")) {
-            query += " AND " + restrictions;
-        }
-        query += " ORDER BY date ASC;";
-        return query;
-    }
-
 
     /**
      * Gets the values from crime type, ward, and beat combo box's and creates a string list of the values
@@ -179,18 +160,6 @@ public class GraphMenuController implements Initializable {
         return choices;
     }
 
-    /**
-     * Gets the integer value from the string and ensures if the string is empty it returns a null value.
-     *
-     * @param str       The choice selected.
-     * @return value    The integer result.
-     */
-    private Integer getIntegerFromString(String str) {
-        if("".equals(str) || str == null){
-            return null;
-        }
-        return Integer.parseInt(str);
-    }
 }
 
 

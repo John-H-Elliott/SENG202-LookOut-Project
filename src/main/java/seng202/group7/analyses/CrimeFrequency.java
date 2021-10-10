@@ -1,7 +1,7 @@
 package seng202.group7.analyses;
 
 /**
- * A class that holds a String date and int frequency, a list of which is used for crime over graphing
+ * A class that holds a String date and int frequency, a list of crime frequency is used for crime over graphing
  * @author Sam McMillan
  */
 
