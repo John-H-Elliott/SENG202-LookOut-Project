@@ -23,8 +23,8 @@
          <Button fx:id="exportButton" alignment="BASELINE_LEFT" layoutX="20.0" layoutY="20.0" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#exportWithFilter" prefWidth="175.0" text="    Export to..." />
          <MenuButton fx:id="menuBar" alignment="BASELINE_LEFT">
             <items>
-               <MenuItem onAction="#exportWithoutFilter" text="Export Without Filter" />
                <MenuItem onAction="#exportWithFilter" text="Export With Filter" />
+               <MenuItem onAction="#exportWithoutFilter" text="Export Without Filter" />
             </items>
          </MenuButton>
       </HBox>

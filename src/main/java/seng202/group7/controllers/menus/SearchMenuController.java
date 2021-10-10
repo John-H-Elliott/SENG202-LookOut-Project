@@ -45,7 +45,8 @@ public class SearchMenuController {
             // Changes side menu to the filter menu.
             pane.setLeft(menuItems);
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", 
+                e.getClass().toString()));
         }
 
         if (pane.getCenter().getId().equals("mapViewPane")) {
@@ -53,7 +54,7 @@ public class SearchMenuController {
                 // Changes side menu to the filter menu.
                 StackPane mapView = ControllerData.getInstance().getGoogleMap();
                 pane.setCenter(mapView);
-                //reLoad pins.
+                // Reload pins.
                 WebView map = (WebView) mapView.getChildren().get(0);
                 MapController.updatePins(map);
             } catch (NullPointerException e) {
@@ -81,7 +82,6 @@ public class SearchMenuController {
         // Determines the condition that will be used.
         String query = QueryBuilder.search(inputField.getText());
         // By setting this where query when the paginator is generated the data accessor will apply it to the search.
-        // ControllerData.getInstance().getWhereQuery().startsWith("WHERE")
         ControllerData.getInstance().setSearchQuery(query);
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
@@ -106,6 +106,4 @@ public class SearchMenuController {
             }
         }
     }
-
-
 }

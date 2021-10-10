@@ -89,8 +89,8 @@ public class GraphMenuController implements Initializable {
     }
 
     /**
-     * This method monitors every time a ward combo box is changed and then updates the beat ComboBox so only values are encapsulated by the
-     * corresponding ward is available to be selected by the user.
+     * This method monitors every time a ward combo box is changed and then updates the beat ComboBox so only 
+     * values are encapsulated by the corresponding ward is available to be selected by the user.
      */
     public void changeBeat() {
         List<Integer> beats;
@@ -119,10 +119,8 @@ public class GraphMenuController implements Initializable {
     /**
      * Method triggered when the user changes the value in the crime type combo box, Checks what selection is made
      * and reloads the bar graph view.
-     *
-     * @throws IOException The exception that is thrown when the FXML Loader can't load the fxml file
      */
-    public void selectBarGraph() throws IOException {
+    public void selectBarGraph() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/views/barGraphView.fxml"));
             root = loader.load();
@@ -130,16 +128,14 @@ public class GraphMenuController implements Initializable {
             graphView.prepareBarGraph(graphType.getValue());
 
             ((BorderPane) frame.getParent()).setCenter(root);
-        } catch (IllegalStateException e) {
+        } catch (IOException | IllegalStateException e) {
             MainScreen.createWarnWin(new CustomException("Error caused when loading the Graph View screens FXML file.", e.getClass().toString()));
         }
     }
 
-        /**
+    /**
      * Method triggered when the user clicks on the display graph button, Checks what selections have been made by the user
      * in the crime type, ward and beat combo box's and displays the appropriate crime over time graph\
-     *
-     * @throws IOException The exception that is thrown when the FXML Loader can't load the fxml file
      */
     public void selectLineGraph() throws IOException {
         try {
@@ -150,7 +146,7 @@ public class GraphMenuController implements Initializable {
             LineGraphViewController graphView = loader.getController();
             graphView.prepareLineGraph(query, choices);
             ((BorderPane) frame.getParent()).setCenter(root);
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | IOException e) {
             MainScreen.createWarnWin(new CustomException("Error caused when loading the Graph View screens FXML file.", e.getClass().toString()));
         }
     }

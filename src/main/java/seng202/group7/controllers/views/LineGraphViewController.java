@@ -54,7 +54,7 @@ public class LineGraphViewController  {
             dataSet.getData().add(new XYChart.Data<> (freq.getDate(), freq.getFrequency()));
         }
         this.overTimeChart.setLegendVisible(false);
-        this.overTimeChart.getData().addAll(dataSet);
+        this.overTimeChart.getData().add(dataSet);
         this.overTimeChart.setTitle(title);
         this.xAxis.setLabel("Date");
         this.yAxis.setLabel("Number of Crime");

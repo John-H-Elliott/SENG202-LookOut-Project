@@ -1,7 +1,6 @@
 package seng202.group7.controllers.views;
 
 import javafx.fxml.FXML;
-
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -13,7 +12,6 @@ import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
 import seng202.group7.view.MainScreen;
-
 import java.util.List;
 import java.util.Collections;
 
@@ -32,7 +30,6 @@ public class BarGraphViewController  {
 
     @FXML
     private NumberAxis yAxis;
-
 
 
     /**
@@ -106,7 +103,7 @@ public class BarGraphViewController  {
             dataSet.getData().add(new XYChart.Data<> (String.valueOf(tuple.x), tuple.y));
         }
         this.crimeChart.setLegendVisible(false);
-        this.crimeChart.getData().addAll(dataSet);
+        this.crimeChart.getData().add(dataSet);
         this.crimeChart.setTitle(title);
         this.xAxis.setLabel(xLabel);
         this.yAxis.setLabel(yLabel);

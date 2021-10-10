@@ -79,8 +79,8 @@ public class GeneralMenuController {
         String behavior;
         boolean skipBadValue;
         if (file.getName().endsWith(".csv")) {
-            skipBadValue = badValueSelection();
             behavior = duplicateSelection();
+            skipBadValue = badValueSelection();
         } else {
             try {
                 if (DataAccessor.getInstance().getSize(ControllerData.getInstance().getCurrentList(), "") != 0){
