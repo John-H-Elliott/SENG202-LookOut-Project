@@ -179,7 +179,7 @@ public class DataViewController implements Initializable {
         BorderPane rootPane = (BorderPane) frame.getParent().getParent().getParent().getParent();
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/entryView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/views/entryView.fxml"));
             Node newFrame = loader.load();
 
             ((EntryController) loader.getController()).setLastFrame(rootPane.getCenter());
