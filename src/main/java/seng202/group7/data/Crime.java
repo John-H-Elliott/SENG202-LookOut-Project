@@ -245,4 +245,15 @@ public class Crime extends Report {
                 super.toString() + '\'' +
                 '}';
     }
+
+    /**
+     * Makes a JSON Array as a String of selected values to be shown on the map.
+     * @return  JSON Array as a String.
+     */
+    public String getJSONString() {
+        return String.format("{title: '%s', position: {lat: %f, lng: %f}, " +
+                        "description: {date: '%s', primDesc: '%s', secDesc: '%s', locDesc: '%s', arrest: '%s', domestic: '%s'}}, ",
+                getCaseNumber(), getLatitude(), getLongitude(), getDate().toLocalDate().toString(), getPrimaryDescription(),
+                getSecondaryDescription(), getLocationDescription(), getArrest().toString(), getDomestic().toString());
+    }
 }

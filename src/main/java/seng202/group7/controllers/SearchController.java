@@ -3,18 +3,23 @@ package seng202.group7.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebView;
 import seng202.group7.data.CustomException;
 import seng202.group7.view.MainScreen;
 import seng202.group7.data.QueryBuilder;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 /**
  * This menu allows a user to pick a field to search and then attempts to match
@@ -28,6 +33,7 @@ public class SearchController {
     private TextField inputField;
     @FXML
     private Label errorLabel;
+
 
     /**
      * Gets the current side panel and replaces it with the general menu panel.
@@ -43,16 +49,6 @@ public class SearchController {
             pane.setLeft(menuItems);
         } catch (IOException | NullPointerException e) {
             MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
-        }
-
-        // This removes the current search effect being applied to the table when the paginator is initialized.
-        ControllerData.getInstance().setSearchQuery("");
-        try {
-            BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
-            // Changes side menu to the filter menu.
-            pane.setCenter(tableView);
-        } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the Pagination screens FXML file.", e.getClass().toString()));
         }
 
     }
@@ -76,7 +72,7 @@ public class SearchController {
      *
      * @param event             The event action that was triggered.
      */
-    public void search(KeyEvent event) throws IOException {
+    public void search(KeyEvent event) {
         if(!validateText()){
             return;
         }
@@ -87,13 +83,27 @@ public class SearchController {
         ControllerData.getInstance().setSearchQuery(query);
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
-        try {
-            BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
-            // Changes side menu to the filter menu.
-            pane.setCenter(tableView);
-        } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the Pagination screens FXML file.", e.getClass().toString()));
+        if (pane.getCenter().getId().equals("mapViewPane")) {
+            try {
+                // Changes side menu to the filter menu.
+                StackPane mapView = ControllerData.getInstance().getGoogleMap();
+                pane.setCenter(mapView);
+                //reLoad pins.
+                WebView map = (WebView) mapView.getChildren().get(0);
+                MapController.updatePins(map);
+            } catch (NullPointerException e) {
+                MainScreen.createErrorWin(new CustomException("Error caused when loading the Map View screens FXML file.", e.getClass().toString()));
+            }
+        } else {
+            try {
+                BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
+                // Changes side menu to the filter menu.
+                pane.setCenter(tableView);
+            } catch (IOException | NullPointerException e) {
+                MainScreen.createErrorWin(new CustomException("Error caused when loading the Pagination screens FXML file.", e.getClass().toString()));
+            }
         }
-
     }
+
+
 }

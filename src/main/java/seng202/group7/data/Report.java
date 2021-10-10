@@ -277,4 +277,5 @@ public abstract class Report {
                 ", longitude=" + getLongitude()
                 ;
     }
+
 }

@@ -1,5 +1,7 @@
 package seng202.group7.controllers;
 
+import javafx.scene.layout.StackPane;
+import javafx.scene.web.WebView;
 import seng202.group7.data.Crime;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
@@ -51,6 +53,16 @@ public final class ControllerData {
      * This is a condition that is used by the data accessor when filteringing the database.
      */
     private String filterQuery = "";
+
+    /**
+     * Holds the Google map to prevent reloading each time.
+     */
+    private StackPane map;
+
+    /**
+     * Holds the Google search to prevent reloading each time.
+     */
+    private WebView search;
 
 
     /**
@@ -185,4 +197,37 @@ public final class ControllerData {
     public void setFilterQuery(String filterQuery) {
         this.filterQuery = filterQuery;
     }
+
+    /**
+     * Setter for the Google map view.
+     * @param mapView   The map view node.
+     */
+    public void setGoogleMap(StackPane mapView) {
+        map = mapView;
+    }
+
+    /**
+     * Getter for the Google map view.
+     * @return  Returns the map view node.
+     */
+    public StackPane getGoogleMap() {
+        return map;
+    }
+
+    /**
+     * Setter for the Google search.
+     * @param externalSearch    The search view node.
+     */
+    public void setGoogleSearch(WebView externalSearch) {
+        search = externalSearch;
+    }
+
+    /**
+     * Getter for the Google search.
+     * @return  Returns the search view node.
+     */
+    public WebView getGoogleSearch() {
+        return search;
+    }
+
 }

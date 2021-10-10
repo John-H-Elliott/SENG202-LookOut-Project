@@ -2,6 +2,7 @@ package seng202.group7.controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.animation.TranslateTransition;
@@ -10,10 +11,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.util.Duration;
+import seng202.group7.data.Crime;
 import seng202.group7.data.CustomException;
+import seng202.group7.data.DataAccessor;
+import seng202.group7.data.Report;
 import seng202.group7.view.MainScreen;
 
 
@@ -88,10 +93,7 @@ public class MenuController implements Initializable {
      * Creates and switches the center view to the programmable google search scene.
      */
     public void toSearch(){
-        WebView externalSearch = new WebView();
-        externalSearch.getEngine().load("https://cse.google.com/cse?cx=59f99af6c7b75d889"); 
-        menuFrame.setCenter(externalSearch);
-
+        menuFrame.setCenter(ControllerData.getInstance().getGoogleSearch());
         // Loads the first side menu screen.
         try {
             VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
@@ -119,7 +121,6 @@ public class MenuController implements Initializable {
         } catch (IOException | NullPointerException e) {
             MainScreen.createErrorWin(new CustomException("Error caused when loading the Pagination screens FXML file.", e.getClass().toString()));
         }
-
 
         // Loads the first side menu screen.
         try {
@@ -156,8 +157,6 @@ public class MenuController implements Initializable {
             MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
         }
 
-
-
     }
 
     /**
@@ -182,4 +181,31 @@ public class MenuController implements Initializable {
         }
 
     }
+
+    /**
+     * Goes to and loads the mapping view of the application.
+     */
+    public void toMap() {
+        try {
+            // Changes side menu to the filter menu.
+            StackPane mapView = ControllerData.getInstance().getGoogleMap();
+            menuFrame.setCenter(mapView);
+            //reLoad pins.
+            WebView map = (WebView) mapView.getChildren().get(0);
+            MapController.updatePins(map);
+        } catch (NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Map View screens FXML file.", e.getClass().toString()));
+        }
+
+        // Loads the first side menu screen.
+        try {
+            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
+            // Sets the menu to the main panel and hides it, so it starts closed.
+            menuFrame.setLeft(menuItems);
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
+        }
+    }
+
+
 }
