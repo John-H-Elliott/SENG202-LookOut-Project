@@ -10,14 +10,15 @@ import seng202.group7.data.Crime;
 
 
 /**
- * A set of static methods that ranks and analyses data into lists for graphing view
+ * A set of static utility methods that prepares material for the graph view classes, such as ranking data based on frequency or
+ * preparing strings to be displayed as a graph title.
  *
  * @author Sam McMillan
  * @author Shaylin Simadari
  */
-public final class Rank {
+public final class GraphUtil {
 
-    private Rank() {}
+    private GraphUtil() {}
 
     /**
      * Parses the data and finds the highest to the lowest frequency of Report type (primary) in the whole data set.
@@ -163,4 +164,43 @@ public final class Rank {
         list.sort((a, b) -> a.y - (int) b.y);
         return list;
     }
+
+    /**
+     * Uses the Array list of strings choices and creates a title.
+     * @param choices  Array list of strings based on user input from Graph Menu Controller
+     * @return String title used as the graph title
+     */
+    public static String getTitle(List<String> choices) {
+        String title = "";
+        if (choices.get(0) != null)  {
+            title += capitalizeWord(choices.get(0).toLowerCase());
+            title += " Over Time";
+        } else {
+            title += "Crime Over Time";
+        }
+        if (choices.get(1) != null) {
+            title += " in Ward " + choices.get(1);
+        }
+        if (choices.get(2) != null) {
+            title += " and Beat " + choices.get(2);
+        }
+        return title;
+    }
+
+    /**
+     *  Takes a sting 'str' and capitalises each word after a white space character.
+     * @param str The string being past by get Title to be capitalised
+     * @return  capitaliseWord a string where each word after white space is capitalised
+     */
+    public static String capitalizeWord(String str){
+        String[] words =str.split("\\s{1,}");
+        StringBuilder capitaliseWord= new StringBuilder();
+        for(String w:words){
+            String first=w.substring(0,1);
+            String afterfirst=w.substring(1);
+            capitaliseWord.append(first.toUpperCase()).append(afterfirst).append(" ");
+        }
+        return capitaliseWord.toString().trim();
+    }
+
 }

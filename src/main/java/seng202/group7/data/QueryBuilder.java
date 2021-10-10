@@ -1,11 +1,15 @@
 package seng202.group7.data;
 
+import seng202.group7.controllers.data.ControllerData;
+
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Builds queries based on parameters and returns them as Strings
  * @author Shaylin Simadari
+ * @author Sam McMillan
  */
 public final class QueryBuilder {
 
@@ -103,5 +107,33 @@ public final class QueryBuilder {
         + "id LIKE '%" + keyword + "%' OR "
         + "fbicd LIKE '%" + keyword + "%' OR "
         + "iucr LIKE '%" + keyword + "%')";
+    }
+
+    /**
+     * Uses the strings from choices from graph menu controller and the where method to create the correct query
+     * @return query, a string value query
+     */
+    public static String constructGraphQuery(List<String> choices) {
+        String query = "SELECT * FROM crimedb WHERE list_id=" + ControllerData.getInstance().getCurrentList();
+        String restrictions = where(new FilterConditions(null, null, choices.get(0), null,
+                getIntegerFromString(choices.get(1)), getIntegerFromString(choices.get(2)), null, null));
+        if (!restrictions.equals("")) {
+            query += " AND " + restrictions;
+        }
+        query += " ORDER BY date ASC;";
+        return query;
+    }
+
+    /**
+     * Gets the integer value from the string and ensures if the string is empty it returnsS a null value.
+     *
+     * @param str       The choice selected.
+     * @return value    The integer result.
+     */
+    public static Integer getIntegerFromString(String str) {
+        if("".equals(str) || str == null){
+            return null;
+        }
+        return Integer.parseInt(str);
     }
 }

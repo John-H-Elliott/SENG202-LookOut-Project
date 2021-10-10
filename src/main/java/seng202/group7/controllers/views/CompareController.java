@@ -109,16 +109,16 @@ public class CompareController implements Initializable {
         }
         reportOneText.pseudoClassStateChanged(errorClass, reportOne == null);
         reportTwoText.pseudoClassStateChanged(errorClass, reportTwo == null);
-        if (reportOne == null || reportTwo == null) {
+        if (reportOne == null || reportTwo == null) { //Checks if ether of the reports are not if so doesnt compare
             return;
         } else {
-            if (reportOne.getId().equals(reportTwo.getId())) {
+            if (reportOne.getId().equals(reportTwo.getId())) { //Checks if the reports are the same value if so informs the user
                 resultTextString += "The two crimes are the same value, please select two different values.";
             } else {
                 resultTextString += "Distance:";
-                resultTextString += compareDistance(reportOne, reportTwo);
+                resultTextString += compareDistance(reportOne, reportTwo); //Adds the distance between the reports
                 resultTextString += "\n\nTime Difference:";
-                resultTextString += compareTime(reportOne, reportTwo);
+                resultTextString += compareTime(reportOne, reportTwo); //Adds the time difference between the reports
                 }
         }
         resultText.setText(resultTextString);
@@ -153,19 +153,19 @@ public class CompareController implements Initializable {
         List<Long> time = Comparer.timeDifference(reportOne, reportTwo);
         String timeString = "";
         if (time.get(3) > 0) {
-            timeString += String.format("%d year(s) ", time.get(3));
+            timeString += String.format("%d year(s) ", time.get(3)); //Time in years
         }
         if (time.get(2) > 0) {
-            timeString += String.format("%d day(s) ", time.get(2));
+            timeString += String.format("%d day(s) ", time.get(2)); //Time in months
         }
         if (time.get(1) > 0) {
-            timeString += String.format("%d hour(s) ", time.get(1));
+            timeString += String.format("%d hour(s) ", time.get(1)); //Time in hours
         }
         if (time.get(0) > 0) {
-            timeString += String.format("%d minute(s) ", time.get(0));
+            timeString += String.format("%d minute(s) ", time.get(0)); //Time in minutes
         }
         if (timeString.equals("")) {
-            return (" Occurred at the same time.");
+            return (" Occurred at the same time."); //If they occured at the same time
         } else {
             return String.format(" %sapart.", timeString);
         }

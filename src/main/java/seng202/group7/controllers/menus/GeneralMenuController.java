@@ -28,6 +28,7 @@ import java.util.Optional;
  *
  * @author Jack McCorkindale
  * @author John Elliott
+ * @author Sam McMillan
  */
 public class GeneralMenuController {
 
