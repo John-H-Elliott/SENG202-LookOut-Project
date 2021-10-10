@@ -1,5 +1,6 @@
 package seng202.group7.controllers.views;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -88,6 +89,7 @@ public class PageController implements Initializable {
             return FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/dataView.fxml")));
         } catch (IOException | NullPointerException e) {
             MainScreen.createErrorWin(new CustomException("Error caused when loading the Raw Data View screens FXML file.", e.getClass().toString()));
+            e.printStackTrace();
         }
         return null;
     }
@@ -108,7 +110,8 @@ public class PageController implements Initializable {
         pageField.setText(""+pages.getPageCount());
     }
 
-    /**
+
+   /**
      * Gets the current text for the page the user wants to goto and then checks if it's valid after which it will either
      * change the page to the new page or change the text field back to a valid input and then if it can change pages.
      */
@@ -121,4 +124,5 @@ public class PageController implements Initializable {
             }
         }
     }
+
 }

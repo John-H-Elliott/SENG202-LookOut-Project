@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="frame" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.views.LineGraphViewController" stylesheets="@style.css" styleClass="label">
+<GridPane fx:id="frame" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.views.LineGraphViewController" stylesheets="@../style.css" styleClass="label">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
   </columnConstraints>

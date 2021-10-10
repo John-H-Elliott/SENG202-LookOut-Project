@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="pageFrame" stylesheets="@../style.css" styleClass="label" prefHeight="219.0" prefWidth="452.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.views.PageController">
+<BorderPane fx:id="pageFrame" prefHeight="219.0" prefWidth="452.0" styleClass="label" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.views.PageController">
    <center>
       <Pagination fx:id="pages" pageCount="1" prefHeight="161.0" prefWidth="344.0" BorderPane.alignment="CENTER" />
    </center>
@@ -17,7 +17,7 @@
                </padding>
             </Label>
             <Button fx:id="frontButton" mnemonicParsing="false" onAction="#toFront" prefHeight="25.0" prefWidth="34.0" text="&lt;&lt;" />
-            <TextField fx:id="pageField" alignment="CENTER" onKeyTyped="#gotoPage" prefHeight="25.0" prefWidth="134.0" promptText="Page Number" />
+            <TextField fx:id="pageField" alignment="CENTER" onKeyReleased="#gotoPage" prefHeight="25.0" prefWidth="134.0" promptText="Page Number" />
             <Button fx:id="backButton" mnemonicParsing="false" onAction="#toEnd" text="&gt;&gt;" />
             <Label fx:id="dataTotal" prefHeight="17.0" prefWidth="132.0" text="Data Total: 0">
                <padding>

@@ -222,7 +222,7 @@ public class Crime extends Report {
     public String getJSONString() {
         return String.format("{title: '%s', position: {lat: %f, lng: %f}, " +
                         "description: {date: '%s', primDesc: '%s', secDesc: '%s', locDesc: '%s', arrest: '%s', domestic: '%s'}}, ",
-                getCaseNumber(), getLatitude(), getLongitude(), getDate().toLocalDate().toString(), getPrimaryDescription(),
+                getId(), getLatitude(), getLongitude(), getDate().toLocalDate().toString(), getPrimaryDescription(),
                 getSecondaryDescription(), getLocationDescription(), getArrest().toString(), getDomestic().toString());
     }
 }

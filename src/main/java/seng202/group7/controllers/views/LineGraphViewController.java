@@ -43,6 +43,8 @@ public class LineGraphViewController  {
             sortedData = DataAccessor.getInstance().getData(query);
         } catch (CustomException e) {
             MainScreen.createWarnWin(e);
+            System.out.println(query);
+            e.printStackTrace();
             return;
         }
         List<CrimeFrequency> crimeOverTime = Rank.crimeOverTime(sortedData);

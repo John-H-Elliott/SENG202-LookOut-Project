@@ -82,8 +82,10 @@ public final class Rank {
 
         for(Report report : data){
             if (((Crime) report).getBlock() != null) {
-                String address = ((Crime) report).getBlock().substring(6);
-                map.put(address, map.getOrDefault(address, 0) + 1);
+                if (((Crime) report).getBlock().length() >= 6) {
+                    String address = ((Crime) report).getBlock().substring(6);
+                    map.put(address, map.getOrDefault(address, 0) + 1);
+                }
             }
         }
         return hashToList(map);

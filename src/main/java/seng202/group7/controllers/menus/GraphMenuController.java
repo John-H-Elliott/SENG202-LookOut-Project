@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
+import seng202.group7.controllers.data.ControllerData;
 import seng202.group7.controllers.views.BarGraphViewController;
 import seng202.group7.controllers.views.LineGraphViewController;
 import seng202.group7.data.CustomException;
@@ -130,8 +131,7 @@ public class GraphMenuController implements Initializable {
 
             ((BorderPane) frame.getParent()).setCenter(root);
         } catch (IllegalStateException e) {
-            MainScreen.createWarnWin(new CustomException("Error caused when loading the Graph View screens FXML file.", 
-            e.getMessage()));
+            MainScreen.createWarnWin(new CustomException("Error caused when loading the Graph View screens FXML file.", e.getClass().toString()));
         }
     }
 
@@ -151,8 +151,7 @@ public class GraphMenuController implements Initializable {
             graphView.prepareLineGraph(query, choices);
             ((BorderPane) frame.getParent()).setCenter(root);
         } catch (IllegalStateException e) {
-            MainScreen.createWarnWin(new CustomException("Error caused when loading the Graph View screens FXML file.", 
-             e.getMessage()));
+            MainScreen.createWarnWin(new CustomException("Error caused when loading the Graph View screens FXML file.", e.getClass().toString()));
         }
     }
 
@@ -161,11 +160,13 @@ public class GraphMenuController implements Initializable {
      * @return query, a string value query
      */
     private String constructQuery() {
-        String query = "SELECT * FROM crimedb ";
-        
-        query += QueryBuilder.where(new FilterConditions(null, null, crimeType.getValue(), null,
+        String query = "SELECT * FROM crimedb WHERE list_id=" + ControllerData.getInstance().getCurrentList();
+        String restrictions = QueryBuilder.where(new FilterConditions(null, null, crimeType.getValue(), null,
             getIntegerFromString(wardField.getValue()), getIntegerFromString(beatField.getValue()), null, null));
-        query += " ORDER BY date ASC";
+        if (!restrictions.equals("")) {
+            query += " AND " + restrictions;
+        }
+        query += " ORDER BY date ASC;";
         return query;
     }
 

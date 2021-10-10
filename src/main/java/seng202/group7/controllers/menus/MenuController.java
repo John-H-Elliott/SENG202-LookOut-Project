@@ -8,12 +8,15 @@ import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.util.Duration;
+import seng202.group7.controllers.views.MapController;
+import seng202.group7.controllers.data.ControllerData;
 import seng202.group7.data.CustomException;
 import seng202.group7.view.MainScreen;
 
@@ -33,6 +36,9 @@ public class MenuController implements Initializable {
      */
     @FXML
     private BorderPane menuFrame;
+
+    @FXML
+    private Button menuButton;
 
     /**
      * This method is run during the loading of the data view fxml file.
@@ -95,6 +101,7 @@ public class MenuController implements Initializable {
             VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/generalMenu.fxml")));
             // Sets the menu to the main panel and hides it, so it starts closed.
             menuFrame.setLeft(menuItems);
+            menuButton.setDisable(false);
         } catch (IOException | NullPointerException e) {
             MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
         }
@@ -117,14 +124,16 @@ public class MenuController implements Initializable {
         }
 
         // Loads the first side menu screen.
-        try {
-            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/generalMenu.fxml")));
-            // Sets the menu to the main panel and hides it, so it starts closed.
-            menuFrame.setLeft(menuItems);
-        } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
+        if ((menuFrame.getLeft() == null) || !menuFrame.getLeft().getId().equals("sideMenu")) {
+            try {
+                VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/generalMenu.fxml")));
+                // Sets the menu to the main panel and hides it, so it starts closed.
+                menuFrame.setLeft(menuItems);
+                menuButton.setDisable(false);
+            } catch (IOException | NullPointerException e) {
+                MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
+            }
         }
-
     }
 
     /**
@@ -141,6 +150,7 @@ public class MenuController implements Initializable {
             MainScreen.createErrorWin(new CustomException("Error caused when loading the Help screens FXML file.", e.getClass().toString()));
         }
         menuFrame.setLeft(null);
+        menuButton.setDisable(true);
     }
 
     /**
@@ -161,6 +171,7 @@ public class MenuController implements Initializable {
             VBox graphMenu = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/graphMenu.fxml")));
             // Changes side menu to the filter menu.
             menuFrame.setLeft(graphMenu);
+            menuButton.setDisable(false);
         } catch (IOException | NullPointerException e) {
             MainScreen.createWarnWin(new CustomException("Error caused when loading the Graph Menu screens FXML file.", e.getClass().toString()));
         }
@@ -182,13 +193,16 @@ public class MenuController implements Initializable {
             MainScreen.createErrorWin(new CustomException("Error caused when loading the Map View screens FXML file.", e.getClass().toString()));
         }
 
-        // Loads the first side menu screen.
-        try {
-            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
-            // Sets the menu to the main panel and hides it, so it starts closed.
-            menuFrame.setLeft(menuItems);
-        } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
+        if ((menuFrame.getLeft() == null) || !menuFrame.getLeft().getId().equals("sideMenu")) {
+            // Loads the first side menu screen.
+            try {
+                VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/generalMenu.fxml")));
+                // Sets the menu to the main panel and hides it, so it starts closed.
+                menuFrame.setLeft(menuItems);
+                menuButton.setDisable(false);
+            } catch (IOException | NullPointerException e) {
+                MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
+            }
         }
     }
 

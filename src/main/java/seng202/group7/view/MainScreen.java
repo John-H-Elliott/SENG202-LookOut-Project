@@ -9,7 +9,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import seng202.group7.controllers.ControllerData;
+import seng202.group7.controllers.data.ControllerData;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import javafx.scene.image.Image;
@@ -58,12 +58,13 @@ public class MainScreen extends Application {
     /**
      * Pre-Loads all the Google APIs and stores them in the controller data class to prevent
      * slow loading and re-loading. Also allows for the user to keep searches stored even when not focused on it.
-     * @throws CustomException
+     *
+     * @throws CustomException      Error when loading the map view.
      */
     private void loadGoogleAPIs() throws CustomException {
         ControllerData connData = ControllerData.getInstance();
         try {
-            StackPane mapView = FXMLLoader.load(Objects.requireNonNull(MainScreen.class.getResource("/gui/mapView.fxml")));
+            StackPane mapView = FXMLLoader.load(Objects.requireNonNull(MainScreen.class.getResource("/gui/views/mapView.fxml")));
             connData.setGoogleMap(mapView);
         } catch (IOException | NullPointerException e) {
             throw new CustomException("Error caused when loading the Map View screens FXML file.", e.getClass().toString());
@@ -82,7 +83,7 @@ public class MainScreen extends Application {
         try {
             DataAccessor.getInstance().getConnection().close();
         } catch (SQLException error) {
-            System.err.println(error);
+            System.err.println(error.getMessage());
         }
     }
 

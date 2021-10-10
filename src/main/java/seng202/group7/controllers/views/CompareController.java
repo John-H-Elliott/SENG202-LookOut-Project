@@ -47,12 +47,9 @@ public class CompareController implements Initializable {
 
     @FXML
     private Label resultText;
-
-    @FXML
-    private Label menuText;
     
     @FXML
-    private VBox frame;
+    private VBox sideMenu;
 
     private static String report1;
     private static String report2;
@@ -80,9 +77,9 @@ public class CompareController implements Initializable {
     /**
      * Gets the current side panel and replaces it with the general menu panel.
      */
-    public void toMenu() throws IOException {
+    public void toMenu() {
         saveGUIFields();
-        BorderPane pane = (BorderPane) frame.getParent();
+        BorderPane pane = (BorderPane) sideMenu.getParent();
         try {
             VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/generalMenu.fxml")));
             // Changes side menu to the filter menu.
@@ -183,16 +180,15 @@ public class CompareController implements Initializable {
         String selectedCrime;
         // Starts with getting the root panel.
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
-        // Then it gets the pagination node from the centre.
-        Node centreNode = ((BorderPane) pane.getCenter()).getCenter();
         try {
+            // Then it gets the pagination node from the centre.
+            Node centreNode = ((BorderPane) pane.getCenter()).getCenter();
             if (centreNode instanceof Pagination) {
                 selectedCrime = getFromPages(centreNode);
             } else {
                 selectedCrime = getFromEntry(centreNode);
             }
         } catch (Exception ignore) {
-            // TODO Try to remove
             selectedCrime = null; // No correct data loaded so no value can be selected.
         }
 

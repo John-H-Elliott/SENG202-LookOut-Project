@@ -1,4 +1,4 @@
-package seng202.group7.controllers;
+package seng202.group7.controllers.views;
 
 import java.net.URL;
 import java.util.List;
@@ -8,11 +8,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import seng202.group7.controllers.data.ControllerData;
 import seng202.group7.data.Crime;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
-import seng202.group7.view.MainScreen;
+
+import static seng202.group7.view.MainScreen.createErrorWin;
 
 /**
  * The controller class that is initialized with the map view fxml file.
@@ -44,7 +46,7 @@ public class MapController implements Initializable {
             WebEngine webEngine = webView.getEngine();
             webEngine.load(Objects.requireNonNull(MapController.class.getResource("/networking/mapView.html")).toExternalForm());
         } catch (Exception e) {
-            MainScreen.createErrorWin(new CustomException("Error caused caused within the google map.", e.getClass().toString()));
+            createErrorWin(new CustomException("Error caused caused within the google map.", e.getClass().toString()));
         }
     }
 
@@ -71,8 +73,13 @@ public class MapController implements Initializable {
      */
     public static void updatePins(WebView map) {
         // Gets the current set of reports based on the pagination's current page.
-        List<Report> reports = DataAccessor.getInstance().getPageSet(ControllerData.getInstance().getCurrentList());
-        String scriptToExecute = "importData(" + toJSONArray(reports) + ");";
-        map.getEngine().executeScript(scriptToExecute);
+        try {
+            List<Report> reports = DataAccessor.getInstance().getPageSet(ControllerData.getInstance().getCurrentList());
+            String scriptToExecute = "importData(" + toJSONArray(reports) + ");";
+            map.getEngine().executeScript(scriptToExecute);
+        } catch (CustomException e) {
+            createErrorWin(new CustomException("Error caused when loading pins into the map view.", e.getClass().toString()));
+        }
+
     }
 }

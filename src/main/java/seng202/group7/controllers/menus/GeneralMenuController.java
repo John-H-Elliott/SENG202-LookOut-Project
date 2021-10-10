@@ -32,13 +32,13 @@ import java.util.Optional;
 public class GeneralMenuController {
 
     @FXML
-    private Node frame;
+    private Node sideMenu;
 
     /**
      * Gets the current side panel and replace it with the filter menu panel.
      */
     public void toFilter() {
-        BorderPane pane = (BorderPane) frame.getParent();
+        BorderPane pane = (BorderPane) sideMenu.getParent();
         try {
             Node menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/filterMenu.fxml")));
             // Changes side menu to the filter menu.
@@ -53,7 +53,7 @@ public class GeneralMenuController {
      * Changes the menu bar to show the comparison menu.
      */
     public void toCompare() {
-        BorderPane pane = (BorderPane) frame.getParent();
+        BorderPane pane = (BorderPane) sideMenu.getParent();
         try {
             VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/compareMenu.fxml")));
             // Changes side menu to the filter menu.
@@ -98,7 +98,7 @@ public class GeneralMenuController {
                 }
             }
 
-            BorderPane rootPane = (BorderPane) frame.getParent();
+            BorderPane rootPane = (BorderPane) sideMenu.getParent();
             // Loads the paginator screen.
             try {
                 BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/pageView.fxml")));
@@ -209,7 +209,7 @@ public class GeneralMenuController {
         fileChooser.getExtensionFilters().addAll(dbFilter, csvFilter);
 
         fileChooser.setTitle("Select save location");
-        Stage stage = (Stage) frame.getScene().getWindow();
+        Stage stage = (Stage) sideMenu.getScene().getWindow();
 
         // Launches the file chooser.
         File selectedFile = fileChooser.showSaveDialog(stage);
@@ -224,7 +224,7 @@ public class GeneralMenuController {
      * Moves the program to an empty entry view to create a new Report object.
      */
     public void toNewEntry() {
-        BorderPane rootPane = (BorderPane) frame.getParent();
+        BorderPane rootPane = (BorderPane) sideMenu.getParent();
 
         try {
             ControllerData.getInstance().setCurrentRow(null);
@@ -244,7 +244,7 @@ public class GeneralMenuController {
      * Loads the search menu into the side menu view.
      */
     public void toSearch() {
-        BorderPane rootPane = (BorderPane) frame.getParent();
+        BorderPane rootPane = (BorderPane) sideMenu.getParent();
         try {
             VBox searchMenu = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/searchMenu.fxml")));
             rootPane.setLeft(searchMenu);

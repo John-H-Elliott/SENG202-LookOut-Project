@@ -4,13 +4,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
+import seng202.group7.controllers.views.MapController;
 import seng202.group7.controllers.data.ControllerData;
 import seng202.group7.data.CustomException;
 import seng202.group7.view.MainScreen;
@@ -28,8 +28,6 @@ import java.util.Objects;
 public class SearchMenuController {
     @FXML
     private TextField inputField;
-    @FXML
-    private Label errorLabel;
 
 
     /**
@@ -40,6 +38,8 @@ public class SearchMenuController {
     public void toMenu(ActionEvent event){
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
+        // This removes the current search effect being applied to the table when the paginator is initialized.
+        ControllerData.getInstance().setSearchQuery("");
         try {
             VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/generalMenu.fxml")));
             // Changes side menu to the filter menu.
@@ -48,14 +48,25 @@ public class SearchMenuController {
             MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
         }
 
-        // This removes the current search effect being applied to the table when the paginator is initialized.
-        ControllerData.getInstance().setSearchQuery("");
-        try {
-            BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/pageView.fxml")));
-            // Changes side menu to the filter menu.
-            pane.setCenter(tableView);
-        } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the Pagination screens FXML file.", e.getClass().toString()));
+        if (pane.getCenter().getId().equals("mapViewPane")) {
+            try {
+                // Changes side menu to the filter menu.
+                StackPane mapView = ControllerData.getInstance().getGoogleMap();
+                pane.setCenter(mapView);
+                //reLoad pins.
+                WebView map = (WebView) mapView.getChildren().get(0);
+                MapController.updatePins(map);
+            } catch (NullPointerException e) {
+                MainScreen.createErrorWin(new CustomException("Error caused when loading the Map View screens FXML file.", e.getClass().toString()));
+            }
+        } else {
+            try {
+                BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/pageView.fxml")));
+                // Changes side menu to the filter menu.
+                pane.setCenter(tableView);
+            } catch (IOException | NullPointerException e) {
+                MainScreen.createErrorWin(new CustomException("Error caused when loading the Pagination screens FXML file.", e.getClass().toString()));
+            }
         }
 
     }
@@ -87,7 +98,7 @@ public class SearchMenuController {
             }
         } else {
             try {
-                BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pageView.fxml")));
+                BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/pageView.fxml")));
                 // Changes side menu to the filter menu.
                 pane.setCenter(tableView);
             } catch (IOException | NullPointerException e) {
