@@ -12,10 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -83,7 +80,6 @@ public class PSTypeTest {
     public void setZeroDouble() {
 
         try {
-            long time = Timestamp.valueOf(LocalDate.now().atStartOfDay()).getTime();
             Crime crimeOne = new Crime("TestNumber", LocalDateTime.now(), "3", "3", "test", "test", "test", false, false, 5, 5, "5", 5, null, null, null);
             DataAccessor.getInstance().editCrime(crimeOne, 1);
             // Uses the int psType method
