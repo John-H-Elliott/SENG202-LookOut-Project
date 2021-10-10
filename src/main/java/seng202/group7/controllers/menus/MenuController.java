@@ -8,12 +8,15 @@ import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import seng202.group7.controllers.views.MapController;
 import seng202.group7.controllers.data.ControllerData;
@@ -203,6 +206,17 @@ public class MenuController implements Initializable {
             } catch (IOException | NullPointerException e) {
                 MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
             }
+        }
+    }
+
+    public void toMain() {
+        try {
+            Parent view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/mainScreen.fxml")));
+            Scene scene = new Scene(view);
+            ((Stage) menuFrame.getScene().getWindow()).setScene(scene);
+            // windowStage.show();
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Start screens FXML file.", e.getClass().toString()));
         }
     }
 
