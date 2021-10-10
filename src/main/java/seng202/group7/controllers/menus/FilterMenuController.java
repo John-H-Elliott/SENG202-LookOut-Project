@@ -89,13 +89,13 @@ public class FilterMenuController implements Initializable {
                 primaryBox.getItems().add(type);
             }
             primaryBox.getItems().sort(null);
-            primaryBox.getItems().add(null);
+            primaryBox.getItems().add(0, null);
             List<String> locationTypes = DataAccessor.getInstance().getColumnString("location_description", "");
             for (String type: locationTypes) {
                 locationBox.getItems().add(type);
             }
             locationBox.getItems().sort(null);
-            locationBox.getItems().add(null);
+            locationBox.getItems().add(0, null);
 
         } catch (CustomException e) {
             MainScreen.createWarnWin(e);
