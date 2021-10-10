@@ -3,6 +3,7 @@ package seng202.group7;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import seng202.group7.data.Crime;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.PSTypes;
@@ -13,8 +14,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Tests to ensure that data inserted using the PSType classes methods
@@ -38,13 +41,11 @@ public class PSTypeTest {
             System.err.println("Connect to database: " + e.getMessage());
         }
         connection = DataAccessor.getInstance().getConnection();
-        try {
-            Statement stmt = DataAccessor.getInstance().getConnection().createStatement();
-            stmt.execute("DELETE FROM crimes");
+        try (Statement stmt = DataAccessor.getInstance().getConnection().createStatement();) {
             stmt.execute("DELETE FROM reports");
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            fail(e);
         }
     }
 
@@ -53,22 +54,24 @@ public class PSTypeTest {
      */
     @Test
     public void setString() {
-
         try {
             // Uses the int psType method
-            PreparedStatement ps = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id) " +
-                    "VALUES (?, 1);");
-            PSTypes.setPSString(ps, 1, "TestNumber"); // Case Number
+            Crime crimeOne = new Crime("TestNumber", LocalDateTime.now(), "3", "3", "test", "test", "test", false, false, 5, 5, "5", 5, null, null, null);
+            DataAccessor.getInstance().editCrime(crimeOne, 1);
+            PreparedStatement ps = connection.prepareStatement("UPDATE reports SET primary_description=? WHERE id='TestNumber'");
+
+            PSTypes.setPSString(ps, 1, "TestDescription");
             ps.execute();
             ps.close(); // Closes the ps statement, so it can use the connection.
 
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM crimes WHERE report_id='TestNumber'");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM reports WHERE primary_description='TestDescription'");
             assertEquals(rs.getString(1), "TestNumber");
             stmt.close();
             rs.close();
-        } catch (SQLException e) {
+        } catch (SQLException | CustomException e) {
             e.printStackTrace();
+            fail(e);
         }
     }
 
@@ -81,9 +84,11 @@ public class PSTypeTest {
 
         try {
             long time = Timestamp.valueOf(LocalDate.now().atStartOfDay()).getTime();
+            Crime crimeOne = new Crime("TestNumber", LocalDateTime.now(), "3", "3", "test", "test", "test", false, false, 5, 5, "5", 5, null, null, null);
+            DataAccessor.getInstance().editCrime(crimeOne, 1);
             // Uses the int psType method
-            PreparedStatement ps = connection.prepareStatement("INSERT OR REPLACE INTO reports(id, list_id, date, primary_description, secondary_description, latitude) " +
-                    "VALUES ('TestNumber', 1, "+time+", 'test', 'test', ?);");
+            PreparedStatement ps = connection.prepareStatement("UPDATE reports SET latitude=? WHERE id='TestNumber'");
+
             PSTypes.setPSDouble(ps, 1, 0.0); // Case Number
             ps.execute();
             ps.close(); // Closes the ps statement, so it can use the connection.
@@ -93,8 +98,9 @@ public class PSTypeTest {
             assertEquals(rs.getString(1), "TestNumber");
             stmt.close();
             rs.close();
-        } catch (SQLException e) {
+        } catch (SQLException | CustomException e) {
             e.printStackTrace();
+            fail(e);
         }
     }
 
@@ -104,22 +110,24 @@ public class PSTypeTest {
      */
     @Test
     public void setNegativeInt() {
-
         try {
+            
+            Crime crimeOne = new Crime("TestNumber", LocalDateTime.now(), "3", "3", "test", "test", "test", false, false, 5, 5, "5", 5, null, null, null);
+            DataAccessor.getInstance().editCrime(crimeOne, 1);
             // Uses the int psType method
-            PreparedStatement ps = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id, beat) " +
-                    "VALUES ('TestNumber', 1, ?);");
+            PreparedStatement ps = connection.prepareStatement("UPDATE crimes SET beat=? WHERE report_id='TestNumber'");
             PSTypes.setPSInteger(ps, 1, -10); // Case Number
             ps.execute();
             ps.close(); // Closes the ps statement, so it can use the connection.
-
+            
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM crimes WHERE beat=-10");
             assertEquals(rs.getString(1), "TestNumber");
             stmt.close();
             rs.close();
-        } catch (SQLException e) {
+        } catch (SQLException | CustomException e) {
             e.printStackTrace();
+            fail(e);
         }
     }
 
@@ -130,9 +138,10 @@ public class PSTypeTest {
     public void setBoolean() {
 
         try {
+            Crime crimeOne = new Crime("TestNumber", LocalDateTime.now(), "3", "3", "test", "test", "test", false, false, 5, 5, "5", 5, null, null, null);
+            DataAccessor.getInstance().editCrime(crimeOne, 1);
             // Uses the int psType method
-            PreparedStatement ps = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id, arrest) " +
-                    "VALUES ('TestNumber', 1, ?);");
+            PreparedStatement ps = connection.prepareStatement("UPDATE crimes SET arrest=? WHERE report_id='TestNumber'");
             PSTypes.setPSBoolean(ps, 1, true); // Case Number
             ps.execute();
             ps.close(); // Closes the ps statement, so it can use the connection.
@@ -142,8 +151,9 @@ public class PSTypeTest {
             assertEquals(rs.getString(1), "TestNumber");
             stmt.close();
             rs.close();
-        } catch (SQLException e) {
+        } catch (SQLException | CustomException e) {
             e.printStackTrace();
+            fail(e);
         }
     }
 

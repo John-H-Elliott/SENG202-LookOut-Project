@@ -98,7 +98,7 @@ public final class Comparer {
         dist = Math.acos(dist);
         dist = Math.toDegrees(dist);
         dist = dist * 60 * 1.1515;
-        dist = dist * 1.609344; //Converting to kilometres
+        dist = dist * 1.609344; //Converting to kilometers
         return (dist);
     }
 }

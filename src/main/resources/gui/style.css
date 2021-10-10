@@ -26,25 +26,11 @@ VBox {
 .side_menu {
     -fx-font-family: "Gill Sans MT";
     font-family: "Gill Sans MT";
-    -fx-font-size: 14;
-    font-size: 14;
 }
 
 .label {
     -fx-font-family: "Century Gothic";
     font-family: "Century Gothic";
-}
-
-.tool-bar {
-    -fx-font-family: "Berlin Sans FB Demi";
-    font-family: "Berlin Sans FB Demi";
-    -fx-font-size: 14;
-    font-size: 14;
-}
-
-.reduced_size {
-    -fx-font-size: 12;
-    font-size: 12;
 }
 
 .left-vbox {

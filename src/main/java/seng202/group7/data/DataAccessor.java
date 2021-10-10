@@ -76,15 +76,16 @@ public final class DataAccessor {
     public void changeConnection(String path) throws CustomException{
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:"+path);
+            runStatement("PRAGMA foreign_keys = ON;");
         } catch (SQLException e) {
             throw new CustomException("Error connecting to database.", e.getMessage());
         }
     }
 
     /**
-     * Creates a new database if one doesn't exist
+     * Creates a new database if one doesn't exist at the specified location.
+     * @param location The path to the selected file.
      * @throws CustomException
-     * @throws SQLException
      */
     private void createDatabase(String location) throws CustomException {
         try (Connection newdb = DriverManager.getConnection("jdbc:sqlite:" + location);Statement stmt = newdb.createStatement()) {
@@ -132,17 +133,16 @@ public final class DataAccessor {
 
     /**
      * Getter for the connected to the database.
-     *
-     * @return connection       The connection to the database.
+     * @return       The connection to the database.
      */
     public Connection getConnection() {
-        return this.connection;
+        return connection;
     }
 
     /**
      * Gets the number of entries in the database.
      *
-     * @return Size     The number of entries.
+     * @return     The number of entries.
      * @throws CustomException
      */
     public int getSize(int listId, String conditions) throws CustomException {
@@ -196,14 +196,20 @@ public final class DataAccessor {
     /**
      * Generic method for passing any query to the dataBase
      * @param query The string query used to query the database
-     * @return ArrayList of reports
+     * @return List of reports
      * @throws CustomException
      */
     public List<Report> getData(String query) throws CustomException {
         return selectReports(query);
     }
 
-    // TODO add javadoc
+    /**
+     * Method which returns all unique strings from a column of a database
+     * @param column The column that will be searched
+     * @param conditions Constrictions to the search
+     * @return A list of unique Strings
+     * @throws SQLException
+     */
     public List<String> getColumnString(String column, String conditions) throws CustomException {
         List<String> crimeTypeList = new ArrayList<>();
         String query = "SELECT DISTINCT " +column+ " from crimedb " + conditions;
@@ -221,10 +227,10 @@ public final class DataAccessor {
      }
 
     /**
-     * Method which returns all unique integers from a column of a database
-     * @param column the value from the database where all values will be returned
-     * @param conditions
-     * @return
+     * Method which returns all unique Integers from a column of a database
+     * @param column The column that will be searched
+     * @param conditions Constrictions to the search
+     * @return A list of unique Integers
      * @throws SQLException
      */
     public ArrayList<Integer> getColumnInteger(String column, String conditions) throws CustomException {
@@ -452,9 +458,9 @@ public final class DataAccessor {
      */
     public void editCrime(Crime crime, int listId) throws CustomException {
         try (PreparedStatement psReport = connection.prepareStatement("INSERT OR REPLACE INTO reports(id, list_id, date, primary_description, secondary_description, domestic, x_coord, y_coord, latitude, longitude, location_description) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
             PreparedStatement psCrime = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id, block, iucr, fbicd, arrest, beat, ward) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");){
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");){
             runStatement("BEGIN;");
 
             PSTypes.setPSString(psCrime, 1, crime.getId()); // Case Number
@@ -681,9 +687,14 @@ public final class DataAccessor {
      */
     public void deleteList(String selectedList) throws CustomException {
         try (PreparedStatement psList = connection.prepareStatement("DELETE FROM lists WHERE name=?;")) {
+            runStatement("BEGIN");
             psList.setString(1, selectedList);
             psList.execute();
+            runStatement("COMMIT");
         } catch (SQLException e) {
+            if (e.getMessage().contains("(cannot start a transaction within a transaction)")) {
+                throw new CustomException("Database is busy. Please wait until the current action is finished.", e.getMessage());
+            }
             throw new CustomException("Error deleting list from the database.", e.getMessage());
         }
     }

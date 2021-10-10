@@ -113,6 +113,11 @@ public class MainScreen extends Application {
         alert.show();
     }
 
+    /**
+     * Creates a Warning window that alerts the user to the success of the operation and continues the application.
+     *
+     * @param cause     The exception that was thrown.
+     */
     public static void createSuccessWin(CustomException cause) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "Message: " + cause.getMessage());
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
