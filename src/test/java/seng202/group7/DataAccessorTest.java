@@ -45,16 +45,13 @@ public class DataAccessorTest {
      */
     @BeforeEach
     public void createNewTestDatabase() {
-        try {
-            Statement stmt = accessor.getConnection().createStatement();
+        try (Statement stmt = accessor.getConnection().createStatement();) {
             stmt.execute("DELETE FROM crimes");
             stmt.execute("DELETE FROM reports");
             stmt.execute("DELETE FROM lists");
             stmt.execute("INSERT INTO lists(id, name) VALUES(1, 'testList')");
-            stmt.close();
 
-            Crime crimeOne = new Crime("TestNumber", LocalDateTime.now(), null, null, "test", "test", null, null, null, null, null, null, null, null, null, null);
-            
+            Crime crimeOne = new Crime("TestNumber", LocalDateTime.now(), "3", "3", "test", "test", "test", false, false, 5, 5, "5", 5, null, null, null);
             accessor.editCrime(crimeOne, 1);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -70,7 +67,7 @@ public class DataAccessorTest {
     @Test
     public void checkSize() {
         try {
-            assertEquals(accessor.getSize(1, ""), 1);
+            assertEquals(1, accessor.getSize(1, ""));
         } catch (CustomException e) {
             fail();
         }
@@ -82,13 +79,13 @@ public class DataAccessorTest {
     @Test
     public void deleteTest() {
         try {
-            Crime crimeTwo = new Crime("TestToDelete", LocalDateTime.now(), null, null, "test", "test", null, null, null, null, null, null, null, null, null, null);
+            Crime crimeTwo = new Crime("TestToDelete", LocalDateTime.now(), "3", "3", "test", "test", "test", false, false, 5, 5, "5", 5, null, null, null);
             accessor.editCrime(crimeTwo, 1);
             accessor.deleteReport("TestToDelete", 1);
             Crime crime = accessor.getCrime("TestToDelete", 1);
             assertNull(crime);
         } catch (CustomException e) {
-            fail();
+            fail(e);
         }
     }
 

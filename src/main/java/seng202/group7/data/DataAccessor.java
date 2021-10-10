@@ -458,9 +458,9 @@ public final class DataAccessor {
      */
     public void editCrime(Crime crime, int listId) throws CustomException {
         try (PreparedStatement psReport = connection.prepareStatement("INSERT OR REPLACE INTO reports(id, list_id, date, primary_description, secondary_description, domestic, x_coord, y_coord, latitude, longitude, location_description) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
             PreparedStatement psCrime = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id, block, iucr, fbicd, arrest, beat, ward) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");){
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");){
             runStatement("BEGIN;");
 
             PSTypes.setPSString(psCrime, 1, crime.getId()); // Case Number

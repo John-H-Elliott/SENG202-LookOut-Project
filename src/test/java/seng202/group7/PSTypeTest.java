@@ -38,11 +38,8 @@ public class PSTypeTest {
             System.err.println("Connect to database: " + e.getMessage());
         }
         connection = DataAccessor.getInstance().getConnection();
-        try {
-            Statement stmt = DataAccessor.getInstance().getConnection().createStatement();
-            stmt.execute("DELETE FROM crimes");
+        try (Statement stmt = DataAccessor.getInstance().getConnection().createStatement();) {
             stmt.execute("DELETE FROM reports");
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -53,7 +50,6 @@ public class PSTypeTest {
      */
     @Test
     public void setString() {
-
         try {
             // Uses the int psType method
             PreparedStatement ps = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id) " +
@@ -104,8 +100,10 @@ public class PSTypeTest {
      */
     @Test
     public void setNegativeInt() {
-
         try {
+            Statement stmt = connection.createStatement();
+            stmt.execute("INSERT OR REPLACE INTO reports(report_id, list_id) " +
+                "VALUES ('TestNumber', 1);");
             // Uses the int psType method
             PreparedStatement ps = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id, beat) " +
                     "VALUES ('TestNumber', 1, ?);");
@@ -113,7 +111,6 @@ public class PSTypeTest {
             ps.execute();
             ps.close(); // Closes the ps statement, so it can use the connection.
 
-            Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM crimes WHERE beat=-10");
             assertEquals(rs.getString(1), "TestNumber");
             stmt.close();
