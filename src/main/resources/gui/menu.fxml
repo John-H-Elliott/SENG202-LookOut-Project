@@ -13,6 +13,7 @@
                   <Font name="System Bold" size="12.0" />
                </font></Button>
           <Button layoutX="10.0" layoutY="13.0" mnemonicParsing="false" onAction="#toData" text="Table" />
+            <Button mnemonicParsing="false" onAction="#toMap" text="Map" />
           <Button layoutX="10.0" layoutY="13.0" mnemonicParsing="false" onAction="#toGraph" text="Graph" />
           <Button layoutX="10.0" layoutY="13.0" mnemonicParsing="false" onAction="#toSearch" text="Google" />
           <Button fx:id="helpButton" layoutX="131.0" layoutY="13.0" mnemonicParsing="false" onAction="#openHelpPage" text="Help" />

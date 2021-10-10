@@ -23,7 +23,9 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebView;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.QueryBuilder;
 import seng202.group7.view.MainScreen;
@@ -191,7 +193,7 @@ public class FilterController implements Initializable {
      * clears the current filter fields and clears filter from table
      * @param event   The event action that was triggered.
      */
-    public void clearFilter(ActionEvent event) throws IOException {
+    public void clearFilter(ActionEvent event) {
         datePicker.setValue(null);
         datePicker2.setValue(null);
         primaryBox.setValue(null);
@@ -224,7 +226,7 @@ public class FilterController implements Initializable {
      * Applies the current filter values to the table
      * @param event   The event action that was triggered.
      */
-    public void applyFilter(ActionEvent event) throws IOException {
+    public void applyFilter(ActionEvent event){
         for (Node node : allValues) {
             if (!InputValidator.validate(node)) {
                 return;
@@ -237,14 +239,27 @@ public class FilterController implements Initializable {
         ControllerData.getInstance().setFilterQuery(query);
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
-        try {
-            BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
-            // Changes side menu to the filter menu.
-            pane.setCenter(tableView);
-        } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the Pagination screens FXML file.", e.getClass().toString()));
-        }
 
+        if (pane.getCenter().getId().equals("mapViewPane")) {
+            try {
+                // Changes side menu to the filter menu.
+                StackPane mapView = ControllerData.getInstance().getGoogleMap();
+                pane.setCenter(mapView);
+                //reLoad pins.
+                WebView map = (WebView) mapView.getChildren().get(0);
+                MapController.updatePins(map);
+            } catch (NullPointerException e) {
+                MainScreen.createErrorWin(new CustomException("Error caused when loading the Map View screens FXML file.", e.getClass().toString()));
+            }
+        } else {
+            try {
+                BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
+                // Changes side menu to the filter menu.
+                pane.setCenter(tableView);
+            } catch (IOException | NullPointerException e) {
+                MainScreen.createErrorWin(new CustomException("Error caused when loading the Pagination screens FXML file.", e.getClass().toString()));
+            }
+        }
     }
 
     /**
@@ -266,13 +281,18 @@ public class FilterController implements Initializable {
      * Gets the current side panel and replaces it with the general menu panel.
      * @param event             The event action that was triggered.
      */
-    public void toMenu(ActionEvent event) throws IOException {
+    public void toMenu(ActionEvent event) {
         saveGUIFields();
         // As the side panels root is the main border panel we use .getRoot().
-        BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
-        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
-        // Changes side menu to the filter menu.
-        pane.setLeft(menuItems);
+        try {
+            BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
+            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
+            // Changes side menu to the filter menu.
+            pane.setLeft(menuItems);
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
+        }
+
     }
 
     private void loadGUIFields(){
