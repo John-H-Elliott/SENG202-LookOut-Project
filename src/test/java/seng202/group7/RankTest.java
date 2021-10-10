@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -57,7 +58,7 @@ public class RankTest {
      */
     @Test
     public void primaryFrequencyRank() {
-        ArrayList<Tuple<String, Integer>> list = Rank.primaryFrequencyRank(data);
+        List<Tuple<String, Integer>> list = Rank.primaryFrequencyRank(data);
         assertEquals("THEFT", list.get(list.size() - 1).x);
     }
 
@@ -67,7 +68,7 @@ public class RankTest {
      */
     @Test
     public void wardFrequencyRank() {
-        ArrayList<Tuple<String, Integer>> list = Rank.wardFrequencyRank(data);
+        List<Tuple<String, Integer>> list = Rank.wardFrequencyRank(data);
         assertEquals("1", list.get(list.size() - 1).x);
     }
 
@@ -77,19 +78,19 @@ public class RankTest {
      */
     @Test
     public void streetRankTest() {
-        ArrayList<Tuple<String, Integer>> list = Rank.streetRank(data);
+        List<Tuple<String, Integer>> list = Rank.streetRank(data);
         assertEquals("S DR MARTIN LUTHER KING JR DR", list.get(list.size() - 1).x);
     }
 
     @Test
     public void beatFrequencyRankTest() {
-        ArrayList<Tuple<String, Integer>> list = Rank.beatFrequencyRank(data);
+        List<Tuple<String, Integer>> list = Rank.beatFrequencyRank(data);
         assertEquals("1", list.get(list.size() - 1).x);
     }
 
     @Test
     public void getDateListTest_General() {
-        ArrayList<CrimeFrequency> dateList = Rank.getDateList(data);
+        List<CrimeFrequency> dateList = Rank.getDateList(data);
         assertEquals(13, dateList.size());
         assertEquals("2 2020", dateList.get(0).getDate());
         assertEquals("2 2021", dateList.get(dateList.size() -1).getDate());
@@ -97,25 +98,25 @@ public class RankTest {
 
     @Test
     public void getDateListTest_OneValue() {
-        ArrayList<CrimeFrequency> dateList = Rank.getDateList(data2);
+        List<CrimeFrequency> dateList = Rank.getDateList(data2);
         assertEquals(1, dateList.size());
     }
 
     @Test
     public void getDateListTest_TwoSameValue() {
-        ArrayList<CrimeFrequency> dateList = Rank.getDateList(data3);
+        List<CrimeFrequency> dateList = Rank.getDateList(data3);
         assertEquals(1, dateList.size());
     }
 
     @Test
     public void getDateListTest_NoValue() {
-        ArrayList<CrimeFrequency> dateList = Rank.getDateList(data4);
+        List<CrimeFrequency> dateList = Rank.getDateList(data4);
         assertEquals(0, dateList.size());
     }
 
     @Test
     public void crimeOverTime_General() {
-        ArrayList<CrimeFrequency> crimeOverTime = Rank.crimeOverTime(data);
+        List<CrimeFrequency> crimeOverTime = Rank.crimeOverTime(data);
         assertEquals(13, crimeOverTime.size());
         assertEquals(3, crimeOverTime.get(0).getFrequency());
         assertEquals(2, crimeOverTime.get(crimeOverTime.size() -1).getFrequency());
@@ -124,7 +125,7 @@ public class RankTest {
 
     @Test
     public void CrimeOVerTime_NoValue() {
-        ArrayList<CrimeFrequency> crimeOverTime = Rank.crimeOverTime(data4);
+        List<CrimeFrequency> crimeOverTime = Rank.crimeOverTime(data4);
         assertEquals(0, crimeOverTime.size());
     }
 }
