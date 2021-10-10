@@ -1,10 +1,9 @@
 package seng202.group7.controllers;
 
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.web.WebEngine;
@@ -55,7 +54,7 @@ public class MapController implements Initializable {
      * @param reports   The current set of loaded reports that need pins.
      * @return The full JSON array.
      */
-    private static String toJSONArray(ArrayList<Report> reports) {
+    private static String toJSONArray(List<Report> reports) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("[");
         reports.forEach(report -> stringBuilder.append(
@@ -72,9 +71,8 @@ public class MapController implements Initializable {
      */
     public static void updatePins(WebView map) {
         // Gets the current set of reports based on the pagination's current page.
-        ArrayList<Report> reports = DataAccessor.getInstance().getPageSet(ControllerData.getInstance().getCurrentList());
+        List<Report> reports = DataAccessor.getInstance().getPageSet(ControllerData.getInstance().getCurrentList());
         String scriptToExecute = "importData(" + toJSONArray(reports) + ");";
         map.getEngine().executeScript(scriptToExecute);
     }
-
 }

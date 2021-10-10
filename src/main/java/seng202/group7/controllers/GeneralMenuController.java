@@ -11,10 +11,8 @@ import javafx.stage.Stage;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.view.MainScreen;
-
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Objects;
 
 /**

@@ -10,10 +10,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import seng202.group7.controllers.ControllerData;
-import seng202.group7.controllers.MenuController;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
-
 import javafx.scene.image.Image;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -46,7 +44,11 @@ public class MainScreen extends Application {
             Parent view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/startScreen.fxml")));
             Scene scene = new Scene(view);
             windowStage.setScene(scene);
-            loadGoogleAPIs();
+            try {
+                loadGoogleAPIs();
+            } catch (CustomException e) {
+                createWarnWin(e);
+            }
             windowStage.show();
         } catch (IOException | NullPointerException e) {
             createErrorWin(new CustomException("Error caused when loading the Start screens FXML file.", e.getClass().toString()));
@@ -56,14 +58,15 @@ public class MainScreen extends Application {
     /**
      * Pre-Loads all the Google APIs and stores them in the controller data class to prevent
      * slow loading and re-loading. Also allows for the user to keep searches stored even when not focused on it.
+     * @throws CustomException
      */
-    private void loadGoogleAPIs() {
+    private void loadGoogleAPIs() throws CustomException {
         ControllerData connData = ControllerData.getInstance();
         try {
             StackPane mapView = FXMLLoader.load(Objects.requireNonNull(MainScreen.class.getResource("/gui/mapView.fxml")));
             connData.setGoogleMap(mapView);
         } catch (IOException | NullPointerException e) {
-            createErrorWin(new CustomException("Error caused when loading the Map View screens FXML file.", e.getClass().toString()));
+            throw new CustomException("Error caused when loading the Map View screens FXML file.", e.getClass().toString());
         }
         WebView externalSearch = new WebView();
         externalSearch.getEngine().load("https://cse.google.com/cse?cx=59f99af6c7b75d889");

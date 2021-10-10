@@ -2,7 +2,6 @@ package seng202.group7.controllers;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.animation.TranslateTransition;
@@ -15,10 +14,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.util.Duration;
-import seng202.group7.data.Crime;
 import seng202.group7.data.CustomException;
-import seng202.group7.data.DataAccessor;
-import seng202.group7.data.Report;
 import seng202.group7.view.MainScreen;
 
 
