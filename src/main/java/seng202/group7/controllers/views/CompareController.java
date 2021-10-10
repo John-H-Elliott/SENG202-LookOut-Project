@@ -92,6 +92,7 @@ public class CompareController implements Initializable {
 
     /**
      * Gets the two pieces of data and creates a string based on the distance and time comparison between the two values
+     * If the two values are the same feedback will notify the user to select two distinct values
      */
     public void compareReports() {
         DataAccessor data = DataAccessor.getInstance();

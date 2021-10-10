@@ -13,7 +13,7 @@ import seng202.group7.data.Crime;
  * A set of static methods that ranks and analyses data into lists for graphing view
  *
  * @author Sam McMillan
- * @author Shaylin
+ * @author Shaylin Simadari
  */
 public final class Rank {
 

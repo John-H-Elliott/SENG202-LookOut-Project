@@ -35,7 +35,7 @@ public final class Comparer {
     }
 
     /**
-     * Returns the displacement between the two reports in km.
+     *Checks for null or default values if not then returns the displacement between the two reports in km.
      *
      * @param reportOne data to be compared with "reportTwo"
      * @param reportTwo data to be compared with "reportOne"
@@ -49,7 +49,8 @@ public final class Comparer {
         double lon2 = 0;
 
         double checkNull = 0;
-        try {
+
+        try { //Checking for null values
             lat1 = reportOne.getLatitude();
             lon1 = reportOne.getLongitude();
         } catch (NullPointerException e) {
@@ -68,8 +69,24 @@ public final class Comparer {
             }
         }
 
+        if (lat1 == 0.0 && lat2 ==0.0) { //Checking for default values
+            checkNull = -3;
+        } else if (lat1 == 0.0) {
+            if (checkNull == -2) {
+                checkNull = -3;
+            } else {
+                checkNull = -1;
+            }
+        } else if (lat2 == 0.0) {
+            if (checkNull == -1) {
+                checkNull = -3;
+            } else {
+                checkNull = -2;
+            }
+        }
+
         if (checkNull != 0) {
-            return checkNull; //
+            return checkNull; //If default or null then return what value(s) is null or default
         }
 
         double theta = lon1 - lon2;

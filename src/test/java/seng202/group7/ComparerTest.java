@@ -26,7 +26,11 @@ public class ComparerTest {
     public static Report reportOne;
     public static Report reportTwo;
     public static Report reportThree;
+
+    public static Report reportFive;
+
     public static Duration dateDifference;
+    public static Report reportFour;
 
     /**
      * Sets up and creates all the reports that will be used for testing.
@@ -41,6 +45,8 @@ public class ComparerTest {
         reportOne = new Crime("TestNumber1", dateStart, null, null, null, null, null, true, false, null, null, null, null, null, -43.540919, 172.585284);
         reportTwo = new Crime("TestNumber2", dateEnd, null, null, null, null, null, true, false, null, null, null, null, null, -43.508434, 172.630126);
         reportThree = new Crime("TestNumber3", dateEnd, null, null, null, null, null, true, false, null, null, null, null, null, -43.508434, 172.630126);
+        reportFour = new Crime("TestNumber4", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        reportFive = new Crime("TestNumber4", null, null, null, null, null, null, null, null, null, null, null, null, null, 0.0, 0.0);
     }
 
 
@@ -79,6 +85,30 @@ public class ComparerTest {
     public void locationDifference_boundaryCase() {
         Double difference = Comparer.locationDifference(reportTwo, reportThree);
         assertEquals(0, difference);
+    }
+
+    @Test
+    public void locationDifferenceTest_BothVoid() {
+        Double difference = Comparer.locationDifference(reportFour, reportFour);
+        assertEquals(-3, difference);
+    }
+
+    @Test
+    public void locationDifferenceTest_FirstVoid() {
+        Double difference = Comparer.locationDifference(reportFour, reportOne);
+        assertEquals(-1, difference);
+    }
+
+    @Test
+    public void locationDifferenceTest_SecondVoid() {
+        Double difference = Comparer.locationDifference(reportOne, reportFour);
+        assertEquals(-2, difference);
+    }
+
+    @Test
+    public void locationDifferenceTest_FirstVoidSecondDefault() {
+        Double difference = Comparer.locationDifference(reportFour, reportFive);
+        assertEquals(-3, difference);
     }
 
 }
