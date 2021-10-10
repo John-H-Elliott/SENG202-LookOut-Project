@@ -8,6 +8,7 @@ import seng202.group7.data.Crime;
 import seng202.group7.data.Report;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class RankTest {
 
-    private static ArrayList<Report> data;
+    private static List<Report> data;
 
     /**
      * Creates a list of reports to be used for the ranked tests.
@@ -44,7 +45,7 @@ public class RankTest {
      */
     @Test
     public void primaryFrequencyRank() {
-        ArrayList<Tuple<String, Integer>> list = Rank.primaryFrequencyRank(data);
+        List<Tuple<String, Integer>> list = Rank.primaryFrequencyRank(data);
         assertEquals("THEFT", list.get(list.size() - 1).x);
     }
 
@@ -54,7 +55,7 @@ public class RankTest {
      */
     @Test
     public void wardFrequencyRank() {
-        ArrayList<Tuple<String, Integer>> list = Rank.wardFrequencyRank(data);
+        List<Tuple<String, Integer>> list = Rank.wardFrequencyRank(data);
         assertEquals("1", list.get(list.size() - 1).x);
     }
 
@@ -64,7 +65,7 @@ public class RankTest {
      */
     @Test
     public void streetRankTest() {
-        ArrayList<Tuple<String, Integer>> list = Rank.streetRank(data);
+        List<Tuple<String, Integer>> list = Rank.streetRank(data);
         assertEquals("S DR MARTIN LUTHER KING JR DR", list.get(list.size() - 1).x);
     }
 }

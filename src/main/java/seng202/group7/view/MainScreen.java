@@ -41,7 +41,7 @@ public class MainScreen extends Application {
         windowStage.getIcons().add(new Image("/gui/logo.png"));
         // Loads first FXML scene. Checks to ensure that the file is not NULL.
         try {
-            Parent view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/startScreen.fxml")));
+            Parent view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/mainScreen.fxml")));
             Scene scene = new Scene(view);
             windowStage.setScene(scene);
             try {
@@ -82,7 +82,7 @@ public class MainScreen extends Application {
         try {
             DataAccessor.getInstance().getConnection().close();
         } catch (SQLException error) {
-            error.printStackTrace();
+            System.err.println(error);
         }
     }
 
@@ -112,6 +112,13 @@ public class MainScreen extends Application {
         alert.show();
     }
 
+    public static void createSuccessWin(CustomException cause) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Message: " + cause.getMessage());
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        alert.setTitle(cause.getInfo());
+        alert.show();
+    }
+
     /**
      * Launches the application with the provided arguments passed through.
      * Uses the launch method which is inherited from this class's parent Application.
@@ -121,4 +128,5 @@ public class MainScreen extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
 }

@@ -12,24 +12,29 @@ import java.io.ObjectInputStream;
  * @author Shaylin Simadari
  */
 public final class Serializer {
+
+    private Serializer(){}
+    
     /**
      * Serializes a FilterConditions object into a file
      * @param file The file to write the FilterConditions object to
+     * @throws CustomException
      */
-    public static void serialize(File file, FilterConditions object){
+    public static void serialize(File file, FilterConditions object) throws CustomException {
         try (FileOutputStream fileOut = new FileOutputStream(file);
             ObjectOutputStream outputStream = new ObjectOutputStream(fileOut)) {
             outputStream.writeObject(object);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new CustomException("Failed to write filter into a file.", e.getMessage());
         }
     }
 
     /**
      * Deserializes a FilterConditions object from a file
      * @param file The file from which to get the FilterConditions object
+     * @throws CustomException
      */
-    public static FilterConditions deserialize(File file){
+    public static FilterConditions deserialize(File file) throws CustomException{
         FilterConditions typedObj = null;
         try (FileInputStream fileIn = new FileInputStream(file);
             ObjectInputStream inputStream = new ObjectInputStream(fileIn)) {
@@ -38,7 +43,7 @@ public final class Serializer {
             typedObj = (FilterConditions) object;
 
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            throw new CustomException("Failed to read filter from selected file.", e.getMessage());
         }
         return typedObj;
     }

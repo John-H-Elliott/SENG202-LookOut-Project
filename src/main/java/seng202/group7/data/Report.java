@@ -15,6 +15,7 @@ import javax.naming.directory.InvalidAttributeValueException;
  */
 public abstract class Report {
     private LocalDateTime date;
+    private final SimpleStringProperty id = new SimpleStringProperty(null);
     private final SimpleStringProperty primaryDescription = new SimpleStringProperty(null);
     private final SimpleStringProperty secondaryDescription = new SimpleStringProperty(null);
     private final SimpleStringProperty locationDescription = new SimpleStringProperty(null);
@@ -28,6 +29,7 @@ public abstract class Report {
 
     /**
      * Initializes a Report object.
+     * @param id                    The unique identifier for the report object
      * @param date                  A required field which contains the year, month, day and time of the crime
      * @param primaryDescription    A required field which contains the primary description of the crime
      * @param secondaryDescription  A required field which contains the more descriptive secondary description of the crime
@@ -38,8 +40,9 @@ public abstract class Report {
      * @param latitude              An optional field which is has the latitude of where the crime occurred
      * @param longitude             An optional field which is has the longitude of where the crime occurred
      */
-    public Report(LocalDateTime date, String primaryDescription, String secondaryDescription, String locationDescription,
+    protected Report(String id, LocalDateTime date, String primaryDescription, String secondaryDescription, String locationDescription,
             Boolean domestic, Integer xCoord, Integer yCoord, Double latitude, Double longitude) {
+        this.id.setValue(id);
         this.date = date;
         this.primaryDescription.setValue(primaryDescription);
         this.secondaryDescription.setValue(secondaryDescription);
@@ -53,6 +56,29 @@ public abstract class Report {
         this.longitude.setValue(longitude);
     }
 
+    /**
+     * Gets the current id of a report.
+     *
+     * @return The reports's id
+     */
+    public String getId() {
+        return this.id.get();
+    }
+
+
+    /**
+     * Sets the report's id, handles an empty string as null.
+     *
+     * @param id                        A required string attribute which must be unique
+     * @throws InvalidAttributeValueException   Value doesn't match type
+     */
+    public void setId(String id) throws InvalidAttributeValueException {
+        if (Objects.equals(id, "") || (id == null)) {
+            throw new InvalidAttributeValueException();
+        } else if (!Objects.equals(getId(), id)){
+            this.id.setValue(id);
+        }
+    }
     
     /**
      * Gets the current date value.
@@ -253,6 +279,7 @@ public abstract class Report {
         if (o == null || getClass() != o.getClass()) return false;
         Report report = (Report) o;
         return Objects.equals(date, report.getDate())
+            && Objects.equals(id.get(), report.getId())
             && Objects.equals(primaryDescription.get(), report.getPrimaryDescription())
             && Objects.equals(secondaryDescription.get(), report.getSecondaryDescription())
             && Objects.equals(locationDescription.get(), report.getLocationDescription())

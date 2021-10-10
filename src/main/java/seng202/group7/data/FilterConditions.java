@@ -103,4 +103,24 @@ public class FilterConditions implements Serializable {
     public Boolean getDomestic() {
         return domestic;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        // TODO Auto-generated method stub
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+        if (super.equals(obj)) {
+            return true;
+        }
+        FilterConditions filter = (FilterConditions) obj;
+        return this.arrest.equals(filter.getArrest()) &&
+            this.domestic.equals(filter.getDomestic()) &&
+            this.beat.equals(filter.getBeat()) &&
+            this.ward.equals(filter.getWard()) &&
+            this.dateTo.equals(filter.getDateTo()) &&
+            this.dateFrom.equals(filter.getDateFrom()) &&
+            this.primaryDescription.equals(filter.getPrimaryDescription()) &&
+            this.locationDescription.equals(filter.getLocationDescription());
+    }
 }

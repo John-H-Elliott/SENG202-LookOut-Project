@@ -66,6 +66,12 @@
       <artifactId>sqlite-jdbc</artifactId>
       <version>3.36.0.3</version>
     </dependency>
+    <dependency>
+      <groupId>com.github.zetten</groupId>
+      <artifactId>xvfb-maven-plugin</artifactId>
+      <version>1.4.0</version>
+      <type>maven-plugin</type>
+    </dependency>
   </dependencies>
 
   <build>

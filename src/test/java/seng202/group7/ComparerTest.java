@@ -10,7 +10,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,7 +49,7 @@ public class ComparerTest {
      */
     @Test
     public void timeDifferenceTest_specificCase() {
-        ArrayList<Long> differences = Comparer.timeDifference(reportOne, reportTwo);
+        List<Long> differences = Comparer.timeDifference(reportOne, reportTwo);
         Long diffMins = Math.abs(TimeUnit.SECONDS.toMinutes(dateDifference.getSeconds()) % 60);
         assertEquals(differences.get(0), diffMins);
     }
@@ -59,7 +59,7 @@ public class ComparerTest {
      */
     @Test
     public void timeDifferenceTest_boundaryCase() {
-        ArrayList<Long> list = Comparer.timeDifference(reportTwo, reportThree);
+        List<Long> list = Comparer.timeDifference(reportTwo, reportThree);
         assertEquals(0, list.get(1));
     }
 

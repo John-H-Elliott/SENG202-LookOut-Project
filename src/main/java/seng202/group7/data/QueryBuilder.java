@@ -4,10 +4,12 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 
 /**
- * builds queries based on parameters and returns them as Strings
+ * Builds queries based on parameters and returns them as Strings
  * @author Shaylin Simadari
  */
 public final class QueryBuilder {
+
+    private QueryBuilder(){}
 
     /**
      * builds an SQL where statement for data that meets the conditions of the supplied parameters.
@@ -93,6 +95,8 @@ public final class QueryBuilder {
      * @return      A String representation of an SQL where statement
      */
     public static String search(String keyword){
+        // keyword = keyword.replace("/", "//");
+        keyword = keyword.replace("'", "''");
         return "(primary_description LIKE '%" + keyword + "%' OR "
         + "secondary_description LIKE '%" + keyword + "%' OR "
         + "location_description LIKE '%" + keyword + "%' OR "

@@ -2,11 +2,8 @@ package seng202.group7.data;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
-
-import javax.naming.directory.InvalidAttributeValueException;
 
 /**
  * Used to create and store crime objects.
@@ -15,7 +12,6 @@ import javax.naming.directory.InvalidAttributeValueException;
  * @author John Elliott
  */
 public class Crime extends Report {
-    private final SimpleStringProperty caseNumber = new SimpleStringProperty(null);
     private final SimpleStringProperty block = new SimpleStringProperty(null);
     private final SimpleStringProperty iucr = new SimpleStringProperty(null);
     private final SimpleStringProperty fbiCD = new SimpleStringProperty(null);
@@ -26,7 +22,6 @@ public class Crime extends Report {
 
     /**
      * Initializes a crime object.
-     * @param caseNumber            A required field which must be unique and cannot be null
      * @param date                  A required field which contains the year, month, day and time of the crime
      * @param block                 An optional field which contains what block the crime occurred in
      * @param iucr                  An optional field which contains the Illinois Uniform Crime Reporting number
@@ -43,11 +38,10 @@ public class Crime extends Report {
      * @param latitude              An optional field which is has the latitude of where the crime occurred
      * @param longitude             An optional field which is has the longitude of where the crime occurred
      */
-    public Crime(String caseNumber, LocalDateTime date, String block, String iucr, String primaryDescription,
+    public Crime(String id, LocalDateTime date, String block, String iucr, String primaryDescription,
     String secondaryDescription, String locationDescription, Boolean arrest, Boolean domestic, Integer beat,
     Integer ward, String fbiCD, Integer xCoord, Integer yCoord, Double latitude, Double longitude) {
-        super(date, primaryDescription, secondaryDescription, locationDescription, domestic, xCoord, yCoord, latitude, longitude);
-        this.caseNumber.setValue(caseNumber);
+        super(id, date, primaryDescription, secondaryDescription, locationDescription, domestic, xCoord, yCoord, latitude, longitude);
 
         if (block != null && !block.isEmpty()) {
             this.block.setValue(block);
@@ -60,30 +54,6 @@ public class Crime extends Report {
         this.ward.setValue(ward);
         if (block != null && !fbiCD.isEmpty()) {
             this.fbiCD.setValue(fbiCD);
-        }
-    }
-
-    /**
-     * Gets the current case number of a report.
-     *
-     * @return The crime's case number
-     */
-    public String getCaseNumber() {
-        return this.caseNumber.get();
-    }
-
-
-    /**
-     * Sets the crimes case number, handles an empty string as null.
-     *
-     * @param caseNumber                        A required string attribute which must be unique
-     * @throws InvalidAttributeValueException   Value doesn't match type
-     */
-    public void setCaseNumber(String caseNumber) throws InvalidAttributeValueException {
-        if (Objects.equals(caseNumber, "") || (caseNumber == null)) {
-            throw new InvalidAttributeValueException();
-        } else if (!Objects.equals(getCaseNumber(), caseNumber)){
-            this.caseNumber.setValue(caseNumber);
         }
     }
 
@@ -226,7 +196,6 @@ public class Crime extends Report {
         return Objects.equals(arrest.get(), crime.getArrest())
             && Objects.equals(beat.get(), crime.getBeat())
             && Objects.equals(ward.get(), crime.getWard())
-            && Objects.equals(caseNumber.get(), crime.getCaseNumber())
             && Objects.equals(block.get(), crime.getBlock())
             && Objects.equals(iucr.get(), crime.getIucr())
             && Objects.equals(fbiCD.get(), crime.getFbiCD());
@@ -235,7 +204,7 @@ public class Crime extends Report {
     @Override
     public String toString() {
         return "Crime{" +
-                "caseNumber='" + getCaseNumber() + '\'' +
+                "caseNumber='" + getId() + '\'' +
                 ", block='" + getBlock() + '\'' +
                 ", iucr='" + getIucr() + '\'' +
                 ", arrest=" + getArrest() +
