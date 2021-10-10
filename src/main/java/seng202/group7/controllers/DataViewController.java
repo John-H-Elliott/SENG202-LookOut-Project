@@ -3,10 +3,13 @@ package seng202.group7.controllers;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -23,9 +26,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
 import java.util.ResourceBundle;
-
-
 /**
  * The controller, used by / linked to, the Data View FXML file.
  * Handles the generation of the table on initialization.
@@ -45,16 +48,6 @@ public class DataViewController implements Initializable {
      */
     @FXML
     private TableView<Crime> tableView;
-    /**
-     * This is the columns of the table with the type string.
-     */
-    @FXML
-    private TableColumn<Crime, String> caseCol, wardCol, descCol, dateCol;
-    /**
-     * This is the columns of the table with the type boolean.
-     */
-    @FXML
-    private TableColumn<Crime, Boolean> arrestCol;
 
 
     /**
@@ -66,18 +59,20 @@ public class DataViewController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        List<String> possibleColumns = Arrays.asList("Case Number,CaseNumber", "Date,date",
+            "Primary Description,PrimaryDescription","Secondary Description,SecondaryDescription", "Domestic,Domestic",
+            "X Coordinate,XCoord", "Y Coordinate,YCoord", "Latitude,Latitude","Longitude,Longitude",
+            "Location Description,LocationDescription", "Block,Block", "Iucr,Iucr", "FBI CD,FbiCD", "Arrest,arrest", 
+            "Beat,Beat", "Ward,Ward");
 
-        caseCol.setCellValueFactory(new PropertyValueFactory<>("CaseNumber"));
-        wardCol.setCellValueFactory(new PropertyValueFactory<>("Ward"));
-        descCol.setCellValueFactory(new PropertyValueFactory<>("PrimaryDescription"));
-        arrestCol.setCellValueFactory(new PropertyValueFactory<>("Arrest"));
-        // Sets up a call to firstly create a DateTime pattern and then coverts our local date time stored in class.
-        dateCol.setCellValueFactory(setup -> {
-                    SimpleStringProperty property = new SimpleStringProperty();
-                    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                    property.setValue(dateFormat.format(setup.getValue().getDate()));
-                    return property;
-                });
+        ContextMenu contextMenu = new ContextMenu();
+        
+        for (String columnName : possibleColumns) {
+            TableColumn<Crime, ?> newColumn = createColumn(columnName, contextMenu);
+            tableView.getColumns().add(newColumn);
+        }
+         
+        tableView.setContextMenu(contextMenu);
 
         // On a double click and the row isn't empty it will trigger the swap view method.
         tableView.setRowFactory( tv -> {
@@ -105,6 +100,71 @@ public class DataViewController implements Initializable {
             }
         });
         setTableContent();
+    }
+
+    /**
+     * Creates a new column with the given name and adds it to the tables context menu.
+     * @param columnName The name of the column
+     * @param contextMenu The tables context menu
+     * @return The new column
+     */
+    private TableColumn<Crime, ?> createColumn(String columnName, ContextMenu contextMenu) {
+        
+        String[] columnData = columnName.split(",");
+        TableColumn<Crime, String> newColumn = new TableColumn<>(columnData[0]);
+        newColumn.setCellValueFactory(new PropertyValueFactory<>(columnData[1]));
+        
+        if (columnData[0].equals("Date")) {
+            newColumn.setCellValueFactory(setup -> {
+                SimpleStringProperty property = new SimpleStringProperty();
+                DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                property.setValue(dateFormat.format(setup.getValue().getDate()));
+                return property;
+            });
+        }
+        MenuItem columnMenu = new MenuItem(columnData[0]);
+        // Make it so when clicked will hide/show the column
+        columnMenu.setOnAction(event -> {
+            visibilityToggleInit(event);
+        });
+
+        contextMenu.getItems().add(columnMenu);
+        
+        if (ControllerData.getInstance().getVisibleColumns() == null) {
+            ControllerData.getInstance().setVisibleColumns(
+                Arrays.asList("Case Number", "Date", "Primary Description","Arrest", "Ward")
+                );
+        }
+        List<String> visibleColumns = ControllerData.getInstance().getVisibleColumns();
+        // Only show default columns
+        if (!visibleColumns.contains(columnData[0])) {
+            newColumn.setVisible(false);
+        }
+        return newColumn;
+    }
+
+    /**
+     * Makes the menuItem toggle the visibility of the relevant column.
+     * @param event The event that triggers this method.
+     */
+    private void visibilityToggleInit(ActionEvent event) {
+        for (TableColumn<Crime, ?> col : tableView.getColumns()) {
+            if (col.getText().equals(((MenuItem) event.getSource()).getText())) {
+                col.setVisible(!col.visibleProperty().get());
+                List<String> visibleColumns = ControllerData.getInstance().getVisibleColumns();
+                List<String> visibleUpdate = new ArrayList<String>();
+                for (String column : visibleColumns) {
+                    if (column != col.getText()){
+                        visibleUpdate.add(column);
+                    }
+                }
+                if (!visibleColumns.contains(col.getText())) {
+                    visibleUpdate.add(col.getText());
+                }
+                ControllerData.getInstance().setVisibleColumns(visibleUpdate);
+                return;
+            }
+        }
     }
 
 
