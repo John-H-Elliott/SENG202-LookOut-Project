@@ -75,22 +75,21 @@ public class MenuController implements Initializable {
     public void menuAnimation() {
         VBox pane = (VBox) menuFrame.getLeft();
         // Determines by the off set position of the VBox if the open or close animation needs to be played.
+        TranslateTransition toggleMenu = new TranslateTransition(new Duration(350), pane);
         if (pane.getTranslateX() != 0) {
             // Creates an animation for opening the menu.
-            TranslateTransition openMenu = new TranslateTransition(new Duration(350), pane);
-            openMenu.setToX(0);
+            toggleMenu.setToX(0);
             menuFrame.getLeft().setVisible(true);
             menuFrame.getLeft().setManaged(true);
-            openMenu.play();
+            toggleMenu.play();
         } else {
             // Creates an animation for closing the menu.
-            TranslateTransition closeMenu = new TranslateTransition(new Duration(350), pane);
-            closeMenu.setOnFinished(action->{
+            toggleMenu.setOnFinished(action->{
                 menuFrame.getLeft().setVisible(false);
                 menuFrame.getLeft().setManaged(false);
             });
-            closeMenu.setToX(-(pane.getWidth()));
-            closeMenu.play();
+            toggleMenu.setToX(-(pane.getWidth()));
+            toggleMenu.play();
         }
     }
 
@@ -123,7 +122,8 @@ public class MenuController implements Initializable {
             // Adds the paginator to the center of the screen.
             menuFrame.setCenter(dataView);
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the Pagination screens FXML file.", e.getClass().toString()));
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Pagination screens FXML file.",
+                e.getClass().toString()));
         }
 
         // Loads the first side menu screen.
@@ -134,7 +134,8 @@ public class MenuController implements Initializable {
                 menuFrame.setLeft(menuItems);
                 menuButton.setDisable(false);
             } catch (IOException | NullPointerException e) {
-                MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
+                MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.",
+                    e.getClass().toString()));
             }
         }
     }
@@ -193,7 +194,8 @@ public class MenuController implements Initializable {
             WebView map = (WebView) mapView.getChildren().get(0);
             MapController.updatePins(map);
         } catch (NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the Map View screens FXML file.", e.getClass().toString()));
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Map View screens FXML file.", 
+                e.getClass().toString()));
         }
 
         if ((menuFrame.getLeft() == null) || !menuFrame.getLeft().getId().equals("sideMenu")) {
@@ -204,11 +206,15 @@ public class MenuController implements Initializable {
                 menuFrame.setLeft(menuItems);
                 menuButton.setDisable(false);
             } catch (IOException | NullPointerException e) {
-                MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
+                MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", 
+                    e.getClass().toString()));
             }
         }
     }
 
+    /**
+     * Loads and sets the screen to the main menu (start screen).
+     */
     public void toMain() {
         try {
             Parent view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/mainScreen.fxml")));
@@ -216,7 +222,8 @@ public class MenuController implements Initializable {
             ((Stage) menuFrame.getScene().getWindow()).setScene(scene);
             // windowStage.show();
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the Start screens FXML file.", e.getClass().toString()));
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Start screen's FXML file.", 
+                e.getClass().toString()));
         }
     }
 

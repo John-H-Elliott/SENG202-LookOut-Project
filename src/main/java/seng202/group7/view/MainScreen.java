@@ -51,7 +51,7 @@ public class MainScreen extends Application {
             }
             windowStage.show();
         } catch (IOException | NullPointerException e) {
-            createErrorWin(new CustomException("Error caused when loading the Start screens FXML file.", e.getClass().toString()));
+            createErrorWin(new CustomException("Error caused when loading the Start screen's FXML file.", e.getClass().toString()));
         }
     }
 
