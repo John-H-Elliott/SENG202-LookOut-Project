@@ -3,7 +3,9 @@ package seng202.group7.controllers.menus;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Objects;
@@ -17,7 +19,6 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -85,13 +86,15 @@ public class FilterMenuController implements Initializable {
         try {
             List<String> crimeTypes = DataAccessor.getInstance().getColumnString("primary_description", "");
             for (String type: crimeTypes) {
-                this.primaryBox.getItems().add(type);
+                primaryBox.getItems().add(type);
             }
+            primaryBox.getItems().add(null);
             primaryBox.getItems().sort(null);
             List<String> locationTypes = DataAccessor.getInstance().getColumnString("location_description", "");
             for (String type: locationTypes) {
-                this.locationBox.getItems().add(type);
+                locationBox.getItems().add(type);
             }
+            locationBox.getItems().add(null);
             locationBox.getItems().sort(null);
 
         } catch (CustomException e) {
@@ -117,21 +120,20 @@ public class FilterMenuController implements Initializable {
         allValues = Arrays.asList(datePicker, dateText, primaryBox, locationBox, wardField, beatField,
         arrestBox, domesticBox);
         
-        datePicker.valueProperty().addListener((observable, oldDate, newDate)->{
-            if(datePicker.getValue() == null){
-                return;
-            }
-            DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
-            dateText.setText(datePicker.getValue().format(dateTimeFormat));
-            InputValidator.validate(dateText);
+        dateText.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
+                LocalDate date = LocalDate.parse(dateText.getText(), dateTimeFormat);
+                datePicker.setValue(date);
+            } catch (DateTimeParseException ignored) {}
         });
-        datePicker2.valueProperty().addListener((observable, oldDate, newDate)->{
-            if(datePicker2.getValue() == null){
-                return;
-            }
-            DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
-            dateText2.setText(datePicker2.getValue().format(dateTimeFormat));
-            InputValidator.validate(dateText2);
+
+        dateText2.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
+                LocalDate date = LocalDate.parse(dateText2.getText(), dateTimeFormat);
+                datePicker2.setValue(date);
+            } catch (DateTimeParseException ignored) {}
         });
 
         InputValidator.addValidation(wardField, InputType.INTEGER);
@@ -162,7 +164,7 @@ public class FilterMenuController implements Initializable {
     }
 
     /**
-     * clears the current filter fields and clears filter from table
+     * Clears the current filter fields and clears filter from table
      * @param event   The event action that was triggered.
      */
     public void clearFilter(ActionEvent event) {
@@ -262,7 +264,7 @@ public class FilterMenuController implements Initializable {
         // As the side panels root is the main border panel we use .getRoot().
         try {
             BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
-            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/generalMenu.fxml")));
+            Node menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/generalMenu.fxml")));
             // Changes side menu to the filter menu.
             pane.setLeft(menuItems);
         } catch (IOException | NullPointerException e) {

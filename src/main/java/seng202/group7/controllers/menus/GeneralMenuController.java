@@ -76,11 +76,22 @@ public class GeneralMenuController {
         if (file == null) {
             return;
         }
-        String behavior = duplicateSelection();
+        String behavior;
         boolean skipBadValue;
         if (file.getName().endsWith(".csv")) {
             skipBadValue = badValueSelection();
+            behavior = duplicateSelection();
         } else {
+            try {
+                if (DataAccessor.getInstance().getSize(ControllerData.getInstance().getCurrentList(), "") != 0){
+                    behavior = duplicateSelection();
+                } else {
+                    behavior = "REPLACE";
+                }
+            } catch (CustomException e) {
+                MainScreen.createWarnWin(e);
+                return;
+            }
             skipBadValue = false;
         }
         new Thread(() -> {
@@ -162,21 +173,21 @@ public class GeneralMenuController {
     /**
      * Gets the conditions the user has active and the location to save a new file before sending it to the DataAccessor to export
      */
-    public void exportWithFilter(ActionEvent event) {
+    public void exportWithFilter() {
         String conditions = ControllerData.getInstance().getWhereQuery();
         File saveLocation = getLocation();
         if (saveLocation == null) {
             return;
         }
         new Thread(() -> {
-            Platform.runLater(()->((Node) event.getTarget()).getScene().setCursor(Cursor.WAIT));
+            Platform.runLater(()->sideMenu.getScene().setCursor(Cursor.WAIT));
 
             try {
                 DataAccessor.getInstance().export(conditions, ControllerData.getInstance().getCurrentList(), saveLocation.toString());
             } catch (CustomException e) {
                 Platform.runLater(()->MainScreen.createWarnWin(e));
             }
-            Platform.runLater(()->((Node) event.getTarget()).getScene().setCursor(Cursor.DEFAULT));
+            Platform.runLater(()->sideMenu.getScene().setCursor(Cursor.DEFAULT));
             
         }).start();
     }
@@ -189,11 +200,17 @@ public class GeneralMenuController {
         if (saveLocation == null) {
             return;
         }
-        try {
-            DataAccessor.getInstance().export("", ControllerData.getInstance().getCurrentList(), saveLocation.toString());
-        } catch (CustomException e) {
-            MainScreen.createWarnWin(e);
-        }
+        new Thread(() -> {
+            Platform.runLater(()->sideMenu.getScene().setCursor(Cursor.WAIT));
+
+            try {
+                DataAccessor.getInstance().export("", ControllerData.getInstance().getCurrentList(), saveLocation.toString());
+            } catch (CustomException e) {
+                Platform.runLater(()->MainScreen.createWarnWin(e));
+            }
+            Platform.runLater(()->sideMenu.getScene().setCursor(Cursor.DEFAULT));
+            
+        }).start();
     }
 
     /**

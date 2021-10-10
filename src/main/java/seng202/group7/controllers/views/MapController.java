@@ -74,7 +74,9 @@ public class MapController implements Initializable {
     public static void updatePins(WebView map) {
         // Gets the current set of reports based on the pagination's current page.
         try {
-            List<Report> reports = DataAccessor.getInstance().getPageSet(ControllerData.getInstance().getCurrentList());
+            ControllerData data = ControllerData.getInstance();
+            List<Report> reports = DataAccessor.getInstance().getPageSet(data.getCurrentList(),
+                data.getCurrentPage(), data.getWhereQuery());
             String scriptToExecute = "importData(" + toJSONArray(reports) + ");";
             map.getEngine().executeScript(scriptToExecute);
         } catch (CustomException e) {

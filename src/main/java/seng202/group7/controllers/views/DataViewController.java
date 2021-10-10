@@ -196,7 +196,9 @@ public class DataViewController implements Initializable {
     private void setTableContent() {
         // Gets the current set of reports based on the pagination's current page.
         try {
-            List<Report> reports = DataAccessor.getInstance().getPageSet(ControllerData.getInstance().getCurrentList());
+            ControllerData controllerData = ControllerData.getInstance();
+            List<Report> reports = DataAccessor.getInstance().getPageSet(controllerData.getCurrentList(),
+                controllerData.getCurrentPage(), controllerData.getWhereQuery());
             List<Crime> crimes = new ArrayList<>();
             reports.forEach(report -> crimes.add((Crime) report));
             ObservableList<Crime> data = FXCollections.observableList(crimes);

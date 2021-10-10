@@ -58,7 +58,8 @@ public class PageController implements Initializable {
             if (newParent != null) {
                 int size;
                 try {
-                    size = DataAccessor.getInstance().getSize(ControllerData.getInstance().getCurrentList());
+                    size = DataAccessor.getInstance().getSize(ControllerData.getInstance().getCurrentList(),
+                        ControllerData.getInstance().getWhereQuery());
                 } catch (CustomException e) {
                     MainScreen.createErrorWin(e);
                     return;

@@ -70,7 +70,7 @@ public class DataAccessorTest {
     @Test
     public void checkSize() {
         try {
-            assertEquals(accessor.getSize(1), 1);
+            assertEquals(accessor.getSize(1, ""), 1);
         } catch (CustomException e) {
             fail();
         }
@@ -119,6 +119,12 @@ public class DataAccessorTest {
     public void importDBTest() {
         try {
             accessor.importFile(new File("src/test/files/TestImporting.db"), 1, "REPLACE", true);
+        } catch (CustomException e1) {
+            if (!e1.getMessage().contains("complete")) {
+                fail("Database failed to read db file");
+            }
+        }
+        try {
             Crime crime = accessor.getCrime("TestNumber", 1);
             assertEquals(crime.getId(), "TestNumber");
         } catch (CustomException e) {
@@ -141,7 +147,7 @@ public class DataAccessorTest {
     @Test
     public void pageSetTest() {
         try {
-            List<Report> reports = accessor.getPageSet(1);
+            List<Report> reports = accessor.getPageSet(1, 0, "");
             assertEquals(((Crime) reports.get(0)).getId(), "TestNumber");
         } catch (CustomException e) {
             fail();

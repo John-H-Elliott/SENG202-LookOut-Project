@@ -4,8 +4,6 @@ import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import seng202.group7.controllers.data.ControllerData;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -147,11 +145,10 @@ public final class DataAccessor {
      * @return Size     The number of entries.
      * @throws CustomException
      */
-    public int getSize(int listId) throws CustomException {
-        String condition = ControllerData.getInstance().getWhereQuery();
+    public int getSize(int listId, String conditions) throws CustomException {
         // See how many entries are in the view crimedb.
-        String query = "SELECT COUNT(*) FROM crimedb WHERE "+ condition;
-        if (!condition.isEmpty()) {
+        String query = "SELECT COUNT(*) FROM crimedb WHERE "+ conditions;
+        if (!conditions.isEmpty()) {
             query += " AND";
         }
         query += " list_id=" + listId +";";
@@ -172,10 +169,7 @@ public final class DataAccessor {
      * @return reports      The list of reports to display.
      * @throws CustomException
      */
-    public List<Report> getPageSet(int listId) throws CustomException {
-        ControllerData connData = ControllerData.getInstance();
-        String condition = connData.getWhereQuery();
-        int page = connData.getCurrentPage();
+    public List<Report> getPageSet(int listId, int page, String condition) throws CustomException {
         // This only get 1000 reports per page of the paginator.
         int start = page * 1000;
         int end = 1000;
@@ -343,7 +337,7 @@ public final class DataAccessor {
             runStatement("COMMIT;");
         } catch (SQLException e) {
             if (e.getMessage().contains("(cannot start a transaction within a transaction)")) {
-                throw new CustomException("Database is busy. Please wait until the current action is completed.", e.getMessage());
+                throw new CustomException("Database is busy. Please wait until the current action is finished.", e.getMessage());
             }
             throw new CustomException("Could not delete entry.", e.getMessage());
         }
@@ -384,9 +378,11 @@ public final class DataAccessor {
                 "ward " + 
                 "FROM newReportDB.crimes");
 
+            throw new CustomException("Import complete.", "Import complete");
+
         } catch (SQLException e) {
             if (e.getMessage().contains("(cannot start a transaction within a transaction)")) {
-                throw new CustomException("Database is busy. Please wait until the current action is completed.", e.getMessage());
+                throw new CustomException("Database is busy. Please wait until the current action is finished.", e.getMessage());
             }
             if (e.getMessage().contains("(UNIQUE constraint failed: reports.list_id, reports.id)")) {
                 throw new CustomException("Duplicate data detected.", e.getMessage());
@@ -442,7 +438,7 @@ public final class DataAccessor {
             new CustomException("Error reading to database.", e.getMessage());
         } catch (SQLException e) {
             if (e.getMessage().contains("(cannot start a transaction within a transaction)")) {
-                throw new CustomException("Database is busy. Please wait until the current action is completed.", e.getMessage());
+                throw new CustomException("Database is busy. Please wait until the current action is finished.", e.getMessage());
             }
             throw new CustomException("Error writing to database.", e.getMessage());
         }
@@ -490,7 +486,7 @@ public final class DataAccessor {
 
         } catch (SQLException e) {
             if (e.getMessage().contains("(cannot start a transaction within a transaction)")) {
-                throw new CustomException("Database is busy. Please wait until the current action is completed.", e.getMessage());
+                throw new CustomException("Database is busy. Please wait until the current action is finished.", e.getMessage());
             }
             throw new CustomException("Error updating crime in the database.", e.getMessage());
         }
@@ -537,7 +533,7 @@ public final class DataAccessor {
                 // Commits the changes and re-enables the auto commit.
             } catch (SQLException e) {
                 if (e.getMessage().contains("(cannot start a transaction within a transaction)")) {
-                    throw new CustomException("Database is busy. Please wait until the current action is completed.", e.getMessage());
+                    throw new CustomException("Database is busy. Please wait until the current action is finished.", e.getMessage());
                 }
                 runStatement("ROLLBACK;");
                 throw new CustomException("Error writing to the database.", e.getMessage());
@@ -615,7 +611,7 @@ public final class DataAccessor {
             runStatement("COMMIT;");
         } catch (SQLException e) {
             if (e.getMessage().contains("(cannot start a transaction within a transaction)")) {
-                throw new CustomException("Database is busy. Please wait until the current action is completed.", e.getMessage());
+                throw new CustomException("Database is busy. Please wait until the current action is finished.", e.getMessage());
             }
             throw new CustomException("Unable to create a new list.", e.getMessage());
         }
