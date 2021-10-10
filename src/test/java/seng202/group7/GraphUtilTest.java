@@ -80,12 +80,19 @@ public class GraphUtilTest {
         assertEquals("S DR MARTIN LUTHER KING JR DR", list.get(list.size() - 1).x);
     }
 
+    /**
+     * Tests to see the correct beat value is returned ("1") is returned as it highest the highest crime rate
+     */
     @Test
     public void beatFrequencyRankTest() {
         List<Tuple<String, Integer>> list = GraphUtil.beatFrequencyRank(data);
         assertEquals("1", list.get(list.size() - 1).x);
     }
 
+    /**
+     * Tests to the correct number of crime frequency values are added to the list between the first and last date value in the list
+     * of reports
+     */
     @Test
     public void getDateListTest_General() {
         List<CrimeFrequency> dateList = GraphUtil.getDateList(data);
@@ -94,24 +101,36 @@ public class GraphUtilTest {
         assertEquals("2 2021", dateList.get(dateList.size() -1).getDate());
     }
 
+    /**
+     * Tests to see the correct number of crime frequency values are added to a list from a single value report list
+     */
     @Test
     public void getDateListTest_OneValue() {
         List<CrimeFrequency> dateList = GraphUtil.getDateList(data2);
         assertEquals(1, dateList.size());
     }
 
+    /**
+     * Tests to see the correct number of crime frequency values are added to a list from a two of the same value report list
+     */
     @Test
     public void getDateListTest_TwoSameValue() {
         List<CrimeFrequency> dateList = GraphUtil.getDateList(data3);
         assertEquals(1, dateList.size());
     }
 
+    /**
+     * Tests to see the correct number of crime frequency values are added to a list from a zero value report list
+     */
     @Test
     public void getDateListTest_NoValue() {
         List<CrimeFrequency> dateList = GraphUtil.getDateList(data4);
         assertEquals(0, dateList.size());
     }
 
+    /**
+     * Tests to see the correct frequency values are added to a list of crime frequencies from the crime over time method
+     */
     @Test
     public void crimeOverTime_General() {
         List<CrimeFrequency> crimeOverTime = GraphUtil.crimeOverTime(data);
@@ -121,12 +140,19 @@ public class GraphUtilTest {
         assertEquals(0, crimeOverTime.get(1).getFrequency());
     }
 
+    /**
+     * Tests to see the correct frequency values are added to a list of crime frequencies from the crime over time method
+     *when a list of zero values is used
+     */
     @Test
     public void CrimeOVerTime_NoValue() {
         List<CrimeFrequency> crimeOverTime = GraphUtil.crimeOverTime(data4);
         assertEquals(0, crimeOverTime.size());
     }
 
+    /**
+     * Checks to see the correct title is returned from the get title method.
+     */
     @Test
     public void getTitleTest() {
         List<String> choices = new ArrayList<>();

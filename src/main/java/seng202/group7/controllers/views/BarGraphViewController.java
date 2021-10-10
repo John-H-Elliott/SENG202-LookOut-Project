@@ -41,7 +41,7 @@ public class BarGraphViewController  {
     public void prepareBarGraph(String option) {
         List<Report> data;
         try {
-            data = DataAccessor.getInstance().getAll(ControllerData.getInstance().getCurrentList());
+            data = DataAccessor.getInstance().getAll(ControllerData.getInstance().getCurrentList()); //Gets all the data from the current list
         } catch (CustomException e) {
             MainScreen.createWarnWin(e);
             return;
@@ -49,35 +49,35 @@ public class BarGraphViewController  {
         List<Tuple<String, Integer>> dataSet;
         switch (option) {
             case "Most Frequent Crime Types" -> {
-                dataSet = GraphUtil.primaryFrequencyRank(data);
-                Collections.reverse(dataSet);
+                dataSet = GraphUtil.primaryFrequencyRank(data); //Ranks by crime type frequency
+                Collections.reverse(dataSet); //Reverses the list so the tuples with the highest value are first
                 generateBarGraph(dataSet, "Most Frequent Types of Crime", "Crime Types", "Number of Crime");
             }
             case "Most Dangerous Wards" -> {
-                dataSet = GraphUtil.wardFrequencyRank(data);
-                Collections.reverse(dataSet);
+                dataSet = GraphUtil.wardFrequencyRank(data); //Ranks by crime in each ward frequency
+                Collections.reverse(dataSet); //Reverses the list so the tuples with the highest freq value are first
                 generateBarGraph(dataSet, "Most Dangerous Wards", "Wards", "Number of Crime");
             }
             case "Most Dangerous Streets" -> {
-                dataSet = GraphUtil.streetRank(data);
-                Collections.reverse(dataSet);
+                dataSet = GraphUtil.streetRank(data); //Ranks by sub string of block so crime in each street frequency
+                Collections.reverse(dataSet); //Reverses the list so the tuples with the highest freq value are first
                 generateBarGraph(dataSet, "Most Dangerous Streets", "Streets", "Number of Crime");
             }
             case "Most Dangerous Beats" -> {
-                dataSet = GraphUtil.beatFrequencyRank(data);
-                Collections.reverse(dataSet);
+                dataSet = GraphUtil.beatFrequencyRank(data); //Ranks by crime in each bea frequency
+                Collections.reverse(dataSet); //Reverses the list so the tuples with the highest freq value are first
                 generateBarGraph(dataSet, option, "Beats", "Number of Crime");
             }
             case "Less Frequent Crime Types" -> {
-                dataSet = GraphUtil.primaryFrequencyRank(data);
+                dataSet = GraphUtil.primaryFrequencyRank(data); //Ranks by crime type frequency
                 generateBarGraph(dataSet, option, "Crime Types", "Number of Crime");
             }
             case "Safest Wards" -> {
-                dataSet = GraphUtil.wardFrequencyRank(data);
+                dataSet = GraphUtil.wardFrequencyRank(data); //Ranks by crime in each ward frequency
                 generateBarGraph(dataSet, option, "Wards", "Number of Crime");
             }
             case "Safest Beats" -> {
-                dataSet = GraphUtil.beatFrequencyRank(data);
+                dataSet = GraphUtil.beatFrequencyRank(data); //Ranks by crime in each bea frequency
                 generateBarGraph(dataSet, option, "Beats", "Number of Crimes");
             }
         }
@@ -88,7 +88,7 @@ public class BarGraphViewController  {
      *
      * @param data      The List of String integer tuples from Rank class
      * @param title     The String title of the graph
-     * @param xLabel    The x axis label of the graph
+     * @param xLabel    The x axis label of the graphS
      * @param yLabel    The y axis label of the graph
      */
 

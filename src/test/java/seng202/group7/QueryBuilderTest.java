@@ -46,6 +46,9 @@ public class QueryBuilderTest {
         assertEquals("", query);
     }
 
+    /**
+     * Tests to see the correct query is constructed given the parameters crime type: THEFT, ward: null and beat: null
+     */
     @Test
     public void constructGraphQueryTest() {
         List<String> choices = new ArrayList<>();
@@ -56,6 +59,9 @@ public class QueryBuilderTest {
         assertEquals("SELECT * FROM crimedb WHERE list_id=1 AND primary_description='THEFT' ORDER BY date ASC;", query);
     }
 
+    /**
+     * Tests to see the correct query is constructed given the parameters crime type: FRAUD, ward: 1 and beat: null
+     */
     @Test
     public void constructGraphQueryTest_TypeWard() {
         List<String> choices = new ArrayList<>();
@@ -66,6 +72,9 @@ public class QueryBuilderTest {
         assertEquals("SELECT * FROM crimedb WHERE list_id=1 AND primary_description='FRAUD' AND ward=1 ORDER BY date ASC;", query);
     }
 
+    /**
+     * Tests to see the correct query is constructed given the parameters crime type: HELLO, ward: 1 and beat: 2
+     */
     @Test
     public void constructGraphQueryTest_TypeWardBeat() {
         List<String> choices = new ArrayList<>();

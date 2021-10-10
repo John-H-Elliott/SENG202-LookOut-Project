@@ -40,7 +40,7 @@ public class LineGraphViewController  {
     public void prepareLineGraph(String query, List<String> choices) {
         List<Report> sortedData;
         try {
-            sortedData = DataAccessor.getInstance().getData(query);
+            sortedData = DataAccessor.getInstance().getData(query); //Gets the sorted data from the Database
         } catch (CustomException e) {
             MainScreen.createWarnWin(e);
             System.out.println(query);
@@ -48,12 +48,12 @@ public class LineGraphViewController  {
             return;
         }
         List<CrimeFrequency> crimeOverTime = GraphUtil.crimeOverTime(sortedData);
-        String title = GraphUtil.getTitle(choices);
+        String title = GraphUtil.getTitle(choices); //Gets the title from graph util
         XYChart.Series<String, Integer> dataSet = new XYChart.Series<>();
         for (CrimeFrequency freq: crimeOverTime) {
-            dataSet.getData().add(new XYChart.Data<> (freq.getDate(), freq.getFrequency()));
+            dataSet.getData().add(new XYChart.Data<> (freq.getDate(), freq.getFrequency())); //Adds each value into the chart
         }
-        this.overTimeChart.setLegendVisible(false);
+        this.overTimeChart.setLegendVisible(false); //Adds the correct values to the view
         this.overTimeChart.getData().add(dataSet);
         this.overTimeChart.setTitle(title);
         this.xAxis.setLabel("Date");

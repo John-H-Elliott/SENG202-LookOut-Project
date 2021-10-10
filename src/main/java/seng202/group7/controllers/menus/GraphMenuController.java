@@ -7,14 +7,14 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
-import seng202.group7.controllers.data.ControllerData;
+
 import seng202.group7.controllers.views.BarGraphViewController;
 import seng202.group7.controllers.views.LineGraphViewController;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
-import seng202.group7.data.FilterConditions;
 import seng202.group7.data.QueryBuilder;
 import seng202.group7.view.MainScreen;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -50,7 +50,8 @@ public class GraphMenuController implements Initializable {
 
 
     /**
-     * This method is run during the loading of the graph menu fxml file.
+     * This method is run during the loading of the graph menu fxml file. Uses a query to scan the database and gives
+     * the user the available choices for crime type and ward in the combo boxes
      * @param location      A URL object.
      * @param resources     A ResourceBundle object.
      */
@@ -70,14 +71,14 @@ public class GraphMenuController implements Initializable {
 
         this.crimeType.getItems().add(null);
         for (String type: crimeType) {
-            this.crimeType.getItems().add(type);
+            this.crimeType.getItems().add(type); //adding crime types
         }
 
         this.wardField.getItems().add(null);
         for (Integer ward: wards) {
-            this.wardField.getItems().add(String.valueOf(ward));
+            this.wardField.getItems().add(String.valueOf(ward)); //adding ward values
         }
-        graphType.getItems().add("Most Frequent Crime Types");
+        graphType.getItems().add("Most Frequent Crime Types"); //adding bar graph options
         graphType.getItems().add("Most Dangerous Wards");
         graphType.getItems().add("Most Dangerous Beats");
         graphType.getItems().add("Most Dangerous Streets");

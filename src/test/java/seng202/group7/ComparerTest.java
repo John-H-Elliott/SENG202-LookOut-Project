@@ -79,7 +79,7 @@ public class ComparerTest {
     }
 
     /**
-     * Test the locationDifference with the same value to ensure it returns 0
+     * Tests the locationDifference with the same value to ensure it returns 0
      */
     @Test
     public void locationDifference_boundaryCase() {
@@ -87,24 +87,36 @@ public class ComparerTest {
         assertEquals(0, difference);
     }
 
+    /**
+     * Tests the location difference between two null values
+     */
     @Test
     public void locationDifferenceTest_BothVoid() {
         Double difference = Comparer.locationDifference(reportFour, reportFour);
         assertEquals(-3, difference);
     }
 
+    /**
+     * Tests the location difference between a void and valid value
+     */
     @Test
     public void locationDifferenceTest_FirstVoid() {
         Double difference = Comparer.locationDifference(reportFour, reportOne);
         assertEquals(-1, difference);
     }
 
+    /**
+     * Tests the location between a valid and void value
+     */
     @Test
     public void locationDifferenceTest_SecondVoid() {
         Double difference = Comparer.locationDifference(reportOne, reportFour);
         assertEquals(-2, difference);
     }
 
+    /**
+     * Tests the location values between between a void and default value
+     */
     @Test
     public void locationDifferenceTest_FirstVoidSecondDefault() {
         Double difference = Comparer.locationDifference(reportFour, reportFive);
