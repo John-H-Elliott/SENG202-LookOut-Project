@@ -1,6 +1,5 @@
 package seng202.group7.controllers.views;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;

@@ -156,13 +156,9 @@ public final class DataAccessor {
         }
         query += " list_id=" + listId +";";
         int size = 0;
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
+        try (Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(query);) {
             size = rs.getInt(1);
-            // Closes the statement and result set.
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             throw new CustomException("Error getting size of the database.", e.getMessage());
         }
@@ -217,15 +213,13 @@ public final class DataAccessor {
     public List<String> getColumnString(String column, String conditions) throws CustomException {
         List<String> crimeTypeList = new ArrayList<>();
         String query = "SELECT DISTINCT " +column+ " from crimedb " + conditions;
-        try (Statement stmt = connection.createStatement()) {
-            ResultSet rs = stmt.executeQuery(query);
+        try (Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(query);) {
             // Converts all results into crimes.
             while (rs.next()) {
                 String columnString = rs.getString(column);
                 crimeTypeList.add(columnString);
             }
-            // Closes the statement and result set.
-            rs.close();
         } catch (SQLException e) {
             throw new CustomException("Could not find column " + column + " in active database.", e.getMessage());
         }
@@ -242,15 +236,13 @@ public final class DataAccessor {
     public ArrayList<Integer> getColumnInteger(String column, String conditions) throws CustomException {
         ArrayList<Integer> crimeTypeList = new ArrayList<>();
         String query = "SELECT DISTINCT " +column+ " from crimedb " + conditions;
-        try (Statement stmt = connection.createStatement()) {
-            ResultSet rs = stmt.executeQuery(query);
+        try (Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(query);) {
             // Converts all results into crimes.
             while (rs.next()) {
                 Integer columnInteger = rs.getInt(column);
                 crimeTypeList.add(columnInteger);
             }
-            // Closes the statement and result set.
-            rs.close();
         } catch (SQLException e) {
             throw new CustomException("Could not find column " + column + " in active database.", e.getMessage());
         }
@@ -266,17 +258,13 @@ public final class DataAccessor {
      */
     private List<Report> selectReports(String query) throws CustomException {
         List<Report> reports = new ArrayList<>();
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
+        try (Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(query);){
             // Converts all results into crimes.
             while (rs.next()) {
                 Report crime = generateReport(rs);
                 reports.add(crime);
             }
-            // Closes the statement and result set.
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             throw new CustomException("Error getting set of reports from the database.", e.getMessage());
         }
@@ -321,21 +309,20 @@ public final class DataAccessor {
      */
     public Crime getCrime(String entry, int listId) throws CustomException {
         Crime crime = null;
-        try {
-            PreparedStatement psReport = connection.prepareStatement("SELECT " + 
+        try (PreparedStatement psReport = connection.prepareStatement("SELECT " + 
             "id, list_id, date, primary_description, secondary_description, domestic, " +
             "x_coord, y_coord, latitude, longitude, location_description, block, iucr, fbicd, arrest, beat, ward" +
-            " FROM crimedb WHERE id=? AND list_id=?;");
+            " FROM crimedb WHERE id=? AND list_id=?;");) {
+            
             psReport.setString(1, entry);
             psReport.setInt(2, listId);
+            
             ResultSet rs = psReport.executeQuery();
-
             while (rs.next()) {
                 crime = (Crime) generateReport(rs);
             }
             
-            // Closes the statement.
-            psReport.close();
+            // Closes the result set.
             rs.close();
         } catch (SQLException e) {
             throw new CustomException("Error getting single crime from the database.", e.getMessage());
@@ -422,9 +409,11 @@ public final class DataAccessor {
      * @throws SQLException
      */
     private void runStatement(String query) throws SQLException {
-        Statement stmt = connection.createStatement();
-        stmt.execute(query);
-        stmt.close();
+        try (Statement stmt = connection.createStatement();) {
+            stmt.execute(query);
+        } catch (SQLException e) {
+            throw e;
+        }
     }
 
     /**
@@ -639,15 +628,11 @@ public final class DataAccessor {
      */
     public ObservableList<String> getLists() throws CustomException {
         List<String> lists = new ArrayList<>();
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT name FROM lists");
+        try (Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT name FROM lists");) {
             while (rs.next()) {
                 lists.add(rs.getString("name"));
             }
-            // Closes the statement and result set.
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             throw new CustomException("Error getting the list of reports.", e.getMessage());
         }
@@ -662,12 +647,10 @@ public final class DataAccessor {
      * @throws CustomException
      */
     public void renameList(String oldName, String newName) throws CustomException {
-        try {
-            PreparedStatement psList = connection.prepareStatement("UPDATE lists SET name=? WHERE name=?;");
+        try (PreparedStatement psList = connection.prepareStatement("UPDATE lists SET name=? WHERE name=?;");) {
             psList.setString(1, newName);
             psList.setString(2, oldName);
             psList.execute();
-            psList.close();
         } catch (SQLException e) {
             throw new CustomException("List name already being used.", e.getMessage());
         }  
@@ -687,7 +670,7 @@ public final class DataAccessor {
             while(lists.next()) {
                 listId = lists.getInt("id");
             }
-            // Closes the statement and result set.
+            // Closes the result set.
             lists.close();
         } catch (SQLException e) {
             throw new CustomException("Error getting the list ID.", e.getMessage());

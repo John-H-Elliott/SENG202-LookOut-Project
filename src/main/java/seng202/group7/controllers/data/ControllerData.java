@@ -2,14 +2,9 @@ package seng202.group7.controllers.data;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;
-import seng202.group7.data.Crime;
-import seng202.group7.data.CustomException;
-import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
 import java.io.File;
-import java.sql.SQLException;
 import java.util.List;
-
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.stage.FileChooser;
