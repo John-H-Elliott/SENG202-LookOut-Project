@@ -210,9 +210,8 @@ public class StartScreenController implements Initializable {
         fade.play();
     }
 
-
     /**
-     * Loads the next scene, menu.fxml, onto the stage.
+     * Loads the next scene, mainMenu.fxml, onto the stage.
      * This is the start of the main application.
      *
      * @param stage             The event action that was triggered.
