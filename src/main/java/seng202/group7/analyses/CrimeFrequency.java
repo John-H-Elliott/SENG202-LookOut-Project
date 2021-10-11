@@ -7,8 +7,8 @@ package seng202.group7.analyses;
 
 public class CrimeFrequency {
 
-    public String date;
-    public int frequency;
+    private String date;
+    private int frequency;
 
     public CrimeFrequency(String date, int frequency) {
         this.date = date;

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
- * a class used to encapsulate the fields that data can be sorted by.
+ * a class used to encapsulate the fields that data can be filtered by.
  * @author Shaylin Simadari
  */
 public class FilterConditions implements Serializable {
@@ -32,8 +32,16 @@ public class FilterConditions implements Serializable {
                             Integer ward, Integer beat, Boolean arrest, Boolean domestic) {
         this.dateFrom = dateFrom;
         this.dateTo = dateTo;
-        this.primaryDescription = primaryDescription;
-        this.locationDescription = locationDescription;
+        if (primaryDescription != null) {
+            this.primaryDescription = primaryDescription.replace("'", "''");
+        } else {
+            this.primaryDescription = null;
+        }
+        if (locationDescription != null) {
+            this.locationDescription = locationDescription.replace("'", "''");
+        } else {
+            this.locationDescription = null;
+        }
         this.ward = ward;
         this.beat = beat;
         this.arrest = arrest;

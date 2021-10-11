@@ -35,16 +35,14 @@ public final class Serializer {
      * @throws CustomException  Error deserializing file.
      */
     public static FilterConditions deserialize(File file) throws CustomException{
-        FilterConditions typedObj;
+        FilterConditions filterConditions;
         try (FileInputStream fileIn = new FileInputStream(file);
             ObjectInputStream inputStream = new ObjectInputStream(fileIn)) {
             Object object = inputStream.readObject();
-
-            typedObj = (FilterConditions) object;
-
+            filterConditions = (FilterConditions) object;
         } catch (IOException | ClassNotFoundException e) {
             throw new CustomException("Failed to read filter from selected file.", e.getMessage());
         }
-        return typedObj;
+        return filterConditions;
     }
 }
