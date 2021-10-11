@@ -1,4 +1,4 @@
-package seng202.group7.controllers.views;
+package seng202.group7.controllers.menus;
 
 import java.io.IOException;
 import java.net.URL;
