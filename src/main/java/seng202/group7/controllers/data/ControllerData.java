@@ -129,8 +129,7 @@ public final class ControllerData {
 
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         // Launches the file chooser.
-        File selectedFile = fileChooser.showOpenDialog(stage);
-        return selectedFile;
+        return fileChooser.showOpenDialog(stage);
     }
 
 

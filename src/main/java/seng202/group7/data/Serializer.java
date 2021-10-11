@@ -18,7 +18,7 @@ public final class Serializer {
     /**
      * Serializes a FilterConditions object into a file
      * @param file The file to write the FilterConditions object to
-     * @throws CustomException
+     * @throws CustomException  Error serializing file.
      */
     public static void serialize(File file, FilterConditions object) throws CustomException {
         try (FileOutputStream fileOut = new FileOutputStream(file);
@@ -32,10 +32,10 @@ public final class Serializer {
     /**
      * Deserializes a FilterConditions object from a file
      * @param file The file from which to get the FilterConditions object
-     * @throws CustomException
+     * @throws CustomException  Error deserializing file.
      */
     public static FilterConditions deserialize(File file) throws CustomException{
-        FilterConditions typedObj = null;
+        FilterConditions typedObj;
         try (FileInputStream fileIn = new FileInputStream(file);
             ObjectInputStream inputStream = new ObjectInputStream(fileIn)) {
             Object object = inputStream.readObject();

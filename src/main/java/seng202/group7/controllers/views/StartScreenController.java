@@ -43,8 +43,6 @@ public class StartScreenController implements Initializable {
     private Node rootPane;
 
     @FXML
-    private Node newList;
-    @FXML
     private Node delete;
     @FXML
     private Node rename;
@@ -80,18 +78,15 @@ public class StartScreenController implements Initializable {
         listNames.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
         setListNames();
 
-        table.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override 
-            public void handle(MouseEvent event) {
-                if (event.isPrimaryButtonDown() && event.getClickCount() == 1) {
-                    selectedList = table.getSelectionModel().getSelectedItem();
-                    listSelected(selectedList != null);
-                }
-                if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-                    Node node = ((Node) event.getTarget()).getParent();
-                    if (node instanceof TableRow && ((TableRow<?>) node).getItem() != null ){
-                        loadList();                   
-                    }
+        table.setOnMousePressed(event -> {
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 1) {
+                selectedList = table.getSelectionModel().getSelectedItem();
+                listSelected(selectedList != null);
+            }
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+                Node node = ((Node) event.getTarget()).getParent();
+                if (node instanceof TableRow && ((TableRow<?>) node).getItem() != null ){
+                    loadList();
                 }
             }
         });
@@ -99,7 +94,6 @@ public class StartScreenController implements Initializable {
 
     /**
      * Adds all lists in the database to the list table
-     * @throws CustomException
      */
     private void setListNames() {
         ObservableList<String> lists;

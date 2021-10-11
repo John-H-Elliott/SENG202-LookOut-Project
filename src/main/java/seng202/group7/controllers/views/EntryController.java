@@ -228,8 +228,6 @@ public class EntryController implements Initializable {
 
         pane.setCenter(lastFrame);
 
-        // ControllerData controllerData = ControllerData.getInstance();
-        // Node table = controllerData.getTableState();
     }
 
     /**
@@ -380,7 +378,7 @@ public class EntryController implements Initializable {
 
     /**
      * Sets the last frame the application was on.
-     * @param lastFrame
+     * @param lastFrame The last frame to return to when the bck button is pressed.
      */
     public void setLastFrame(Node lastFrame) {
         this.lastFrame = lastFrame;

@@ -273,6 +273,9 @@ public class FilterMenuController implements Initializable {
 
     }
 
+    /**
+     * Loads the fields in from a file.
+     */
     private void loadGUIFields(){
         if(filterConditions == null){
             return;
@@ -287,6 +290,9 @@ public class FilterMenuController implements Initializable {
         domesticBox.setValue(filterConditions.getDomestic() == null ? null : filterConditions.getDomestic() ? "Y" : "N");
     }
 
+    /**
+     * Saves the fields to a file.
+     */
     private void saveGUIFields(){
         filterConditions = new FilterConditions(
                 datePicker.getValue(),
