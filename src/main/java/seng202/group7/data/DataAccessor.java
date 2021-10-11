@@ -827,6 +827,7 @@ public final class DataAccessor {
             
             stmt.execute("PRAGMA foreign_keys = ON;");
 
+            stmt.execute("DROP TABLE reports;");
             stmt.execute("CREATE TABLE reports (" + 
                     "id VARCHAR(8) NOT NULL, " + 
                     "date TIMESTAMP NOT NULL, " +
@@ -840,6 +841,7 @@ public final class DataAccessor {
                     "location_description VARCHAR(50), " +
                     "PRIMARY KEY(id) " +
                     ")");
+            stmt.execute("DROP TABLE crimes;");
             stmt.execute("CREATE TABLE crimes (" + 
                     "report_id VARCHAR(8) NOT NULL, " +
                     "block VARCHAR(50), " +

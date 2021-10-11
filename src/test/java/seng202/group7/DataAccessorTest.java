@@ -151,4 +151,69 @@ public class DataAccessorTest {
         }
     }
 
+    @Test
+    public void import_threadConflict() {
+        new Thread(() -> {
+            try {
+                accessor.importFile(new File("src/test/files/testCSV.csv"), 1, "REPLACE", true);
+            } catch (CustomException e) {
+                fail("Base thread failed");
+            }
+        }).start();
+        new Thread(() -> {
+            try {
+                accessor.importFile(new File("src/test/files/testCSV.csv"), 1, "REPLACE", true);
+                fail();
+            } catch (CustomException e) {
+                if (!e.getMessage().contains("busy")) {
+                    fail();
+                }
+            }
+        }).start();
+    }
+
+    @Test
+    public void exportTest_db() {
+        try {
+            accessor.importFile(new File("src/test/files/testCSV.csv"), 1, "REPLACE", true);
+        } catch (CustomException e) {}
+        try {
+            accessor.export("", 1, "src/test/files/testExport.db");
+        } catch (CustomException e) {
+            fail();
+        }
+        try {
+            accessor.importFile(new File("src/test/files/testExport.db"), 1, "REPLACE", true);
+        } catch (CustomException e) {
+        }
+        try {
+            Crime crime = accessor.getCrime("JE163990", 1);
+            assertEquals("JE163990", crime.getId());
+        } catch (CustomException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void exportTest_csv() {
+        try {
+            accessor.importFile(new File("src/test/files/testCSV.csv"), 1, "REPLACE", true);
+        } catch (CustomException e) {}
+        try {
+            accessor.export("", 1, "src/test/files/testExport.csv");
+        } catch (CustomException e) {
+            fail();
+        }
+        try {
+            accessor.importFile(new File("src/test/files/testExport.csv"), 1, "REPLACE", true);
+        } catch (CustomException e) {
+        }
+        try {
+            Crime crime = accessor.getCrime("JE163990", 1);
+            assertEquals("JE163990", crime.getId());
+        } catch (CustomException e) {
+            fail(e.getMessage());
+        }
+    }
+
 }
