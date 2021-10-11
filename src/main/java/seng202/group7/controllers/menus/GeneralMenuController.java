@@ -98,6 +98,7 @@ public class GeneralMenuController {
         }
         Scene window = ((Node) event.getTarget()).getScene();
         BorderPane rootPane = (BorderPane) sideMenu.getParent();
+        Node center = rootPane.getCenter();
         new Thread(() -> {
             Platform.runLater(() ->window.setCursor(Cursor.WAIT));
 
@@ -116,8 +117,10 @@ public class GeneralMenuController {
             // Loads the paginator screen.
             try {
                 BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/pageView.fxml")));
-                // Adds the data view to the center of the screen.
-                Platform.runLater(()->rootPane.setCenter(dataView));
+                // Adds the data view to the center of the screen if it is the selected screen.
+                if (((BorderPane) sideMenu.getParent()).getCenter() == center) {
+                    Platform.runLater(()->rootPane.setCenter(dataView));
+                }
             } catch (IOException | NullPointerException e) {
                 Platform.runLater(()->MainScreen.createWarnWin(new CustomException("Error caused when loading the Pagination screens FXML file.", e.getClass().toString())));
             }
@@ -203,15 +206,16 @@ public class GeneralMenuController {
         if (saveLocation == null) {
             return;
         }
+        Scene window = sideMenu.getScene();
         new Thread(() -> {
-            Platform.runLater(()->sideMenu.getScene().setCursor(Cursor.WAIT));
+            Platform.runLater(()->window.setCursor(Cursor.WAIT));
 
             try {
                 DataAccessor.getInstance().export("", ControllerData.getInstance().getCurrentList(), saveLocation.toString());
             } catch (CustomException e) {
                 Platform.runLater(()->MainScreen.createWarnWin(e));
             }
-            Platform.runLater(()->sideMenu.getScene().setCursor(Cursor.DEFAULT));
+            Platform.runLater(()->window.setCursor(Cursor.DEFAULT));
             
         }).start();
     }
