@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
@@ -95,8 +96,10 @@ public class GeneralMenuController {
             }
             skipBadValue = false;
         }
+        Scene window = ((Node) event.getTarget()).getScene();
+        BorderPane rootPane = (BorderPane) sideMenu.getParent();
         new Thread(() -> {
-            Platform.runLater(()->((Node) event.getTarget()).getScene().setCursor(Cursor.WAIT));
+            Platform.runLater(() ->window.setCursor(Cursor.WAIT));
 
             try {
                 DataAccessor.getInstance().importFile(file, ControllerData.getInstance().getCurrentList(), behavior, skipBadValue);
@@ -110,7 +113,6 @@ public class GeneralMenuController {
                 }
             }
 
-            BorderPane rootPane = (BorderPane) sideMenu.getParent();
             // Loads the paginator screen.
             try {
                 BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/pageView.fxml")));
@@ -119,8 +121,7 @@ public class GeneralMenuController {
             } catch (IOException | NullPointerException e) {
                 Platform.runLater(()->MainScreen.createWarnWin(new CustomException("Error caused when loading the Pagination screens FXML file.", e.getClass().toString())));
             }
-            Platform.runLater(()->((Node) event.getTarget()).getScene().setCursor(Cursor.DEFAULT));
-            
+            Platform.runLater(() ->window.setCursor(Cursor.DEFAULT));            
         }).start();
     }
 
@@ -180,15 +181,16 @@ public class GeneralMenuController {
         if (saveLocation == null) {
             return;
         }
+        Scene window = sideMenu.getScene();
         new Thread(() -> {
-            Platform.runLater(()->sideMenu.getScene().setCursor(Cursor.WAIT));
+            Platform.runLater(()->window.setCursor(Cursor.WAIT));
 
             try {
                 DataAccessor.getInstance().export(conditions, ControllerData.getInstance().getCurrentList(), saveLocation.toString());
             } catch (CustomException e) {
                 Platform.runLater(()->MainScreen.createWarnWin(e));
             }
-            Platform.runLater(()->sideMenu.getScene().setCursor(Cursor.DEFAULT));
+            Platform.runLater(()->window.setCursor(Cursor.DEFAULT));
             
         }).start();
     }
