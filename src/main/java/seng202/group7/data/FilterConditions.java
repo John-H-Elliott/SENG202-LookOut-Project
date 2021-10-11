@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
- * a class used to encapsulate the fields that data can be sorted by.
+ * a class used to encapsulate the fields that data can be filtered by.
  * @author Shaylin Simadari
  */
 public class FilterConditions implements Serializable {
