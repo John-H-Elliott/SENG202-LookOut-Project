@@ -26,7 +26,6 @@ import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
 import seng202.group7.analyses.Comparer;
 import seng202.group7.controllers.data.ControllerData;
-import seng202.group7.controllers.menus.MenuController;
 import seng202.group7.view.MainScreen;
 
 /**

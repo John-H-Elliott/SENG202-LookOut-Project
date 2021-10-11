@@ -4,15 +4,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-
 import javafx.collections.ObservableSet;
 import javafx.scene.Node;
 import javafx.css.PseudoClass;
-import javafx.event.EventHandler;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.view.MainScreen;
