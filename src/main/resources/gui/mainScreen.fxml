@@ -5,11 +5,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:id="rootPane" stylesheets="@style.css" styleClass="start_screen" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="775.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.views.StartScreenController">   
+<BorderPane fx:id="rootPane" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="775.0" styleClass="start_screen" stylesheets="@style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.views.StartScreenController">   
    <top>
       <VBox alignment="CENTER" prefHeight="88.0" prefWidth="775.0" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="CENTER" text="Welcome to LookOut" styleClass="label">
+            <Label alignment="CENTER" styleClass="label" text="Welcome to LookOut">
                <font>
                   <Font name="System Bold" size="45.0" />
                </font>
@@ -27,16 +27,16 @@
             </TableView>
             <VBox prefHeight="250" spacing="15">
                <HBox spacing="10.0">
-                  <TextField fx:id="newListText" prefHeight="26.0" prefWidth="128.0" promptText="New list name" />
-                  <Button fx:id="newList" minWidth="-Infinity" onAction="#createList" prefWidth="100.0" text="Create new list" HBox.hgrow="SOMETIMES">
+                  <TextField fx:id="newListText" prefHeight="26.0" prefWidth="146.0" promptText="New list name" />
+                  <Button fx:id="newList" minWidth="-Infinity" onAction="#createList" prefHeight="26.0" prefWidth="118.0" text="Create new list" HBox.hgrow="SOMETIMES">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
                   </Button>
                </HBox>
                <HBox spacing="10.0">
-                  <TextField fx:id="renameListText" disable="true" prefWidth="110.0" promptText="Updated list name" HBox.hgrow="SOMETIMES" />
-                  <Button fx:id="rename" disable="true" minWidth="-Infinity" onAction="#renameList" prefWidth="100.0" text="Rename">
+                  <TextField fx:id="renameListText" disable="true" prefHeight="26.0" prefWidth="147.0" promptText="Updated list name" HBox.hgrow="SOMETIMES" />
+                  <Button fx:id="rename" disable="true" minWidth="-Infinity" onAction="#renameList" prefHeight="26.0" prefWidth="118.0" text="Rename">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
