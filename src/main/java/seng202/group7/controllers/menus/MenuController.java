@@ -109,7 +109,8 @@ public class MenuController implements Initializable {
         } catch (IOException | NullPointerException e) {
             MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
         }
-
+        menuFrame.setLeft(null);
+        menuButton.setDisable(true);
     }
 
 
