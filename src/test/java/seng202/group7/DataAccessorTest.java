@@ -152,23 +152,26 @@ public class DataAccessorTest {
 
     @Test
     public void import_threadConflict() {
-        new Thread(() -> {
-            try {
-                accessor.importFile(new File("src/test/files/testCSV.csv"), 1, "REPLACE", true);
-            } catch (CustomException e) {
-                fail("Base thread failed");
-            }
-        }).start();
-        new Thread(() -> {
-            try {
-                accessor.importFile(new File("src/test/files/testCSV.csv"), 1, "REPLACE", true);
+        try (Statement stmt = accessor.getConnection().createStatement();) {
+            // Imitating the effect of thread running
+            stmt.execute("BEGIN");
+        } catch (SQLException e) {
+            fail();
+        }
+        try {
+            accessor.importFile(new File("src/test/files/testCSV.csv"), 1, "REPLACE", true);
+        } catch (CustomException e) {
+            if (!e.getMessage().contains("busy")) {
                 fail();
-            } catch (CustomException e) {
-                if (!e.getMessage().contains("busy")) {
-                    fail();
-                }
             }
-        }).start();
+        }
+        try (Statement stmt = accessor.getConnection().createStatement();) {
+            // Imitating the effect of thread running
+            stmt.execute("COMMIT");
+        } catch (SQLException e) {
+            fail();
+        }
+
     }
 
     @Test
