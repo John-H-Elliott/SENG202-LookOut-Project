@@ -244,6 +244,9 @@ public class CompareController implements Initializable {
         }
     }
 
+    /**
+     * Saves the current compared results so that they are stored when changing menus.
+     */
     private void saveGUIFields(){
         if(!reportOneText.getText().equals("")) {
             report1 = reportOneText.getText();
@@ -253,7 +256,9 @@ public class CompareController implements Initializable {
         }
     }
 
-
+    /**
+     * Loads the current compared results so that they are stored when changing menus.
+     */
     private void loadGUIFields(){
         if(report1 != null) {
             reportOneText.setText(report1);

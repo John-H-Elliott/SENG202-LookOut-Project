@@ -14,7 +14,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import seng202.group7.controllers.data.ControllerData;
 import seng202.group7.data.Crime;
@@ -79,7 +78,7 @@ public class DataViewController implements Initializable {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     Crime rowData = row.getItem();
-                    swapViews(event, rowData);
+                    swapViews(rowData);
                 }
             });
             return row;
@@ -167,10 +166,9 @@ public class DataViewController implements Initializable {
      * This method stores that current state of the table and the selected row in the ControllerData and then loads,
      * the detailed data view screen and swaps it for the current raw data view screen.
      *
-     * @param event         The double click mouse event trigger.
      * @param rowData       The Crime object from the selected row.
      */
-    private void swapViews(MouseEvent event, Crime rowData){
+    private void swapViews(Crime rowData){
         // This section must come first as the rowData is need when initializing the crimeEdit FXML.
         ControllerData controllerData = ControllerData.getInstance();
         controllerData.setCurrentRow(rowData);

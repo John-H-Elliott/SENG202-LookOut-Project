@@ -28,7 +28,7 @@ public class InputValidator {
     /**
      * Sets the error PseudoClass which gives a Node a red border.
      */
-    private static PseudoClass errorClass = PseudoClass.getPseudoClass("error");
+    private static final PseudoClass errorClass = PseudoClass.getPseudoClass("error");
 
     /**
      * Passes the value through the required validation methods and sets the Node's error style.
@@ -43,11 +43,11 @@ public class InputValidator {
         boolean valid = true;
         String input = getInput(inputNode);
         if (inputNode.getPseudoClassStates().contains(InputType.REQUIRED.getValidationType())) {
-            valid &= validateRequired(input);
+            valid = validateRequired(input);
         }
         if (valid && !"".equals(input)) {
             try {
-                valid &= validateInput(input, inputNode.getPseudoClassStates());
+                valid = validateInput(input, inputNode.getPseudoClassStates());
             } catch (CustomException e) {
                 MainScreen.createWarnWin(e);
             }
@@ -152,23 +152,11 @@ public class InputValidator {
     public static void addValidation(Node inputNode, InputType requiredValidation) {
         inputNode.pseudoClassStateChanged(requiredValidation.getValidationType(), true);
         if (inputNode instanceof TextField) {
-            ((TextField) inputNode).setOnKeyTyped(new EventHandler<KeyEvent>() {
-                @Override
-                public void handle(KeyEvent event) {
-                    validate(inputNode);
-                }
-            });
+            inputNode.setOnKeyTyped(event -> validate(inputNode));
         } else if (inputNode instanceof TextArea) {
-            ((TextArea) inputNode).setOnKeyTyped(new EventHandler<KeyEvent>() {
-                @Override
-                public void handle(KeyEvent event) {
-                    validate(inputNode);
-                }
-            });
+            inputNode.setOnKeyTyped(event -> validate(inputNode));
         } else if (inputNode instanceof DatePicker) {
-            ((DatePicker) inputNode).valueProperty().addListener((observable, oldDate, newDate)->{
-                InputValidator.validate(inputNode);
-            });
+            ((DatePicker) inputNode).valueProperty().addListener((observable, oldDate, newDate)-> InputValidator.validate(inputNode));
         }
     }
 }

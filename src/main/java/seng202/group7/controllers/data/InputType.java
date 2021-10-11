@@ -15,19 +15,20 @@ public enum InputType {
     TIME (PseudoClass.getPseudoClass("time")),
     LISTNAME (PseudoClass.getPseudoClass("list_name"));
 
-    private PseudoClass validationType;
+    private final PseudoClass validationType;
 
     /**
      * Sets the type of validation that will be done when applied to a Node.
      * @param validationType The PseudoClass that determines what validation is required.
      */
-    private InputType(PseudoClass validationType) {
+    InputType(PseudoClass validationType) {
         this.validationType = validationType;
     }
 
     /**
-     * 
-     * @returnThe type of validation that will be done when applied to a Node.
+     * Returns the validation type.
+     *
+     * @return type of validation that will be done when applied to a Node.
      */
     public PseudoClass getValidationType() {
         return this.validationType;

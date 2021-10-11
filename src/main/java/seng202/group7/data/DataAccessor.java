@@ -46,7 +46,6 @@ public final class DataAccessor {
 
     /**
      * The constructor which is made private so that it can not be initialized from other classes.
-     * @throws CustomException
      */
     private DataAccessor() {
         try {
@@ -70,8 +69,8 @@ public final class DataAccessor {
 
     /**
      * Changes the connection of the database that is currently loaded.
-     * @param path
-     * @throws CustomException
+     * @param path The new path of the database.
+     * @throws CustomException  Error connecting to the new database.
      */
     public void changeConnection(String path) throws CustomException{
         try {
@@ -85,7 +84,7 @@ public final class DataAccessor {
     /**
      * Creates a new database if one doesn't exist at the specified location.
      * @param location The path to the selected file.
-     * @throws CustomException
+     * @throws CustomException Error creating new database.
      */
     private void createDatabase(String location) throws CustomException {
         try (Connection newdb = DriverManager.getConnection("jdbc:sqlite:" + location);Statement stmt = newdb.createStatement()) {
@@ -143,7 +142,7 @@ public final class DataAccessor {
      * Gets the number of entries in the database.
      *
      * @return     The number of entries.
-     * @throws CustomException
+     * @throws CustomException Error getting size of the database.
      */
     public int getSize(int listId, String conditions) throws CustomException {
         // See how many entries are in the view crimedb.
@@ -152,9 +151,9 @@ public final class DataAccessor {
             query += " AND";
         }
         query += " list_id=" + listId +";";
-        int size = 0;
+        int size;
         try (Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(query);) {
+            ResultSet rs = stmt.executeQuery(query)) {
             size = rs.getInt(1);
         } catch (SQLException e) {
             throw new CustomException("Error getting size of the database.", e.getMessage());
@@ -167,7 +166,7 @@ public final class DataAccessor {
      * of reports to be used from the database in the TableView.
      *
      * @return reports      The list of reports to display.
-     * @throws CustomException
+     * @throws CustomException Error getting page set from the database.
      */
     public List<Report> getPageSet(int listId, int page, String condition) throws CustomException {
         // This only get 1000 reports per page of the paginator.
@@ -186,7 +185,7 @@ public final class DataAccessor {
      * Gets all the reports from the database.
      *
      * @return  All reports from the database.
-     * @throws CustomException
+     * @throws CustomException Error getting result set from the database.
      */
     public List<Report> getAll(int listId) throws CustomException {
         String query = "SELECT * FROM crimedb WHERE list_id=" + listId;
@@ -197,7 +196,7 @@ public final class DataAccessor {
      * Generic method for passing any query to the dataBase
      * @param query The string query used to query the database
      * @return List of reports
-     * @throws CustomException
+     * @throws CustomException Error getting result set from the database.
      */
     public List<Report> getData(String query) throws CustomException {
         return selectReports(query);
@@ -208,13 +207,13 @@ public final class DataAccessor {
      * @param column The column that will be searched
      * @param conditions Constrictions to the search
      * @return A list of unique Strings
-     * @throws SQLException
+     * @throws CustomException Error getting result set from the database.
      */
     public List<String> getColumnString(String column, String conditions) throws CustomException {
         List<String> crimeTypeList = new ArrayList<>();
         String query = "SELECT DISTINCT " +column+ " from crimedb " + conditions;
         try (Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(query);) {
+            ResultSet rs = stmt.executeQuery(query)) {
             // Converts all results into crimes.
             while (rs.next()) {
                 String columnString = rs.getString(column);
@@ -231,13 +230,13 @@ public final class DataAccessor {
      * @param column The column that will be searched
      * @param conditions Constrictions to the search
      * @return A list of unique Integers
-     * @throws SQLException
+     * @throws CustomException  Error getting result set from the database.
      */
     public ArrayList<Integer> getColumnInteger(String column, String conditions) throws CustomException {
         ArrayList<Integer> crimeTypeList = new ArrayList<>();
         String query = "SELECT DISTINCT " +column+ " from crimedb " + conditions;
         try (Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(query);) {
+            ResultSet rs = stmt.executeQuery(query)) {
             // Converts all results into crimes.
             while (rs.next()) {
                 Integer columnInteger = rs.getInt(column);
@@ -254,12 +253,12 @@ public final class DataAccessor {
      *
      * @param query     The query for the crimedb view.
      * @return          A list of reports.
-     * @throws CustomException
+     * @throws CustomException  Error getting a selection of reports.
      */
     private List<Report> selectReports(String query) throws CustomException {
         List<Report> reports = new ArrayList<>();
         try (Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(query);){
+            ResultSet rs = stmt.executeQuery(query)){
             // Converts all results into crimes.
             while (rs.next()) {
                 Report crime = generateReport(rs);
@@ -279,7 +278,7 @@ public final class DataAccessor {
      */
     private Report generateReport(ResultSet rs) throws SQLException{
         Timestamp tt = rs.getTimestamp("date");
-        Report crime = new Crime(
+        return new Crime(
                 rs.getString("id"),
                 tt.toLocalDateTime(),
                 rs.getString("block"),
@@ -297,7 +296,6 @@ public final class DataAccessor {
                 rs.getDouble("latitude"),
                 rs.getDouble("longitude")
         );
-        return crime;
     }
 
     /**
@@ -305,14 +303,14 @@ public final class DataAccessor {
      *
      * @param entry     The case number of a crime object.
      * @return          A single report.
-     * @throws CustomException
+     * @throws CustomException Error getting a crime object from the database.
      */
     public Crime getCrime(String entry, int listId) throws CustomException {
         Crime crime = null;
         try (PreparedStatement psReport = connection.prepareStatement("SELECT " + 
             "id, list_id, date, primary_description, secondary_description, domestic, " +
             "x_coord, y_coord, latitude, longitude, location_description, block, iucr, fbicd, arrest, beat, ward" +
-            " FROM crimedb WHERE id=? AND list_id=?;");) {
+            " FROM crimedb WHERE id=? AND list_id=?;")) {
             
             psReport.setString(1, entry);
             psReport.setInt(2, listId);
@@ -408,13 +406,11 @@ public final class DataAccessor {
     /**
      * Runs a query with no result set and ensures that the statements are then closed.
      * @param query     The query being used.
-     * @throws SQLException
+     * @throws SQLException Error running a sqlite statement.
      */
     private void runStatement(String query) throws SQLException {
-        try (Statement stmt = connection.createStatement();) {
+        try (Statement stmt = connection.createStatement()) {
             stmt.execute(query);
-        } catch (SQLException e) {
-            throw e;
         }
     }
 
@@ -422,6 +418,7 @@ public final class DataAccessor {
      * Is given a CSV file and imports it into the database.
      *
      * @param pathname      CSV file.
+     * @throws CustomException  Error reading the CSV into the database.
      */
     private void readToDB(File pathname, int listId, String behavior, boolean skipBadValue) throws CustomException {
         String[] schemaDefault = {"CASE#", "DATE OF OCCURRENCE", "BLOCK", "IUCR", "PRIMARY DESCRIPTION", "SECONDARY DESCRIPTION",
@@ -441,7 +438,7 @@ public final class DataAccessor {
             write(rows, listId, behavior, skipBadValue);
 
         } catch (IOException e) {
-            new CustomException("Error reading to database.", e.getMessage());
+            throw new CustomException("Error reading to database.", e.getMessage());
         } catch (SQLException e) {
             if (e.getMessage().contains("(cannot start a transaction within a transaction)")) {
                 throw new CustomException("Database is busy. Please wait until the current action is finished.", e.getMessage());
@@ -454,13 +451,13 @@ public final class DataAccessor {
      * Adds the ability to edit or add data into the database from a crime object.
      *
      * @param crime     A crime object.
-     * @throws CustomException
+     * @throws CustomException  Error updating a crime within the database.
      */
     public void editCrime(Crime crime, int listId) throws CustomException {
         try (PreparedStatement psReport = connection.prepareStatement("INSERT OR REPLACE INTO reports(id, list_id, date, primary_description, secondary_description, domestic, x_coord, y_coord, latitude, longitude, location_description) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
             PreparedStatement psCrime = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id, block, iucr, fbicd, arrest, beat, ward) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");){
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?);")){
             runStatement("BEGIN;");
 
             PSTypes.setPSString(psCrime, 1, crime.getId()); // Case Number
@@ -607,7 +604,7 @@ public final class DataAccessor {
     /**
      * Creates a new list in the database with the name passed in.
      * @param name The name of the new database.
-     * @throws CustomException
+     * @throws CustomException Error creating a list in the database.
      */
     public void createList(String name) throws CustomException {
         try (PreparedStatement psList = connection.prepareStatement("INSERT or ABORT INTO lists(name) VALUES (?);")) {
@@ -626,30 +623,29 @@ public final class DataAccessor {
     /**
      * 
      * @return An ObservableList containing all the lists in the database.
-     * @throws CustomException
+     * @throws CustomException Error getting data of a given list.
      */
     public ObservableList<String> getLists() throws CustomException {
         List<String> lists = new ArrayList<>();
         try (Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT name FROM lists");) {
+            ResultSet rs = stmt.executeQuery("SELECT name FROM lists")) {
             while (rs.next()) {
                 lists.add(rs.getString("name"));
             }
         } catch (SQLException e) {
             throw new CustomException("Error getting the list of reports.", e.getMessage());
         }
-        ObservableList<String> details = FXCollections.observableList(lists);
-        return details;
+        return FXCollections.observableList(lists);
     }
 
     /**
      * Renames a list contained in the database.
      * @param oldName The current name of the list.
      * @param newName The name that the list will be changed to.
-     * @throws CustomException
+     * @throws CustomException Error renaming list.
      */
     public void renameList(String oldName, String newName) throws CustomException {
-        try (PreparedStatement psList = connection.prepareStatement("UPDATE lists SET name=? WHERE name=?;");) {
+        try (PreparedStatement psList = connection.prepareStatement("UPDATE lists SET name=? WHERE name=?;")) {
             psList.setString(1, newName);
             psList.setString(2, oldName);
             psList.execute();
@@ -662,7 +658,7 @@ public final class DataAccessor {
      * Returns the numeric ID of a list given its name.
      * @param selectedList The name of the required list
      * @return The numeric ID of the selected list.
-     * @throws CustomException
+     * @throws CustomException Error getting list ID.
      */
     public Integer getListId(String selectedList) throws CustomException {
         Integer listId = null;
@@ -683,7 +679,7 @@ public final class DataAccessor {
     /**
      * Deletes the selected list from the database.
      * @param selectedList The name of the list to be deleted.
-     * @throws CustomException
+     * @throws CustomException Error deleting list of data.
      */
     public void deleteList(String selectedList) throws CustomException {
         try (PreparedStatement psList = connection.prepareStatement("DELETE FROM lists WHERE name=?;")) {
@@ -704,16 +700,16 @@ public final class DataAccessor {
      * @param conditions The filter conditions to be complied with.
      * @param listId The list the data is being exported from.
      * @param saveLocation The location tof the new file.
-     * @throws SQLException
+     * @throws CustomException Error exporting the results to a file.
      */
-    public void export(String conditions, int listId, String saveLocation) throws CustomException{
+    public void export(String conditions, int listId, String saveLocation) throws CustomException {
         if (saveLocation.endsWith(".db")) {
             try {
                 exportDB(conditions, listId, saveLocation);
             } catch (SQLException e) {
                 throw new CustomException("Database failed to sync correctly.", e.getMessage());
             }
-        } else if (saveLocation.endsWith("csv")) {
+        } else if (saveLocation.endsWith(".csv")) {
             exportCSV(conditions, listId, saveLocation);
         }
     }
@@ -723,7 +719,7 @@ public final class DataAccessor {
      * @param conditions The filter conditions to be complied with.
      * @param listId The list the data is being exported from.
      * @param saveLocation The location of the new file.
-     * @throws SQLException
+     * @throws CustomException Error exporting CSV file.
      */
     private void exportCSV(String conditions, int listId, String saveLocation) throws CustomException {
         try (CSVWriter writer = new CSVWriter(new FileWriter(saveLocation), ',');
@@ -765,10 +761,10 @@ public final class DataAccessor {
      * @param conditions The filter conditions to be complied with.
      * @param listId The list the data is being exported from.
      * @param saveLocation The location of the new file.
-     * @throws SQLException
-     * @throws CustomException
+     * @throws SQLException     Error when running the statements.
+     * @throws CustomException  Error when exporting the database.
      */
-    private void exportDB(String conditions, int listId, String saveLocation) throws SQLException, CustomException {
+    private void exportDB(String conditions, int listId, String saveLocation) throws CustomException, SQLException {
         createExportDatabase(saveLocation);
         runStatement("ATTACH DATABASE '" + saveLocation + "' AS other;");
         try {
@@ -810,7 +806,7 @@ public final class DataAccessor {
      * @param query SELECT statement to be refined.
      * @param conditions Filter conditions applied to query.
      * @param listId List to query data from.
-     * @return
+     * @return  The query to be run.
      */
     private String addConditions(String query, String conditions, int listId) {
         query += conditions;
@@ -824,7 +820,7 @@ public final class DataAccessor {
     /**
      * Creates a database for the data to be exported into at the given location.
      * @param location The location to create the database.
-     * @throws CustomException
+     * @throws CustomException  Throws an error when creating the exported data.
      */
     private void createExportDatabase(String location) throws CustomException {
         try (Connection newdb = DriverManager.getConnection("jdbc:sqlite:" + location); Statement stmt = newdb.createStatement()) {

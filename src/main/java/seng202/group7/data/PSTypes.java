@@ -113,7 +113,7 @@ public final class PSTypes {
      * @param ps                    The PreparedStatement being used.
      * @param parameterIndex        The index in the PreparedStatement.
      * @param x                     The Boolean being checked.
-     * @throws SQLException
+     * @throws SQLException         Error setting Prepared Statement.
      */
     public static void setPSBoolean(PreparedStatement ps, int parameterIndex, Boolean x) throws SQLException {
         if (x == null) {

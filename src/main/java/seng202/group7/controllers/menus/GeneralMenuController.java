@@ -235,6 +235,13 @@ public class GeneralMenuController {
         File selectedFile = fileChooser.showSaveDialog(stage);
         // If the file chooser is exited before a file is selected it will be a NULL value and should not continue.
         if (selectedFile != null) {
+            if ((!selectedFile.getName().endsWith(".db")) && (!selectedFile.getName().endsWith(".csv"))) {
+                if (fileChooser.getSelectedExtensionFilter().getExtensions().get(0).equals("*.db")) {
+                    selectedFile = new File(selectedFile.getAbsolutePath() + ".db");
+                } else {
+                    selectedFile = new File(selectedFile.getAbsolutePath() + ".csv");
+                }
+            }
             return selectedFile;
         }
         return null;
