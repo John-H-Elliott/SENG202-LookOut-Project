@@ -29,7 +29,7 @@
 ---
 
 1.
-    Navigating to the **["Source Code"](Source Code/)** folder which should contain the **["src"]("Source Code"/src/)** directory.
+    Navigating to the **["Source Code"](Source&#32;Code/)** folder which should contain the **["src"]("Source Code"/src/)** directory.
 
 2.
     In IntelliJ IDEA click **"Open"** and then find the source code folder location and click **"OK"**.  
