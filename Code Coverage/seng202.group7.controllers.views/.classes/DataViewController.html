@@ -1,0 +1,292 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: DataViewController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">seng202.group7.controllers.views</a> ]
+</div>
+
+<h1>Coverage Summary for Class: DataViewController (seng202.group7.controllers.views)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DataViewController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 82)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package seng202.group7.controllers.views;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import javafx.beans.property.SimpleStringProperty;
+<i>4</i>&nbsp;import javafx.collections.FXCollections;
+<i>5</i>&nbsp;import javafx.collections.ObservableList;
+<i>6</i>&nbsp;import javafx.event.ActionEvent;
+<i>7</i>&nbsp;import javafx.fxml.FXML;
+<i>8</i>&nbsp;import javafx.fxml.FXMLLoader;
+<i>9</i>&nbsp;import javafx.fxml.Initializable;
+<i>10</i>&nbsp;import javafx.scene.Node;
+<i>11</i>&nbsp;import javafx.scene.control.ContextMenu;
+<i>12</i>&nbsp;import javafx.scene.control.MenuItem;
+<i>13</i>&nbsp;import javafx.scene.control.TableColumn;
+<i>14</i>&nbsp;import javafx.scene.control.TableRow;
+<i>15</i>&nbsp;import javafx.scene.control.TableView;
+<i>16</i>&nbsp;import javafx.scene.control.cell.PropertyValueFactory;
+<i>17</i>&nbsp;import javafx.scene.layout.BorderPane;
+<i>18</i>&nbsp;import seng202.group7.controllers.data.ControllerData;
+<i>19</i>&nbsp;import seng202.group7.data.Crime;
+<i>20</i>&nbsp;import seng202.group7.data.CustomException;
+<i>21</i>&nbsp;import seng202.group7.data.Report;
+<i>22</i>&nbsp;import seng202.group7.data.DataAccessor;
+<i>23</i>&nbsp;import seng202.group7.view.MainScreen;
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;import java.io.IOException;
+<i>26</i>&nbsp;import java.net.URL;
+<i>27</i>&nbsp;import java.time.format.DateTimeFormatter;
+<i>28</i>&nbsp;import java.util.*;
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;/**
+<i>31</i>&nbsp; * The controller, used by / linked to, the Data View FXML file.
+<i>32</i>&nbsp; * Handles the generation of the table on initialization.
+<i>33</i>&nbsp; *
+<i>34</i>&nbsp; * @author Jack McCorkindale
+<i>35</i>&nbsp; * @author John Elliott
+<i>36</i>&nbsp; */
+<b class="nc"><i>37</i>&nbsp;public class DataViewController implements Initializable {</b>
+<i>38</i>&nbsp;    /**
+<i>39</i>&nbsp;     * This is the GridPane that holds the table and is the root node.
+<i>40</i>&nbsp;     */
+<i>41</i>&nbsp;    @FXML
+<i>42</i>&nbsp;    private BorderPane frame;
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    /**
+<i>45</i>&nbsp;     * This is the Table.
+<i>46</i>&nbsp;     */
+<i>47</i>&nbsp;    @FXML
+<i>48</i>&nbsp;    private TableView&lt;Crime&gt; tableView;
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    /**
+<i>52</i>&nbsp;     * This method is run during the loading of the data view fxml file.
+<i>53</i>&nbsp;     * It generates what values will be stored in the columns.
+<i>54</i>&nbsp;     *
+<i>55</i>&nbsp;     * @param location      A URL object.
+<i>56</i>&nbsp;     * @param resources     A ResourceBundle object.
+<i>57</i>&nbsp;     */
+<i>58</i>&nbsp;    @Override
+<i>59</i>&nbsp;    public void initialize(URL location, ResourceBundle resources) {
+<b class="nc"><i>60</i>&nbsp;        List&lt;String&gt; possibleColumns = Arrays.asList(&quot;Case Number,Id&quot;, &quot;Date,date&quot;,</b>
+<i>61</i>&nbsp;                &quot;Primary Description,PrimaryDescription&quot;,&quot;Secondary Description,SecondaryDescription&quot;, &quot;Domestic,Domestic&quot;,
+<i>62</i>&nbsp;                &quot;X Coordinate,XCoord&quot;, &quot;Y Coordinate,YCoord&quot;, &quot;Latitude,Latitude&quot;,&quot;Longitude,Longitude&quot;,
+<i>63</i>&nbsp;                &quot;Location Description,LocationDescription&quot;, &quot;Block,Block&quot;, &quot;Iucr,Iucr&quot;, &quot;FBI CD,FbiCD&quot;, &quot;Arrest,arrest&quot;,
+<i>64</i>&nbsp;                &quot;Beat,Beat&quot;, &quot;Ward,Ward&quot;);
+<i>65</i>&nbsp;
+<b class="nc"><i>66</i>&nbsp;        ContextMenu contextMenu = new ContextMenu();</b>
+<i>67</i>&nbsp;
+<b class="nc"><i>68</i>&nbsp;        for (String columnName : possibleColumns) {</b>
+<b class="nc"><i>69</i>&nbsp;            TableColumn&lt;Crime, ?&gt; newColumn = createColumn(columnName, contextMenu);</b>
+<b class="nc"><i>70</i>&nbsp;            tableView.getColumns().add(newColumn);</b>
+<b class="nc"><i>71</i>&nbsp;        }</b>
+<i>72</i>&nbsp;
+<b class="nc"><i>73</i>&nbsp;        tableView.setContextMenu(contextMenu);</b>
+<i>74</i>&nbsp;
+<i>75</i>&nbsp;        // On a double click and the row isn&#39;t empty it will trigger the swap view method.
+<b class="nc"><i>76</i>&nbsp;        tableView.setRowFactory( tv -&gt; {</b>
+<b class="nc"><i>77</i>&nbsp;            TableRow&lt;Crime&gt; row = new TableRow&lt;&gt;();</b>
+<b class="nc"><i>78</i>&nbsp;            row.setOnMouseClicked(event -&gt; {</b>
+<b class="nc"><i>79</i>&nbsp;                if (event.getClickCount() == 2 &amp;&amp; (! row.isEmpty()) ) {</b>
+<b class="nc"><i>80</i>&nbsp;                    Crime rowData = row.getItem();</b>
+<b class="nc"><i>81</i>&nbsp;                    swapViews(rowData);</b>
+<i>82</i>&nbsp;                }
+<b class="nc"><i>83</i>&nbsp;            });</b>
+<b class="nc"><i>84</i>&nbsp;            return row;</b>
+<i>85</i>&nbsp;        });
+<i>86</i>&nbsp;
+<i>87</i>&nbsp;        // Refreshes the table data when the table view is returned to.
+<b class="nc"><i>88</i>&nbsp;        frame.parentProperty().addListener((obs, oldParent, newParent) -&gt; {</b>
+<b class="nc"><i>89</i>&nbsp;            if (newParent != null) {</b>
+<b class="nc"><i>90</i>&nbsp;                newParent.parentProperty().addListener((obs1, oldParent1, pagination) -&gt;</b>
+<b class="nc"><i>91</i>&nbsp;                        pagination.getParent().parentProperty().addListener((obs2, oldParent2, newParent2) -&gt; {</b>
+<b class="nc"><i>92</i>&nbsp;                    if (newParent2 != null) {</b>
+<b class="nc"><i>93</i>&nbsp;                        setTableContent();</b>
+<i>94</i>&nbsp;                    }
+<b class="nc"><i>95</i>&nbsp;                }));</b>
+<i>96</i>&nbsp;            }
+<b class="nc"><i>97</i>&nbsp;        });</b>
+<b class="nc"><i>98</i>&nbsp;        setTableContent();</b>
+<b class="nc"><i>99</i>&nbsp;    }</b>
+<i>100</i>&nbsp;
+<i>101</i>&nbsp;    /**
+<i>102</i>&nbsp;     * Creates a new column with the given name and adds it to the tables context menu.
+<i>103</i>&nbsp;     * @param columnName The name of the column
+<i>104</i>&nbsp;     * @param contextMenu The tables context menu
+<i>105</i>&nbsp;     * @return The new column
+<i>106</i>&nbsp;     */
+<i>107</i>&nbsp;    private TableColumn&lt;Crime, ?&gt; createColumn(String columnName, ContextMenu contextMenu) {
+<i>108</i>&nbsp;
+<b class="nc"><i>109</i>&nbsp;        String[] columnData = columnName.split(&quot;,&quot;);</b>
+<b class="nc"><i>110</i>&nbsp;        TableColumn&lt;Crime, String&gt; newColumn = new TableColumn&lt;&gt;(columnData[0]);</b>
+<b class="nc"><i>111</i>&nbsp;        newColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(columnData[1]));</b>
+<i>112</i>&nbsp;
+<b class="nc"><i>113</i>&nbsp;        if (columnData[0].equals(&quot;Date&quot;)) {</b>
+<b class="nc"><i>114</i>&nbsp;            newColumn.setCellValueFactory(setup -&gt; {</b>
+<b class="nc"><i>115</i>&nbsp;                SimpleStringProperty property = new SimpleStringProperty();</b>
+<b class="nc"><i>116</i>&nbsp;                DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(&quot;dd-MM-yyyy HH:mm:ss&quot;);</b>
+<b class="nc"><i>117</i>&nbsp;                property.setValue(dateFormat.format(setup.getValue().getDate()));</b>
+<b class="nc"><i>118</i>&nbsp;                return property;</b>
+<i>119</i>&nbsp;            });
+<i>120</i>&nbsp;        }
+<b class="nc"><i>121</i>&nbsp;        MenuItem columnMenu = new MenuItem(columnData[0]);</b>
+<i>122</i>&nbsp;        // Make it so when clicked will hide/show the column
+<b class="nc"><i>123</i>&nbsp;        columnMenu.setOnAction(this::visibilityToggleInit);</b>
+<i>124</i>&nbsp;
+<b class="nc"><i>125</i>&nbsp;        contextMenu.getItems().add(columnMenu);</b>
+<i>126</i>&nbsp;
+<b class="nc"><i>127</i>&nbsp;        if (ControllerData.getInstance().getVisibleColumns() == null) {</b>
+<b class="nc"><i>128</i>&nbsp;            ControllerData.getInstance().setVisibleColumns(</b>
+<b class="nc"><i>129</i>&nbsp;                    Arrays.asList(&quot;Case Number&quot;, &quot;Date&quot;, &quot;Primary Description&quot;,&quot;Arrest&quot;, &quot;Ward&quot;)</b>
+<i>130</i>&nbsp;            );
+<i>131</i>&nbsp;        }
+<b class="nc"><i>132</i>&nbsp;        List&lt;String&gt; visibleColumns = ControllerData.getInstance().getVisibleColumns();</b>
+<i>133</i>&nbsp;        // Only show default columns
+<b class="nc"><i>134</i>&nbsp;        if (!visibleColumns.contains(columnData[0])) {</b>
+<b class="nc"><i>135</i>&nbsp;            newColumn.setVisible(false);</b>
+<i>136</i>&nbsp;        }
+<b class="nc"><i>137</i>&nbsp;        return newColumn;</b>
+<i>138</i>&nbsp;    }
+<i>139</i>&nbsp;
+<i>140</i>&nbsp;    /**
+<i>141</i>&nbsp;     * Makes the menuItem toggle the visibility of the relevant column.
+<i>142</i>&nbsp;     * @param event The event that triggers this method.
+<i>143</i>&nbsp;     */
+<i>144</i>&nbsp;    private void visibilityToggleInit(ActionEvent event) {
+<b class="nc"><i>145</i>&nbsp;        for (TableColumn&lt;Crime, ?&gt; col : tableView.getColumns()) {</b>
+<b class="nc"><i>146</i>&nbsp;            if (col.getText().equals(((MenuItem) event.getSource()).getText())) {</b>
+<b class="nc"><i>147</i>&nbsp;                col.setVisible(!col.visibleProperty().get());</b>
+<b class="nc"><i>148</i>&nbsp;                List&lt;String&gt; visibleColumns = ControllerData.getInstance().getVisibleColumns();</b>
+<b class="nc"><i>149</i>&nbsp;                List&lt;String&gt; visibleUpdate = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>150</i>&nbsp;                for (String column : visibleColumns) {</b>
+<b class="nc"><i>151</i>&nbsp;                    if (!column.equals(col.getText())){</b>
+<b class="nc"><i>152</i>&nbsp;                        visibleUpdate.add(column);</b>
+<i>153</i>&nbsp;                    }
+<b class="nc"><i>154</i>&nbsp;                }</b>
+<b class="nc"><i>155</i>&nbsp;                if (!visibleColumns.contains(col.getText())) {</b>
+<b class="nc"><i>156</i>&nbsp;                    visibleUpdate.add(col.getText());</b>
+<i>157</i>&nbsp;                }
+<b class="nc"><i>158</i>&nbsp;                ControllerData.getInstance().setVisibleColumns(visibleUpdate);</b>
+<b class="nc"><i>159</i>&nbsp;                return;</b>
+<i>160</i>&nbsp;            }
+<b class="nc"><i>161</i>&nbsp;        }</b>
+<b class="nc"><i>162</i>&nbsp;    }</b>
+<i>163</i>&nbsp;
+<i>164</i>&nbsp;
+<i>165</i>&nbsp;    /**
+<i>166</i>&nbsp;     * This method stores that current state of the table and the selected row in the ControllerData and then loads,
+<i>167</i>&nbsp;     * the detailed data view screen and swaps it for the current raw data view screen.
+<i>168</i>&nbsp;     *
+<i>169</i>&nbsp;     * @param rowData       The Crime object from the selected row.
+<i>170</i>&nbsp;     */
+<i>171</i>&nbsp;    private void swapViews(Crime rowData){
+<i>172</i>&nbsp;        // This section must come first as the rowData is need when initializing the crimeEdit FXML.
+<b class="nc"><i>173</i>&nbsp;        ControllerData controllerData = ControllerData.getInstance();</b>
+<b class="nc"><i>174</i>&nbsp;        controllerData.setCurrentRow(rowData);</b>
+<i>175</i>&nbsp;
+<b class="nc"><i>176</i>&nbsp;        BorderPane rootPane = (BorderPane) frame.getParent().getParent().getParent().getParent();</b>
+<i>177</i>&nbsp;
+<i>178</i>&nbsp;        try {
+<b class="nc"><i>179</i>&nbsp;            FXMLLoader loader = new FXMLLoader(getClass().getResource(&quot;/gui/views/entryView.fxml&quot;));</b>
+<b class="nc"><i>180</i>&nbsp;            Node newFrame = loader.load();</b>
+<i>181</i>&nbsp;
+<b class="nc"><i>182</i>&nbsp;            ((EntryController) loader.getController()).setLastFrame(rootPane.getCenter());</b>
+<i>183</i>&nbsp;
+<b class="nc"><i>184</i>&nbsp;            rootPane.setCenter(newFrame);</b>
+<b class="nc"><i>185</i>&nbsp;        } catch (IOException | NullPointerException e) {</b>
+<b class="nc"><i>186</i>&nbsp;            MainScreen.createErrorWin(new CustomException(&quot;Error caused when loading the Entry View screens FXML file.&quot;, e.getClass().toString()));</b>
+<b class="nc"><i>187</i>&nbsp;        }</b>
+<b class="nc"><i>188</i>&nbsp;    }</b>
+<i>189</i>&nbsp;
+<i>190</i>&nbsp;
+<i>191</i>&nbsp;    /**
+<i>192</i>&nbsp;     * Creates an observable list which is used to store the data that will be displayed in the table.
+<i>193</i>&nbsp;     */
+<i>194</i>&nbsp;    private void setTableContent() {
+<i>195</i>&nbsp;        // Gets the current set of reports based on the pagination&#39;s current page.
+<i>196</i>&nbsp;        try {
+<b class="nc"><i>197</i>&nbsp;            ControllerData controllerData = ControllerData.getInstance();</b>
+<b class="nc"><i>198</i>&nbsp;            List&lt;Report&gt; reports = DataAccessor.getInstance().getPageSet(controllerData.getCurrentList(),</b>
+<b class="nc"><i>199</i>&nbsp;                controllerData.getCurrentPage(), controllerData.getWhereQuery());</b>
+<b class="nc"><i>200</i>&nbsp;            List&lt;Crime&gt; crimes = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>201</i>&nbsp;            reports.forEach(report -&gt; crimes.add((Crime) report));</b>
+<b class="nc"><i>202</i>&nbsp;            ObservableList&lt;Crime&gt; data = FXCollections.observableList(crimes);</b>
+<b class="nc"><i>203</i>&nbsp;            tableView.setItems(data);</b>
+<b class="nc"><i>204</i>&nbsp;        } catch (CustomException e) {</b>
+<b class="nc"><i>205</i>&nbsp;            MainScreen.createWarnWin(e);</b>
+<b class="nc"><i>206</i>&nbsp;        }</b>
+<i>207</i>&nbsp;
+<b class="nc"><i>208</i>&nbsp;    }</b>
+<i>209</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-10-11 17:02</div>
+</div>
+</body>
+</html>

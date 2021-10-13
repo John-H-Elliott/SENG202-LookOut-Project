@@ -1,0 +1,962 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: DataAccessor</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">seng202.group7.data</a> ]
+</div>
+
+<h1>Coverage Summary for Class: DataAccessor (seng202.group7.data)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DataAccessor</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    76.5%
+  </span>
+  <span class="absValue">
+    (26/ 34)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.2%
+  </span>
+  <span class="absValue">
+    (237/ 358)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package seng202.group7.data;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import au.com.bytecode.opencsv.CSVReader;
+<i>4</i>&nbsp;import au.com.bytecode.opencsv.CSVWriter;
+<i>5</i>&nbsp;import javafx.collections.FXCollections;
+<i>6</i>&nbsp;import javafx.collections.ObservableList;
+<i>7</i>&nbsp;import java.io.File;
+<i>8</i>&nbsp;import java.io.FileReader;
+<i>9</i>&nbsp;import java.io.FileWriter;
+<i>10</i>&nbsp;import java.io.IOException;
+<i>11</i>&nbsp;import java.sql.Connection;
+<i>12</i>&nbsp;import java.sql.DriverManager;
+<i>13</i>&nbsp;import java.sql.PreparedStatement;
+<i>14</i>&nbsp;import java.sql.ResultSet;
+<i>15</i>&nbsp;import java.sql.SQLException;
+<i>16</i>&nbsp;import java.sql.Statement;
+<i>17</i>&nbsp;import java.sql.Timestamp;
+<i>18</i>&nbsp;import java.sql.Types;
+<i>19</i>&nbsp;import java.time.LocalDateTime;
+<i>20</i>&nbsp;import java.time.format.DateTimeFormatter;
+<i>21</i>&nbsp;import java.time.format.DateTimeParseException;
+<i>22</i>&nbsp;import java.util.ArrayList;
+<i>23</i>&nbsp;import java.util.List;
+<i>24</i>&nbsp;import java.util.Locale;
+<i>25</i>&nbsp;import java.util.Objects;
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;/**
+<i>28</i>&nbsp; * This class works to link the SQLite database with our java application.
+<i>29</i>&nbsp; * It gets key data from the database during the runtime of the application.
+<i>30</i>&nbsp; *
+<i>31</i>&nbsp; * @author Jack McCorkindale
+<i>32</i>&nbsp; * @author John Elliott
+<i>33</i>&nbsp; * @author Shaylin Simadari
+<i>34</i>&nbsp; * @author Sam McMillan
+<i>35</i>&nbsp; */
+<i>36</i>&nbsp;public final class DataAccessor {
+<i>37</i>&nbsp;    /**
+<i>38</i>&nbsp;     * This creates a singleton instants of the class.
+<i>39</i>&nbsp;     */
+<b class="fc"><i>40</i>&nbsp;    private final static DataAccessor INSTANCE = new DataAccessor();</b>
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    /**
+<i>43</i>&nbsp;     * The connection made to the database. This is closed when the JavaFX stage is closed.
+<i>44</i>&nbsp;     */
+<i>45</i>&nbsp;    private Connection connection;
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    /**
+<i>48</i>&nbsp;     * The constructor which is made private so that it can not be initialized from other classes.
+<i>49</i>&nbsp;     */
+<b class="fc"><i>50</i>&nbsp;    private DataAccessor() {</b>
+<i>51</i>&nbsp;        try {
+<b class="fc"><i>52</i>&nbsp;            createDatabase(&quot;MainDatabase.db&quot;);</b>
+<b class="fc"><i>53</i>&nbsp;            connection = DriverManager.getConnection(&quot;jdbc:sqlite:MainDatabase.db&quot;);</b>
+<b class="fc"><i>54</i>&nbsp;            runStatement(&quot;PRAGMA foreign_keys = ON;&quot;);</b>
+<b class="nc"><i>55</i>&nbsp;        } catch (SQLException | CustomException e) {</b>
+<b class="nc"><i>56</i>&nbsp;            System.err.println(&quot;FatalError: Could not connect to the database.&quot;);</b>
+<b class="fc"><i>57</i>&nbsp;        }</b>
+<b class="fc"><i>58</i>&nbsp;    }</b>
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    /**
+<i>61</i>&nbsp;     * Used to get the singleton instants of the class when assessing. This is done over a &quot;static&quot; class due to it
+<i>62</i>&nbsp;     * implementing an interface.
+<i>63</i>&nbsp;     *
+<i>64</i>&nbsp;     * @return INSTANCE     The only instants of this class.
+<i>65</i>&nbsp;     */
+<i>66</i>&nbsp;    public static DataAccessor getInstance() {
+<b class="fc"><i>67</i>&nbsp;        return INSTANCE;</b>
+<i>68</i>&nbsp;    }
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;    /**
+<i>71</i>&nbsp;     * Changes the connection of the database that is currently loaded.
+<i>72</i>&nbsp;     * @param path The new path of the database.
+<i>73</i>&nbsp;     * @throws CustomException  Error connecting to the new database.
+<i>74</i>&nbsp;     */
+<i>75</i>&nbsp;    public void changeConnection(String path) throws CustomException{
+<i>76</i>&nbsp;        try {
+<b class="fc"><i>77</i>&nbsp;            connection = DriverManager.getConnection(&quot;jdbc:sqlite:&quot;+path);</b>
+<b class="fc"><i>78</i>&nbsp;            runStatement(&quot;PRAGMA foreign_keys = ON;&quot;);</b>
+<b class="nc"><i>79</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>80</i>&nbsp;            throw new CustomException(&quot;Error connecting to database.&quot;, e.getMessage());</b>
+<b class="fc"><i>81</i>&nbsp;        }</b>
+<b class="fc"><i>82</i>&nbsp;    }</b>
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;    /**
+<i>85</i>&nbsp;     * Creates a new database if one doesn&#39;t exist at the specified location.
+<i>86</i>&nbsp;     * @param location The path to the selected file.
+<i>87</i>&nbsp;     * @throws CustomException Error creating new database.
+<i>88</i>&nbsp;     */
+<i>89</i>&nbsp;    private void createDatabase(String location) throws CustomException {
+<b class="fc"><i>90</i>&nbsp;        try (Connection newdb = DriverManager.getConnection(&quot;jdbc:sqlite:&quot; + location);Statement stmt = newdb.createStatement()) {</b>
+<i>91</i>&nbsp;        
+<b class="fc"><i>92</i>&nbsp;            stmt.execute(&quot;PRAGMA foreign_keys = ON;&quot;);</b>
+<i>93</i>&nbsp;
+<b class="fc"><i>94</i>&nbsp;            stmt.execute(&quot;CREATE TABLE IF NOT EXISTS lists (&quot; + </b>
+<i>95</i>&nbsp;                    &quot;id INTEGER PRIMARY KEY AUTOINCREMENT,&quot; +
+<i>96</i>&nbsp;                    &quot;name VARCHAR(32) UNIQUE NOT NULL&quot; +
+<i>97</i>&nbsp;                    &quot;)&quot;);
+<b class="fc"><i>98</i>&nbsp;            stmt.execute(&quot;CREATE TABLE IF NOT EXISTS reports (&quot; + </b>
+<i>99</i>&nbsp;                    &quot;id VARCHAR(8) NOT NULL, &quot; + 
+<i>100</i>&nbsp;                    &quot;list_id INTEGER NOT NULL, &quot; +
+<i>101</i>&nbsp;                    &quot;date TIMESTAMP NOT NULL, &quot; +
+<i>102</i>&nbsp;                    &quot;primary_description VARCHAR(50) NOT NULL, &quot; +
+<i>103</i>&nbsp;                    &quot;secondary_description VARCHAR(50) NOT NULL, &quot; + 
+<i>104</i>&nbsp;                    &quot;domestic BOOLEAN NOT NULL, &quot; +
+<i>105</i>&nbsp;                    &quot;x_coord INT, &quot; +
+<i>106</i>&nbsp;                    &quot;y_coord INT, &quot; +
+<i>107</i>&nbsp;                    &quot;latitude FLOAT, &quot; +
+<i>108</i>&nbsp;                    &quot;longitude FLOAT, &quot; +
+<i>109</i>&nbsp;                    &quot;location_description VARCHAR(50) NOT NULL, &quot; +
+<i>110</i>&nbsp;                    &quot;PRIMARY KEY(list_id, id), &quot; +
+<i>111</i>&nbsp;                    &quot;FOREIGN KEY(list_id) REFERENCES lists(id) ON UPDATE CASCADE ON DELETE CASCADE&quot; +
+<i>112</i>&nbsp;                    &quot;)&quot;);
+<b class="fc"><i>113</i>&nbsp;            stmt.execute(&quot;CREATE TABLE IF NOT EXISTS crimes (&quot; + </b>
+<i>114</i>&nbsp;                    &quot;report_id VARCHAR(8) NOT NULL, &quot; +
+<i>115</i>&nbsp;                    &quot;list_id INTEGER NOT NULL, &quot; +
+<i>116</i>&nbsp;                    &quot;block VARCHAR(50) NOT NULL, &quot; +
+<i>117</i>&nbsp;                    &quot;iucr VARCHAR(4) NOT NULL, &quot; +
+<i>118</i>&nbsp;                    &quot;fbicd VARCHAR(3) NOT NULL, &quot; + 
+<i>119</i>&nbsp;                    &quot;arrest BOOLEAN NOT NULL, &quot; +
+<i>120</i>&nbsp;                    &quot;beat INT NOT NULL, &quot; +
+<i>121</i>&nbsp;                    &quot;ward INT NOT NULL, &quot; +
+<i>122</i>&nbsp;                    &quot;FOREIGN KEY(list_id, report_id) REFERENCES reports(list_id, id) ON UPDATE CASCADE ON DELETE CASCADE, &quot; +
+<i>123</i>&nbsp;                    &quot;PRIMARY KEY(list_id, report_id)&quot; +
+<i>124</i>&nbsp;                    &quot;)&quot;);
+<b class="fc"><i>125</i>&nbsp;            stmt.execute(&quot;CREATE VIEW IF NOT EXISTS crimedb AS &quot; +</b>
+<i>126</i>&nbsp;                    &quot;SELECT *&quot; + 
+<i>127</i>&nbsp;                    &quot;FROM reports JOIN crimes c ON id=c.report_id AND reports.list_id=c.list_id&quot;);
+<b class="fc"><i>128</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>129</i>&nbsp;            throw new CustomException(&quot;Main database could not be generated.&quot;, e.getMessage());</b>
+<b class="fc"><i>130</i>&nbsp;        }</b>
+<b class="fc"><i>131</i>&nbsp;    }</b>
+<i>132</i>&nbsp;
+<i>133</i>&nbsp;    /**
+<i>134</i>&nbsp;     * Getter for the connected to the database.
+<i>135</i>&nbsp;     * @return       The connection to the database.
+<i>136</i>&nbsp;     */
+<i>137</i>&nbsp;    public Connection getConnection() {
+<b class="fc"><i>138</i>&nbsp;        return connection;</b>
+<i>139</i>&nbsp;    }
+<i>140</i>&nbsp;
+<i>141</i>&nbsp;    /**
+<i>142</i>&nbsp;     * Gets the number of entries in the database.
+<i>143</i>&nbsp;     *
+<i>144</i>&nbsp;     * @return     The number of entries.
+<i>145</i>&nbsp;     * @throws CustomException Error getting size of the database.
+<i>146</i>&nbsp;     */
+<i>147</i>&nbsp;    public int getSize(int listId, String conditions) throws CustomException {
+<i>148</i>&nbsp;        // See how many entries are in the view crimedb.
+<b class="fc"><i>149</i>&nbsp;        String query = &quot;SELECT COUNT(*) FROM crimedb WHERE &quot;+ conditions;</b>
+<b class="fc"><i>150</i>&nbsp;        if (!conditions.isEmpty()) {</b>
+<b class="nc"><i>151</i>&nbsp;            query += &quot; AND&quot;;</b>
+<i>152</i>&nbsp;        }
+<b class="fc"><i>153</i>&nbsp;        query += &quot; list_id=&quot; + listId +&quot;;&quot;;</b>
+<i>154</i>&nbsp;        int size;
+<b class="fc"><i>155</i>&nbsp;        try (Statement stmt = connection.createStatement();</b>
+<b class="fc"><i>156</i>&nbsp;            ResultSet rs = stmt.executeQuery(query)) {</b>
+<b class="fc"><i>157</i>&nbsp;            size = rs.getInt(1);</b>
+<b class="fc"><i>158</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>159</i>&nbsp;            throw new CustomException(&quot;Error getting size of the database.&quot;, e.getMessage());</b>
+<b class="fc"><i>160</i>&nbsp;        }</b>
+<b class="fc"><i>161</i>&nbsp;        return size;</b>
+<i>162</i>&nbsp;    }
+<i>163</i>&nbsp;
+<i>164</i>&nbsp;    /**
+<i>165</i>&nbsp;     * Using the current page of the paginator this method returns the relevant section
+<i>166</i>&nbsp;     * of reports to be used from the database in the TableView.
+<i>167</i>&nbsp;     *
+<i>168</i>&nbsp;     * @return reports      The list of reports to display.
+<i>169</i>&nbsp;     * @throws CustomException Error getting page set from the database.
+<i>170</i>&nbsp;     */
+<i>171</i>&nbsp;    public List&lt;Report&gt; getPageSet(int listId, int page, String condition) throws CustomException {
+<i>172</i>&nbsp;        // This only get 1000 reports per page of the paginator.
+<b class="fc"><i>173</i>&nbsp;        int start = page * 1000;</b>
+<b class="fc"><i>174</i>&nbsp;        int end = 1000;</b>
+<i>175</i>&nbsp;
+<b class="fc"><i>176</i>&nbsp;        String query = &quot;SELECT * FROM crimedb WHERE &quot; + condition;</b>
+<b class="fc"><i>177</i>&nbsp;        if (!condition.isEmpty()) {</b>
+<b class="nc"><i>178</i>&nbsp;            query += &quot; AND &quot;;</b>
+<i>179</i>&nbsp;        }
+<b class="fc"><i>180</i>&nbsp;        query +=&quot; list_id=&quot; + listId + &quot; ORDER BY id LIMIT &quot;+end+&quot; OFFSET &quot;+start+&quot;;&quot;;</b>
+<b class="fc"><i>181</i>&nbsp;        return selectReports(query);</b>
+<i>182</i>&nbsp;    }
+<i>183</i>&nbsp;
+<i>184</i>&nbsp;    /**
+<i>185</i>&nbsp;     * Gets all the reports from the database.
+<i>186</i>&nbsp;     *
+<i>187</i>&nbsp;     * @return  All reports from the database.
+<i>188</i>&nbsp;     * @throws CustomException Error getting result set from the database.
+<i>189</i>&nbsp;     */
+<i>190</i>&nbsp;    public List&lt;Report&gt; getAll(int listId) throws CustomException {
+<b class="nc"><i>191</i>&nbsp;        String query = &quot;SELECT * FROM crimedb WHERE list_id=&quot; + listId;</b>
+<b class="nc"><i>192</i>&nbsp;        return selectReports(query);</b>
+<i>193</i>&nbsp;    }
+<i>194</i>&nbsp;
+<i>195</i>&nbsp;    /**
+<i>196</i>&nbsp;     * Generic method for passing any query to the dataBase
+<i>197</i>&nbsp;     * @param query The string query used to query the database
+<i>198</i>&nbsp;     * @return List of reports
+<i>199</i>&nbsp;     * @throws CustomException Error getting result set from the database.
+<i>200</i>&nbsp;     */
+<i>201</i>&nbsp;    public List&lt;Report&gt; getData(String query) throws CustomException {
+<b class="nc"><i>202</i>&nbsp;        return selectReports(query);</b>
+<i>203</i>&nbsp;    }
+<i>204</i>&nbsp;
+<i>205</i>&nbsp;    /**
+<i>206</i>&nbsp;     * Method which returns all unique strings from a column of a database
+<i>207</i>&nbsp;     * @param column The column that will be searched
+<i>208</i>&nbsp;     * @param conditions Constrictions to the search
+<i>209</i>&nbsp;     * @return A list of unique Strings
+<i>210</i>&nbsp;     * @throws CustomException Error getting result set from the database.
+<i>211</i>&nbsp;     */
+<i>212</i>&nbsp;    public List&lt;String&gt; getColumnString(String column, String conditions) throws CustomException {
+<b class="nc"><i>213</i>&nbsp;        List&lt;String&gt; crimeTypeList = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>214</i>&nbsp;        String query = &quot;SELECT DISTINCT &quot; +column+ &quot; from crimedb &quot; + conditions;</b>
+<b class="nc"><i>215</i>&nbsp;        try (Statement stmt = connection.createStatement();</b>
+<b class="nc"><i>216</i>&nbsp;            ResultSet rs = stmt.executeQuery(query)) {</b>
+<i>217</i>&nbsp;            // Converts all results into crimes.
+<b class="nc"><i>218</i>&nbsp;            while (rs.next()) {</b>
+<b class="nc"><i>219</i>&nbsp;                String columnString = rs.getString(column);</b>
+<b class="nc"><i>220</i>&nbsp;                crimeTypeList.add(columnString);</b>
+<b class="nc"><i>221</i>&nbsp;            }</b>
+<b class="nc"><i>222</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>223</i>&nbsp;            throw new CustomException(&quot;Could not find column &quot; + column + &quot; in active database.&quot;, e.getMessage());</b>
+<b class="nc"><i>224</i>&nbsp;        }</b>
+<b class="nc"><i>225</i>&nbsp;        return crimeTypeList;</b>
+<i>226</i>&nbsp;     }
+<i>227</i>&nbsp;
+<i>228</i>&nbsp;    /**
+<i>229</i>&nbsp;     * Method which returns all unique Integers from a column of a database
+<i>230</i>&nbsp;     * @param column The column that will be searched
+<i>231</i>&nbsp;     * @param conditions Constrictions to the search
+<i>232</i>&nbsp;     * @return A list of unique Integers
+<i>233</i>&nbsp;     * @throws CustomException  Error getting result set from the database.
+<i>234</i>&nbsp;     */
+<i>235</i>&nbsp;    public ArrayList&lt;Integer&gt; getColumnInteger(String column, String conditions) throws CustomException {
+<b class="nc"><i>236</i>&nbsp;        ArrayList&lt;Integer&gt; crimeTypeList = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>237</i>&nbsp;        String query = &quot;SELECT DISTINCT &quot; +column+ &quot; from crimedb &quot; + conditions;</b>
+<b class="nc"><i>238</i>&nbsp;        try (Statement stmt = connection.createStatement();</b>
+<b class="nc"><i>239</i>&nbsp;            ResultSet rs = stmt.executeQuery(query)) {</b>
+<i>240</i>&nbsp;            // Converts all results into crimes.
+<b class="nc"><i>241</i>&nbsp;            while (rs.next()) {</b>
+<b class="nc"><i>242</i>&nbsp;                Integer columnInteger = rs.getInt(column);</b>
+<b class="nc"><i>243</i>&nbsp;                crimeTypeList.add(columnInteger);</b>
+<b class="nc"><i>244</i>&nbsp;            }</b>
+<b class="nc"><i>245</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>246</i>&nbsp;            throw new CustomException(&quot;Could not find column &quot; + column + &quot; in active database.&quot;, e.getMessage());</b>
+<b class="nc"><i>247</i>&nbsp;        }</b>
+<b class="nc"><i>248</i>&nbsp;        return crimeTypeList;</b>
+<i>249</i>&nbsp;    }
+<i>250</i>&nbsp;
+<i>251</i>&nbsp;    /**
+<i>252</i>&nbsp;     * Uses a query for the crimedb view to get a selection of reports.
+<i>253</i>&nbsp;     *
+<i>254</i>&nbsp;     * @param query     The query for the crimedb view.
+<i>255</i>&nbsp;     * @return          A list of reports.
+<i>256</i>&nbsp;     * @throws CustomException  Error getting a selection of reports.
+<i>257</i>&nbsp;     */
+<i>258</i>&nbsp;    private List&lt;Report&gt; selectReports(String query) throws CustomException {
+<b class="fc"><i>259</i>&nbsp;        List&lt;Report&gt; reports = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>260</i>&nbsp;        try (Statement stmt = connection.createStatement();</b>
+<b class="fc"><i>261</i>&nbsp;            ResultSet rs = stmt.executeQuery(query)){</b>
+<i>262</i>&nbsp;            // Converts all results into crimes.
+<b class="fc"><i>263</i>&nbsp;            while (rs.next()) {</b>
+<b class="fc"><i>264</i>&nbsp;                Report crime = generateReport(rs);</b>
+<b class="fc"><i>265</i>&nbsp;                reports.add(crime);</b>
+<b class="fc"><i>266</i>&nbsp;            }</b>
+<b class="fc"><i>267</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>268</i>&nbsp;            throw new CustomException(&quot;Error getting set of reports from the database.&quot;, e.getMessage());</b>
+<b class="fc"><i>269</i>&nbsp;        }</b>
+<b class="fc"><i>270</i>&nbsp;        return reports;</b>
+<i>271</i>&nbsp;    }
+<i>272</i>&nbsp;
+<i>273</i>&nbsp;    /**
+<i>274</i>&nbsp;     * Turns an entry in a result set into a Report object.
+<i>275</i>&nbsp;     * @param rs The result of the result set to be turned into a Report object.
+<i>276</i>&nbsp;     * @return The created Report object.
+<i>277</i>&nbsp;     * @throws SQLException Thrown if a value is invalid.
+<i>278</i>&nbsp;     */
+<i>279</i>&nbsp;    private Report generateReport(ResultSet rs) throws SQLException{
+<b class="fc"><i>280</i>&nbsp;        Timestamp tt = rs.getTimestamp(&quot;date&quot;);</b>
+<b class="fc"><i>281</i>&nbsp;        return new Crime(</b>
+<b class="fc"><i>282</i>&nbsp;                rs.getString(&quot;id&quot;),</b>
+<b class="fc"><i>283</i>&nbsp;                tt.toLocalDateTime(),</b>
+<b class="fc"><i>284</i>&nbsp;                rs.getString(&quot;block&quot;),</b>
+<b class="fc"><i>285</i>&nbsp;                rs.getString(&quot;iucr&quot;),</b>
+<b class="fc"><i>286</i>&nbsp;                rs.getString(&quot;primary_description&quot;),</b>
+<b class="fc"><i>287</i>&nbsp;                rs.getString(&quot;secondary_description&quot;),</b>
+<b class="fc"><i>288</i>&nbsp;                rs.getString(&quot;location_description&quot;),</b>
+<b class="fc"><i>289</i>&nbsp;                rs.getBoolean(&quot;arrest&quot;),</b>
+<b class="fc"><i>290</i>&nbsp;                rs.getBoolean(&quot;domestic&quot;),</b>
+<b class="fc"><i>291</i>&nbsp;                rs.getInt(&quot;beat&quot;),</b>
+<b class="fc"><i>292</i>&nbsp;                rs.getInt(&quot;ward&quot;),</b>
+<b class="fc"><i>293</i>&nbsp;                rs.getString(&quot;fbicd&quot;),</b>
+<b class="fc"><i>294</i>&nbsp;                rs.getInt(&quot;x_coord&quot;),</b>
+<b class="fc"><i>295</i>&nbsp;                rs.getInt(&quot;y_coord&quot;),</b>
+<b class="fc"><i>296</i>&nbsp;                rs.getDouble(&quot;latitude&quot;),</b>
+<b class="fc"><i>297</i>&nbsp;                rs.getDouble(&quot;longitude&quot;)</b>
+<i>298</i>&nbsp;        );
+<i>299</i>&nbsp;    }
+<i>300</i>&nbsp;
+<i>301</i>&nbsp;    /**
+<i>302</i>&nbsp;     * Gets a single crime entry from the database.
+<i>303</i>&nbsp;     *
+<i>304</i>&nbsp;     * @param entry     The case number of a crime object.
+<i>305</i>&nbsp;     * @return          A single report.
+<i>306</i>&nbsp;     * @throws CustomException Error getting a crime object from the database.
+<i>307</i>&nbsp;     */
+<i>308</i>&nbsp;    public Crime getCrime(String entry, int listId) throws CustomException {
+<b class="fc"><i>309</i>&nbsp;        Crime crime = null;</b>
+<b class="fc"><i>310</i>&nbsp;        try (PreparedStatement psReport = connection.prepareStatement(&quot;SELECT &quot; + </b>
+<i>311</i>&nbsp;            &quot;id, list_id, date, primary_description, secondary_description, domestic, &quot; +
+<i>312</i>&nbsp;            &quot;x_coord, y_coord, latitude, longitude, location_description, block, iucr, fbicd, arrest, beat, ward&quot; +
+<i>313</i>&nbsp;            &quot; FROM crimedb WHERE id=? AND list_id=?;&quot;)) {
+<i>314</i>&nbsp;            
+<b class="fc"><i>315</i>&nbsp;            psReport.setString(1, entry);</b>
+<b class="fc"><i>316</i>&nbsp;            psReport.setInt(2, listId);</b>
+<i>317</i>&nbsp;            
+<b class="fc"><i>318</i>&nbsp;            ResultSet rs = psReport.executeQuery();</b>
+<b class="fc"><i>319</i>&nbsp;            while (rs.next()) {</b>
+<b class="fc"><i>320</i>&nbsp;                crime = (Crime) generateReport(rs);</b>
+<i>321</i>&nbsp;            }
+<i>322</i>&nbsp;            
+<i>323</i>&nbsp;            // Closes the result set.
+<b class="fc"><i>324</i>&nbsp;            rs.close();</b>
+<b class="fc"><i>325</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>326</i>&nbsp;            throw new CustomException(&quot;Error getting single crime from the database.&quot;, e.getMessage());</b>
+<b class="fc"><i>327</i>&nbsp;        }</b>
+<b class="fc"><i>328</i>&nbsp;        return crime;</b>
+<i>329</i>&nbsp;    }
+<i>330</i>&nbsp;
+<i>331</i>&nbsp;    /**
+<i>332</i>&nbsp;     * Deletes an entry from the database.
+<i>333</i>&nbsp;     *
+<i>334</i>&nbsp;     * @param entryId       The case number of the crime object.
+<i>335</i>&nbsp;     */
+<i>336</i>&nbsp;    public void deleteReport(String entryId, int listId) throws CustomException{
+<b class="fc"><i>337</i>&nbsp;        String reportQuery = &quot;DELETE FROM reports WHERE id = &#39;&quot; + entryId + &quot;&#39; AND list_id=&quot; + listId;</b>
+<i>338</i>&nbsp;        try {
+<b class="fc"><i>339</i>&nbsp;            runStatement(&quot;BEGIN;&quot;);</b>
+<b class="fc"><i>340</i>&nbsp;            runStatement(reportQuery);</b>
+<b class="fc"><i>341</i>&nbsp;            runStatement(&quot;COMMIT;&quot;);</b>
+<b class="nc"><i>342</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>343</i>&nbsp;            if (e.getMessage().contains(&quot;(cannot start a transaction within a transaction)&quot;)) {</b>
+<b class="nc"><i>344</i>&nbsp;                throw new CustomException(&quot;Database is busy. Please wait until the current action is finished.&quot;, e.getMessage());</b>
+<i>345</i>&nbsp;            }
+<b class="nc"><i>346</i>&nbsp;            throw new CustomException(&quot;Could not delete entry.&quot;, e.getMessage());</b>
+<b class="fc"><i>347</i>&nbsp;        }</b>
+<b class="fc"><i>348</i>&nbsp;    }</b>
+<i>349</i>&nbsp;
+<i>350</i>&nbsp;    /**
+<i>351</i>&nbsp;     * Runs during the importing of a outside database into the main database.
+<i>352</i>&nbsp;     *
+<i>353</i>&nbsp;     * @param selectedFile      The Database file.
+<i>354</i>&nbsp;     */
+<i>355</i>&nbsp;    private void importInDB(File selectedFile, int listId, String behavior) throws CustomException {
+<i>356</i>&nbsp;        try {
+<b class="fc"><i>357</i>&nbsp;            runStatement(&quot;BEGIN;&quot;);</b>
+<b class="fc"><i>358</i>&nbsp;            runStatement(&quot;ATTACH &#39;&quot; + selectedFile + &quot;&#39; AS &quot; + &quot;newReportDB;&quot;);</b>
+<b class="fc"><i>359</i>&nbsp;            runStatement(&quot;INSERT OR &quot; + behavior + &quot; INTO reports &quot; +</b>
+<i>360</i>&nbsp;                &quot;SELECT &quot; +
+<i>361</i>&nbsp;                &quot;id, &quot; + 
+<i>362</i>&nbsp;                &quot;&#39;&quot; + listId + &quot;&#39; ,&quot; +
+<i>363</i>&nbsp;                &quot;date, &quot; +
+<i>364</i>&nbsp;                &quot;primary_description, &quot; +
+<i>365</i>&nbsp;                &quot;secondary_description, &quot; + 
+<i>366</i>&nbsp;                &quot;domestic, &quot; +
+<i>367</i>&nbsp;                &quot;x_coord, &quot; +
+<i>368</i>&nbsp;                &quot;y_coord, &quot; +
+<i>369</i>&nbsp;                &quot;latitude, &quot; +
+<i>370</i>&nbsp;                &quot;longitude, &quot; +
+<i>371</i>&nbsp;                &quot;location_description &quot; + 
+<i>372</i>&nbsp;                &quot;FROM newReportDB.reports&quot;);
+<i>373</i>&nbsp;
+<b class="fc"><i>374</i>&nbsp;            runStatement(&quot;INSERT OR &quot; + behavior + &quot; INTO crimes SELECT &quot; +</b>
+<i>375</i>&nbsp;                &quot;report_id, &quot; + 
+<i>376</i>&nbsp;                &quot;&#39;&quot; + listId + &quot;&#39;, &quot; +
+<i>377</i>&nbsp;                &quot;block, &quot; +
+<i>378</i>&nbsp;                &quot;iucr, &quot; +
+<i>379</i>&nbsp;                &quot;fbicd, &quot; + 
+<i>380</i>&nbsp;                &quot;arrest, &quot; +
+<i>381</i>&nbsp;                &quot;beat, &quot; +
+<i>382</i>&nbsp;                &quot;ward &quot; + 
+<i>383</i>&nbsp;                &quot;FROM newReportDB.crimes&quot;);
+<i>384</i>&nbsp;
+<b class="fc"><i>385</i>&nbsp;            throw new CustomException(&quot;Import complete.&quot;, &quot;Import complete&quot;);</b>
+<i>386</i>&nbsp;
+<b class="nc"><i>387</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>388</i>&nbsp;            if (e.getMessage().contains(&quot;(cannot start a transaction within a transaction)&quot;)) {</b>
+<b class="nc"><i>389</i>&nbsp;                throw new CustomException(&quot;Database is busy. Please wait until the current action is finished.&quot;, e.getMessage());</b>
+<i>390</i>&nbsp;            }
+<b class="nc"><i>391</i>&nbsp;            if (e.getMessage().contains(&quot;(UNIQUE constraint failed: reports.list_id, reports.id)&quot;)) {</b>
+<b class="nc"><i>392</i>&nbsp;                throw new CustomException(&quot;Duplicate data detected.&quot;, e.getMessage());</b>
+<i>393</i>&nbsp;            }
+<b class="nc"><i>394</i>&nbsp;            throw new CustomException(&quot;Invalid data in database&quot;, e.getMessage());</b>
+<i>395</i>&nbsp;        } finally {
+<b class="fc"><i>396</i>&nbsp;            try {</b>
+<b class="fc"><i>397</i>&nbsp;                runStatement(&quot;COMMIT;&quot;);</b>
+<b class="fc"><i>398</i>&nbsp;                runStatement(&quot;DETACH DATABASE &quot; + &quot;&#39;newReportDB&#39;;&quot;);</b>
+<b class="nc"><i>399</i>&nbsp;            } catch (SQLException e) {</b>
+<b class="nc"><i>400</i>&nbsp;                throw new CustomException(&quot;Error while writing to the database&quot;, e.getMessage());</b>
+<b class="fc"><i>401</i>&nbsp;            }</b>
+<b class="fc"><i>402</i>&nbsp;        }</b>
+<i>403</i>&nbsp;    }
+<i>404</i>&nbsp;
+<i>405</i>&nbsp;
+<i>406</i>&nbsp;    /**
+<i>407</i>&nbsp;     * Runs a query with no result set and ensures that the statements are then closed.
+<i>408</i>&nbsp;     * @param query     The query being used.
+<i>409</i>&nbsp;     * @throws SQLException Error running a sqlite statement.
+<i>410</i>&nbsp;     */
+<i>411</i>&nbsp;    private void runStatement(String query) throws SQLException {
+<b class="fc"><i>412</i>&nbsp;        try (Statement stmt = connection.createStatement()) {</b>
+<b class="fc"><i>413</i>&nbsp;            stmt.execute(query);</b>
+<b class="fc"><i>414</i>&nbsp;        }</b>
+<b class="fc"><i>415</i>&nbsp;    }</b>
+<i>416</i>&nbsp;
+<i>417</i>&nbsp;    /**
+<i>418</i>&nbsp;     * Is given a CSV file and imports it into the database.
+<i>419</i>&nbsp;     *
+<i>420</i>&nbsp;     * @param pathname      CSV file.
+<i>421</i>&nbsp;     * @throws CustomException  Error reading the CSV into the database.
+<i>422</i>&nbsp;     */
+<i>423</i>&nbsp;    private void readToDB(File pathname, int listId, String behavior, boolean skipBadValue) throws CustomException {
+<b class="fc"><i>424</i>&nbsp;        String[] schemaDefault = {&quot;CASE#&quot;, &quot;DATE OF OCCURRENCE&quot;, &quot;BLOCK&quot;, &quot;IUCR&quot;, &quot;PRIMARY DESCRIPTION&quot;, &quot;SECONDARY DESCRIPTION&quot;,</b>
+<i>425</i>&nbsp;                &quot;LOCATION DESCRIPTION&quot;, &quot;ARREST&quot;, &quot;DOMESTIC&quot;, &quot;BEAT&quot;, &quot;WARD&quot;, &quot;FBI CD&quot;, &quot;X COORDINATE&quot;, &quot;Y COORDINATE&quot;,
+<i>426</i>&nbsp;                &quot;LATITUDE&quot;, &quot;LONGITUDE&quot;, &quot;LOCATION&quot;};
+<b class="fc"><i>427</i>&nbsp;        try (FileReader csvFile = new FileReader(pathname); CSVReader reader = new CSVReader(csvFile)) {</b>
+<b class="fc"><i>428</i>&nbsp;            String[] schema = reader.readNext(); // Checks the data will be the type required</b>
+<i>429</i>&nbsp;
+<b class="fc"><i>430</i>&nbsp;            for (int i = 0; i &lt; schema.length; i++) {</b>
+<b class="fc"><i>431</i>&nbsp;                if (!schemaDefault[i].equals(schema[i])) {</b>
+<b class="nc"><i>432</i>&nbsp;                    throw new CustomException(&quot;Invalid Schema in CSV file. &quot; + schema[i] + &quot; should be &quot; + schemaDefault[i] + &quot;.&quot;, &quot;Invalid Schema&quot;);</b>
+<i>433</i>&nbsp;                }
+<i>434</i>&nbsp;            }
+<i>435</i>&nbsp;                // After getting all rows goes to write them into the database.
+<b class="fc"><i>436</i>&nbsp;            List&lt;String[]&gt; rows = reader.readAll();</b>
+<i>437</i>&nbsp;            
+<b class="fc"><i>438</i>&nbsp;            write(rows, listId, behavior, skipBadValue);</b>
+<i>439</i>&nbsp;
+<b class="nc"><i>440</i>&nbsp;        } catch (IOException e) {</b>
+<b class="nc"><i>441</i>&nbsp;            throw new CustomException(&quot;Error reading to database.&quot;, e.getMessage());</b>
+<b class="fc"><i>442</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="fc"><i>443</i>&nbsp;            if (e.getMessage().contains(&quot;(cannot start a transaction within a transaction)&quot;)) {</b>
+<b class="fc"><i>444</i>&nbsp;                throw new CustomException(&quot;Database is busy. Please wait until the current action is finished.&quot;, e.getMessage());</b>
+<i>445</i>&nbsp;            }
+<b class="nc"><i>446</i>&nbsp;            throw new CustomException(&quot;Error writing to database.&quot;, e.getMessage());</b>
+<b class="nc"><i>447</i>&nbsp;        }</b>
+<b class="nc"><i>448</i>&nbsp;    }</b>
+<i>449</i>&nbsp;
+<i>450</i>&nbsp;    /**
+<i>451</i>&nbsp;     * Adds the ability to edit or add data into the database from a crime object.
+<i>452</i>&nbsp;     *
+<i>453</i>&nbsp;     * @param crime     A crime object.
+<i>454</i>&nbsp;     * @throws CustomException  Error updating a crime within the database.
+<i>455</i>&nbsp;     */
+<i>456</i>&nbsp;    public void editCrime(Crime crime, int listId) throws CustomException {
+<b class="fc"><i>457</i>&nbsp;        try (PreparedStatement psReport = connection.prepareStatement(&quot;INSERT OR REPLACE INTO reports(id, list_id, date, primary_description, secondary_description, domestic, x_coord, y_coord, latitude, longitude, location_description) &quot; +</b>
+<i>458</i>&nbsp;                &quot;VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);&quot;);
+<b class="fc"><i>459</i>&nbsp;            PreparedStatement psCrime = connection.prepareStatement(&quot;INSERT OR REPLACE INTO crimes(report_id, list_id, block, iucr, fbicd, arrest, beat, ward) &quot; +</b>
+<i>460</i>&nbsp;                &quot;VALUES (?, ?, ?, ?, ?, ?, ?, ?);&quot;)){
+<b class="fc"><i>461</i>&nbsp;            runStatement(&quot;BEGIN;&quot;);</b>
+<i>462</i>&nbsp;
+<b class="fc"><i>463</i>&nbsp;            PSTypes.setPSString(psCrime, 1, crime.getId()); // Case Number</b>
+<b class="fc"><i>464</i>&nbsp;            PSTypes.setPSInteger(psCrime, 2, listId); // List</b>
+<b class="fc"><i>465</i>&nbsp;            PSTypes.setPSString(psCrime, 3, crime.getBlock()); // Block</b>
+<b class="fc"><i>466</i>&nbsp;            PSTypes.setPSString(psCrime, 4, crime.getIucr()); // Iucr</b>
+<b class="fc"><i>467</i>&nbsp;            PSTypes.setPSString(psCrime, 5, crime.getFbiCD()); // FbiCD</b>
+<b class="fc"><i>468</i>&nbsp;            PSTypes.setPSBoolean(psCrime, 6, crime.getArrest()); // Arrest</b>
+<b class="fc"><i>469</i>&nbsp;            PSTypes.setPSInteger(psCrime, 7, crime.getBeat()); // Beat</b>
+<b class="fc"><i>470</i>&nbsp;            PSTypes.setPSInteger(psCrime, 8, crime.getWard()); // Ward</b>
+<i>471</i>&nbsp;
+<b class="fc"><i>472</i>&nbsp;            Timestamp date = Timestamp.valueOf(crime.getDate());</b>
+<b class="fc"><i>473</i>&nbsp;            PSTypes.setPSString(psReport, 1, crime.getId()); // Case Number</b>
+<b class="fc"><i>474</i>&nbsp;            PSTypes.setPSInteger(psReport, 2, listId); // List</b>
+<b class="fc"><i>475</i>&nbsp;            psReport.setTimestamp(3, date); // Date</b>
+<b class="fc"><i>476</i>&nbsp;            PSTypes.setPSString(psReport, 4, crime.getPrimaryDescription()); // Primary Description</b>
+<b class="fc"><i>477</i>&nbsp;            PSTypes.setPSString(psReport, 5, crime.getSecondaryDescription()); // Secondary Description</b>
+<b class="fc"><i>478</i>&nbsp;            PSTypes.setPSBoolean(psReport, 6, crime.getDomestic()); // Domestic</b>
+<b class="fc"><i>479</i>&nbsp;            PSTypes.setPSInteger(psReport, 7, crime.getXCoord()); // X Coordinate</b>
+<b class="fc"><i>480</i>&nbsp;            PSTypes.setPSInteger(psReport, 8, crime.getYCoord()); // Y Coordinate</b>
+<b class="fc"><i>481</i>&nbsp;            PSTypes.setPSDouble(psReport, 9, crime.getLatitude()); // Latitude</b>
+<b class="fc"><i>482</i>&nbsp;            PSTypes.setPSDouble(psReport, 10, crime.getLongitude()); // Longitude</b>
+<b class="fc"><i>483</i>&nbsp;            PSTypes.setPSString(psReport, 11, crime.getLocationDescription()); // Location Description</b>
+<i>484</i>&nbsp;
+<i>485</i>&nbsp;
+<b class="fc"><i>486</i>&nbsp;            psReport.execute();</b>
+<b class="fc"><i>487</i>&nbsp;            psCrime.execute();</b>
+<b class="fc"><i>488</i>&nbsp;            runStatement(&quot;COMMIT;&quot;);</b>
+<i>489</i>&nbsp;
+<b class="fc"><i>490</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>491</i>&nbsp;            if (e.getMessage().contains(&quot;(cannot start a transaction within a transaction)&quot;)) {</b>
+<b class="nc"><i>492</i>&nbsp;                throw new CustomException(&quot;Database is busy. Please wait until the current action is finished.&quot;, e.getMessage());</b>
+<i>493</i>&nbsp;            }
+<b class="nc"><i>494</i>&nbsp;            throw new CustomException(&quot;Error updating crime in the database.&quot;, e.getMessage());</b>
+<b class="fc"><i>495</i>&nbsp;        }</b>
+<b class="fc"><i>496</i>&nbsp;    }</b>
+<i>497</i>&nbsp;
+<i>498</i>&nbsp;
+<i>499</i>&nbsp;    /**
+<i>500</i>&nbsp;     * Adds a list of reports in the form of a string[] into the database.
+<i>501</i>&nbsp;     *
+<i>502</i>&nbsp;     * @param rows                  All rows from the CSV file.
+<i>503</i>&nbsp;     * @throws SQLException         An error during the insertion.
+<i>504</i>&nbsp;     */
+<i>505</i>&nbsp;    private void write(List&lt;String[]&gt; rows, int listId, String behavior, boolean skipBadValue) throws SQLException, CustomException {
+<i>506</i>&nbsp;        // Turn off autocommit to increase speed.
+<b class="fc"><i>507</i>&nbsp;        List&lt;Integer&gt; errorRows = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>508</i>&nbsp;        runStatement(&quot;BEGIN;&quot;);</b>
+<b class="fc"><i>509</i>&nbsp;        for (int i = 0; i &lt; rows.size(); i++) {</b>
+<b class="fc"><i>510</i>&nbsp;            try (PreparedStatement psCrime = connection.prepareStatement(&quot;INSERT OR &quot; + behavior + &quot; INTO crimes(report_id, list_id, &quot; + </b>
+<i>511</i>&nbsp;                    &quot;block, iucr, fbicd, arrest, beat, ward) &quot; +
+<i>512</i>&nbsp;                    &quot;VALUES (?, ?, ?, ?, ?, ?, ?, ?);&quot;);
+<b class="fc"><i>513</i>&nbsp;                PreparedStatement psReport = connection.prepareStatement(&quot;INSERT OR &quot; + behavior + &quot; INTO reports(id, list_id, date, &quot; + </b>
+<i>514</i>&nbsp;                    &quot;primary_description, secondary_description, domestic, x_coord, y_coord, latitude, longitude, location_description) &quot; +
+<i>515</i>&nbsp;                    &quot;VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);&quot;)) {
+<i>516</i>&nbsp;                try {
+<b class="fc"><i>517</i>&nbsp;                    addReport(rows.get(i), listId, psReport, psCrime);</b>
+<b class="nc"><i>518</i>&nbsp;                } catch (SQLException | DateTimeParseException e) {</b>
+<i>519</i>&nbsp;                    // Row i+2 as indexing starts at 0 and row 1 is removed as the schema
+<b class="nc"><i>520</i>&nbsp;                    errorRows.add(i+2);</b>
+<b class="nc"><i>521</i>&nbsp;                    if (!skipBadValue) {</b>
+<b class="nc"><i>522</i>&nbsp;                        throw new CustomException(&quot;Invalid data was detected. No changes have been made.&quot;, e.getMessage());</b>
+<i>523</i>&nbsp;                    } 
+<b class="nc"><i>524</i>&nbsp;                    continue;</b>
+<b class="fc"><i>525</i>&nbsp;                }</b>
+<i>526</i>&nbsp;                try {
+<b class="fc"><i>527</i>&nbsp;                    psReport.execute();</b>
+<b class="fc"><i>528</i>&nbsp;                    psCrime.execute();</b>
+<b class="nc"><i>529</i>&nbsp;                } catch (SQLException e) {</b>
+<b class="nc"><i>530</i>&nbsp;                    if (e.getMessage().contains(&quot;(UNIQUE constraint failed: reports.list_id, reports.id)&quot;)) {</b>
+<b class="nc"><i>531</i>&nbsp;                        throw new CustomException(&quot;Duplicate data was detected. No changes have been made.&quot;, e.getMessage());</b>
+<i>532</i>&nbsp;                    } else {
+<b class="nc"><i>533</i>&nbsp;                        throw e;</b>
+<i>534</i>&nbsp;                    }
+<b class="fc"><i>535</i>&nbsp;                }</b>
+<i>536</i>&nbsp;                // Commits the changes and re-enables the auto commit.
+<b class="fc"><i>537</i>&nbsp;            } catch (SQLException e) {</b>
+<b class="nc"><i>538</i>&nbsp;                if (e.getMessage().contains(&quot;(cannot start a transaction within a transaction)&quot;)) {</b>
+<b class="nc"><i>539</i>&nbsp;                    throw new CustomException(&quot;Database is busy. Please wait until the current action is finished.&quot;, e.getMessage());</b>
+<i>540</i>&nbsp;                }
+<b class="nc"><i>541</i>&nbsp;                runStatement(&quot;ROLLBACK;&quot;);</b>
+<b class="nc"><i>542</i>&nbsp;                throw new CustomException(&quot;Error writing to the database.&quot;, e.getMessage());</b>
+<b class="fc"><i>543</i>&nbsp;            }</b>
+<i>544</i>&nbsp;        }
+<b class="fc"><i>545</i>&nbsp;        runStatement(&quot;COMMIT&quot;);</b>
+<b class="fc"><i>546</i>&nbsp;        throw new CustomException(&quot;Import complete. &quot; + (rows.size() - errorRows.size()) + &quot;/&quot; + rows.size() +</b>
+<i>547</i>&nbsp;            &quot; entries were imported&quot;, &quot;Import complete&quot;);
+<i>548</i>&nbsp;    }
+<i>549</i>&nbsp;
+<i>550</i>&nbsp;    /**
+<i>551</i>&nbsp;     * Adds a crime to the report and crime statements required to add the crime to the database.
+<i>552</i>&nbsp;     */
+<i>553</i>&nbsp;    private void addReport(String[] row, int listId, PreparedStatement psReport, PreparedStatement psCrime) throws SQLException {
+<b class="fc"><i>554</i>&nbsp;        for (int index = 0; index &lt;= 11; index++) {</b>
+<b class="fc"><i>555</i>&nbsp;            if (&quot;&quot;.equals(row[index])) {</b>
+<b class="nc"><i>556</i>&nbsp;                throw new SQLException(&quot;A NOT NULL constraint has failed.&quot;);</b>
+<i>557</i>&nbsp;            }
+<i>558</i>&nbsp;        }
+<b class="fc"><i>559</i>&nbsp;        psReport.setString(1, row[0]); // Case Number</b>
+<b class="fc"><i>560</i>&nbsp;        PSTypes.setPSInteger(psReport, 2, listId); // List</b>
+<b class="fc"><i>561</i>&nbsp;        if (Objects.equals(row[1], &quot;&quot;)) {</b>
+<b class="nc"><i>562</i>&nbsp;            psReport.setNull(3, Types.TIME);</b>
+<i>563</i>&nbsp;        } else {
+<b class="fc"><i>564</i>&nbsp;            psReport.setTimestamp(3, Timestamp.valueOf(parseDate(row[1])));</b>
+<i>565</i>&nbsp;        } // Date
+<b class="fc"><i>566</i>&nbsp;        PSTypes.setPSString(psReport, 4, row[4]); // Primary Description</b>
+<b class="fc"><i>567</i>&nbsp;        PSTypes.setPSString(psReport, 5, row[5]); // Secondary Description</b>
+<b class="fc"><i>568</i>&nbsp;        PSTypes.setPSBoolean(psReport, 6, row[8]); // Domestic</b>
+<b class="fc"><i>569</i>&nbsp;        PSTypes.setPSInteger(psReport, 7, row[12]); // X Coordinate</b>
+<b class="fc"><i>570</i>&nbsp;        PSTypes.setPSInteger(psReport, 8, row[13]); // Y Coordinate</b>
+<b class="fc"><i>571</i>&nbsp;        PSTypes.setPSDouble(psReport, 9, row[14]); // Latitude</b>
+<b class="fc"><i>572</i>&nbsp;        PSTypes.setPSDouble(psReport, 10, row[15]); // Longitude</b>
+<b class="fc"><i>573</i>&nbsp;        PSTypes.setPSString(psReport, 11, row[6]); // Location Description</b>
+<i>574</i>&nbsp;        
+<b class="fc"><i>575</i>&nbsp;        PSTypes.setPSString(psCrime, 1, row[0]); // Case Number</b>
+<b class="fc"><i>576</i>&nbsp;        PSTypes.setPSInteger(psCrime, 2, listId); // List</b>
+<b class="fc"><i>577</i>&nbsp;        PSTypes.setPSString(psCrime, 3, row[2]); // Block</b>
+<b class="fc"><i>578</i>&nbsp;        PSTypes.setPSString(psCrime, 4, row[3]); // Iucr</b>
+<b class="fc"><i>579</i>&nbsp;        PSTypes.setPSString(psCrime, 5, row[11]); // FbiCD</b>
+<b class="fc"><i>580</i>&nbsp;        PSTypes.setPSBoolean(psCrime, 6, row[7]); // Arrest</b>
+<b class="fc"><i>581</i>&nbsp;        PSTypes.setPSInteger(psCrime, 7, row[9]); // Beat</b>
+<b class="fc"><i>582</i>&nbsp;        PSTypes.setPSInteger(psCrime, 8, row[10]); // Ward</b>
+<b class="fc"><i>583</i>&nbsp;    }</b>
+<i>584</i>&nbsp;
+<i>585</i>&nbsp;    /**
+<i>586</i>&nbsp;     * Tries the 2 valid date formats used by the application.
+<i>587</i>&nbsp;     * @param date The string format of the date to be converted to LocalDateTime.
+<i>588</i>&nbsp;     * @return The LocalDateTime from a successful parsing.
+<i>589</i>&nbsp;     */
+<i>590</i>&nbsp;    private LocalDateTime parseDate(String date) throws DateTimeParseException {
+<i>591</i>&nbsp;        DateTimeFormatter formatter;
+<i>592</i>&nbsp;        try {
+<b class="fc"><i>593</i>&nbsp;            formatter = DateTimeFormatter.ofPattern(&quot;MM/dd/yyyy hh:mm:ss a&quot;, Locale.US);</b>
+<b class="fc"><i>594</i>&nbsp;            return LocalDateTime.parse(date, formatter);</b>
+<b class="fc"><i>595</i>&nbsp;        } catch (DateTimeParseException ignore) {}</b>
+<i>596</i>&nbsp;        try {
+<b class="fc"><i>597</i>&nbsp;            formatter = DateTimeFormatter.ofPattern(&quot;M/dd/yyyy HH:mm&quot;, Locale.US);</b>
+<b class="fc"><i>598</i>&nbsp;            return LocalDateTime.parse(date, formatter);</b>
+<b class="fc"><i>599</i>&nbsp;        } catch (DateTimeParseException ignore) {}</b>
+<b class="fc"><i>600</i>&nbsp;        formatter = DateTimeFormatter.ofPattern(&quot;dd-MMM-yyyy HH:mm:ss&quot;);</b>
+<b class="fc"><i>601</i>&nbsp;        return LocalDateTime.parse(date, formatter);</b>
+<i>602</i>&nbsp;    }
+<i>603</i>&nbsp;
+<i>604</i>&nbsp;    /**
+<i>605</i>&nbsp;     * Creates a new list in the database with the name passed in.
+<i>606</i>&nbsp;     * @param name The name of the new database.
+<i>607</i>&nbsp;     * @throws CustomException Error creating a list in the database.
+<i>608</i>&nbsp;     */
+<i>609</i>&nbsp;    public void createList(String name) throws CustomException {
+<b class="nc"><i>610</i>&nbsp;        try (PreparedStatement psList = connection.prepareStatement(&quot;INSERT or ABORT INTO lists(name) VALUES (?);&quot;)) {</b>
+<b class="nc"><i>611</i>&nbsp;            runStatement(&quot;BEGIN;&quot;);</b>
+<b class="nc"><i>612</i>&nbsp;            PSTypes.setPSString(psList, 1, name);</b>
+<b class="nc"><i>613</i>&nbsp;            psList.execute();</b>
+<b class="nc"><i>614</i>&nbsp;            runStatement(&quot;COMMIT;&quot;);</b>
+<b class="nc"><i>615</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>616</i>&nbsp;            if (e.getMessage().contains(&quot;(cannot start a transaction within a transaction)&quot;)) {</b>
+<b class="nc"><i>617</i>&nbsp;                throw new CustomException(&quot;Database is busy. Please wait until the current action is finished.&quot;, e.getMessage());</b>
+<i>618</i>&nbsp;            }
+<b class="nc"><i>619</i>&nbsp;            throw new CustomException(&quot;Unable to create a new list.&quot;, e.getMessage());</b>
+<b class="nc"><i>620</i>&nbsp;        }</b>
+<b class="nc"><i>621</i>&nbsp;    }</b>
+<i>622</i>&nbsp;
+<i>623</i>&nbsp;    /**
+<i>624</i>&nbsp;     * 
+<i>625</i>&nbsp;     * @return An ObservableList containing all the lists in the database.
+<i>626</i>&nbsp;     * @throws CustomException Error getting data of a given list.
+<i>627</i>&nbsp;     */
+<i>628</i>&nbsp;    public ObservableList&lt;String&gt; getLists() throws CustomException {
+<b class="nc"><i>629</i>&nbsp;        List&lt;String&gt; lists = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>630</i>&nbsp;        try (Statement stmt = connection.createStatement();</b>
+<b class="nc"><i>631</i>&nbsp;            ResultSet rs = stmt.executeQuery(&quot;SELECT name FROM lists&quot;)) {</b>
+<b class="nc"><i>632</i>&nbsp;            while (rs.next()) {</b>
+<b class="nc"><i>633</i>&nbsp;                lists.add(rs.getString(&quot;name&quot;));</b>
+<i>634</i>&nbsp;            }
+<b class="nc"><i>635</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>636</i>&nbsp;            throw new CustomException(&quot;Error getting the list of reports.&quot;, e.getMessage());</b>
+<b class="nc"><i>637</i>&nbsp;        }</b>
+<b class="nc"><i>638</i>&nbsp;        return FXCollections.observableList(lists);</b>
+<i>639</i>&nbsp;    }
+<i>640</i>&nbsp;
+<i>641</i>&nbsp;    /**
+<i>642</i>&nbsp;     * Renames a list contained in the database.
+<i>643</i>&nbsp;     * @param oldName The current name of the list.
+<i>644</i>&nbsp;     * @param newName The name that the list will be changed to.
+<i>645</i>&nbsp;     * @throws CustomException Error renaming list.
+<i>646</i>&nbsp;     */
+<i>647</i>&nbsp;    public void renameList(String oldName, String newName) throws CustomException {
+<b class="nc"><i>648</i>&nbsp;        try (PreparedStatement psList = connection.prepareStatement(&quot;UPDATE lists SET name=? WHERE name=?;&quot;)) {</b>
+<b class="nc"><i>649</i>&nbsp;            psList.setString(1, newName);</b>
+<b class="nc"><i>650</i>&nbsp;            psList.setString(2, oldName);</b>
+<b class="nc"><i>651</i>&nbsp;            psList.execute();</b>
+<b class="nc"><i>652</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>653</i>&nbsp;            throw new CustomException(&quot;List name already being used.&quot;, e.getMessage());</b>
+<b class="nc"><i>654</i>&nbsp;        }  </b>
+<b class="nc"><i>655</i>&nbsp;    }</b>
+<i>656</i>&nbsp;
+<i>657</i>&nbsp;    /**
+<i>658</i>&nbsp;     * Returns the numeric ID of a list given its name.
+<i>659</i>&nbsp;     * @param selectedList The name of the required list
+<i>660</i>&nbsp;     * @return The numeric ID of the selected list.
+<i>661</i>&nbsp;     * @throws CustomException Error getting list ID.
+<i>662</i>&nbsp;     */
+<i>663</i>&nbsp;    public Integer getListId(String selectedList) throws CustomException {
+<b class="fc"><i>664</i>&nbsp;        Integer listId = null;</b>
+<b class="fc"><i>665</i>&nbsp;        try (PreparedStatement psList = connection.prepareStatement(&quot;SELECT id FROM lists WHERE name=?;&quot;)) {</b>
+<b class="fc"><i>666</i>&nbsp;            psList.setString(1, selectedList);</b>
+<b class="fc"><i>667</i>&nbsp;            ResultSet lists = psList.executeQuery();</b>
+<b class="fc"><i>668</i>&nbsp;            while(lists.next()) {</b>
+<b class="fc"><i>669</i>&nbsp;                listId = lists.getInt(&quot;id&quot;);</b>
+<i>670</i>&nbsp;            }
+<i>671</i>&nbsp;            // Closes the result set.
+<b class="fc"><i>672</i>&nbsp;            lists.close();</b>
+<b class="fc"><i>673</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>674</i>&nbsp;            throw new CustomException(&quot;Error getting the list ID.&quot;, e.getMessage());</b>
+<b class="fc"><i>675</i>&nbsp;        }</b>
+<b class="fc"><i>676</i>&nbsp;        return listId;</b>
+<i>677</i>&nbsp;    }
+<i>678</i>&nbsp;
+<i>679</i>&nbsp;    /**
+<i>680</i>&nbsp;     * Deletes the selected list from the database.
+<i>681</i>&nbsp;     * @param selectedList The name of the list to be deleted.
+<i>682</i>&nbsp;     * @throws CustomException Error deleting list of data.
+<i>683</i>&nbsp;     */
+<i>684</i>&nbsp;    public void deleteList(String selectedList) throws CustomException {
+<b class="nc"><i>685</i>&nbsp;        try (PreparedStatement psList = connection.prepareStatement(&quot;DELETE FROM lists WHERE name=?;&quot;)) {</b>
+<b class="nc"><i>686</i>&nbsp;            runStatement(&quot;BEGIN&quot;);</b>
+<b class="nc"><i>687</i>&nbsp;            psList.setString(1, selectedList);</b>
+<b class="nc"><i>688</i>&nbsp;            psList.execute();</b>
+<b class="nc"><i>689</i>&nbsp;            runStatement(&quot;COMMIT&quot;);</b>
+<b class="nc"><i>690</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>691</i>&nbsp;            if (e.getMessage().contains(&quot;(cannot start a transaction within a transaction)&quot;)) {</b>
+<b class="nc"><i>692</i>&nbsp;                throw new CustomException(&quot;Database is busy. Please wait until the current action is finished.&quot;, e.getMessage());</b>
+<i>693</i>&nbsp;            }
+<b class="nc"><i>694</i>&nbsp;            throw new CustomException(&quot;Error deleting list from the database.&quot;, e.getMessage());</b>
+<b class="nc"><i>695</i>&nbsp;        }</b>
+<b class="nc"><i>696</i>&nbsp;    }</b>
+<i>697</i>&nbsp;
+<i>698</i>&nbsp;    /**
+<i>699</i>&nbsp;     * Determines what type of file needs to be exported to and navigates to the relevant method.
+<i>700</i>&nbsp;     * @param conditions The filter conditions to be complied with.
+<i>701</i>&nbsp;     * @param listId The list the data is being exported from.
+<i>702</i>&nbsp;     * @param saveLocation The location tof the new file.
+<i>703</i>&nbsp;     * @throws CustomException Error exporting the results to a file.
+<i>704</i>&nbsp;     */
+<i>705</i>&nbsp;    public void export(String conditions, int listId, String saveLocation) throws CustomException {
+<b class="fc"><i>706</i>&nbsp;        if (saveLocation.endsWith(&quot;.db&quot;)) {</b>
+<i>707</i>&nbsp;            try {
+<b class="fc"><i>708</i>&nbsp;                exportDB(conditions, listId, saveLocation);</b>
+<b class="nc"><i>709</i>&nbsp;            } catch (SQLException e) {</b>
+<b class="nc"><i>710</i>&nbsp;                throw new CustomException(&quot;Database failed to sync correctly.&quot;, e.getMessage());</b>
+<b class="fc"><i>711</i>&nbsp;            }</b>
+<b class="fc"><i>712</i>&nbsp;        } else if (saveLocation.endsWith(&quot;.csv&quot;)) {</b>
+<b class="fc"><i>713</i>&nbsp;            exportCSV(conditions, listId, saveLocation);</b>
+<i>714</i>&nbsp;        }
+<b class="fc"><i>715</i>&nbsp;    }</b>
+<i>716</i>&nbsp;
+<i>717</i>&nbsp;    /**
+<i>718</i>&nbsp;     * Writes the data contained in the database relevant to the current filter conditions into a csv file.
+<i>719</i>&nbsp;     * @param conditions The filter conditions to be complied with.
+<i>720</i>&nbsp;     * @param listId The list the data is being exported from.
+<i>721</i>&nbsp;     * @param saveLocation The location of the new file.
+<i>722</i>&nbsp;     * @throws CustomException Error exporting CSV file.
+<i>723</i>&nbsp;     */
+<i>724</i>&nbsp;    private void exportCSV(String conditions, int listId, String saveLocation) throws CustomException {
+<b class="fc"><i>725</i>&nbsp;        try (CSVWriter writer = new CSVWriter(new FileWriter(saveLocation), &#39;,&#39;);</b>
+<b class="fc"><i>726</i>&nbsp;            Statement stmt = connection.createStatement()){</b>
+<i>727</i>&nbsp;        
+<b class="fc"><i>728</i>&nbsp;            writer.writeNext((&quot;CASE#,DATE OF OCCURRENCE,BLOCK,IUCR,PRIMARY DESCRIPTION,SECONDARY DESCRIPTION,&quot; +</b>
+<b class="fc"><i>729</i>&nbsp;            &quot;LOCATION DESCRIPTION,ARREST,DOMESTIC,BEAT,WARD,FBI CD,X COORDINATE,Y COORDINATE,LATITUDE,LONGITUDE,LOCATION&quot;).split(&quot;,&quot;));</b>
+<i>730</i>&nbsp;
+<b class="fc"><i>731</i>&nbsp;            String query = &quot;SELECT &quot; +</b>
+<i>732</i>&nbsp;                &quot;id, &quot; + 
+<i>733</i>&nbsp;                &quot;date, &quot; +
+<i>734</i>&nbsp;                &quot;block, &quot; +
+<i>735</i>&nbsp;                &quot;iucr, &quot; +
+<i>736</i>&nbsp;                &quot;primary_description, &quot; +
+<i>737</i>&nbsp;                &quot;secondary_description, &quot; + 
+<i>738</i>&nbsp;                &quot;location_description, &quot; + 
+<i>739</i>&nbsp;                &quot;arrest, &quot; +
+<i>740</i>&nbsp;                &quot;domestic, &quot; +
+<i>741</i>&nbsp;                &quot;beat, &quot; +
+<i>742</i>&nbsp;                &quot;ward, &quot; + 
+<i>743</i>&nbsp;                &quot;fbicd, &quot; +
+<i>744</i>&nbsp;                &quot;x_coord, &quot; +
+<i>745</i>&nbsp;                &quot;y_coord, &quot; +
+<i>746</i>&nbsp;                &quot;latitude, &quot; +
+<i>747</i>&nbsp;                &quot;longitude &quot; +
+<i>748</i>&nbsp;                &quot;FROM crimedb WHERE &quot;;
+<b class="fc"><i>749</i>&nbsp;            query = addConditions(query, conditions, listId);</b>
+<i>750</i>&nbsp;
+<b class="fc"><i>751</i>&nbsp;            ResultSet rs = stmt.executeQuery(query);</b>
+<b class="fc"><i>752</i>&nbsp;            writer.writeAll(rs, false);</b>
+<b class="fc"><i>753</i>&nbsp;            rs.close();</b>
+<b class="fc"><i>754</i>&nbsp;        } catch (SQLException | IOException e) {</b>
+<b class="nc"><i>755</i>&nbsp;            throw new CustomException(&quot;Error exporting CSV from the database.&quot;, e.getMessage());</b>
+<b class="fc"><i>756</i>&nbsp;        }   </b>
+<b class="fc"><i>757</i>&nbsp;    }</b>
+<i>758</i>&nbsp;
+<i>759</i>&nbsp;    /**
+<i>760</i>&nbsp;     * Writes the data contained in the database relevant to the current filter conditions into a database file.
+<i>761</i>&nbsp;     * @param conditions The filter conditions to be complied with.
+<i>762</i>&nbsp;     * @param listId The list the data is being exported from.
+<i>763</i>&nbsp;     * @param saveLocation The location of the new file.
+<i>764</i>&nbsp;     * @throws SQLException     Error when running the statements.
+<i>765</i>&nbsp;     * @throws CustomException  Error when exporting the database.
+<i>766</i>&nbsp;     */
+<i>767</i>&nbsp;    private void exportDB(String conditions, int listId, String saveLocation) throws CustomException, SQLException {
+<b class="fc"><i>768</i>&nbsp;        createExportDatabase(saveLocation);</b>
+<b class="fc"><i>769</i>&nbsp;        runStatement(&quot;ATTACH DATABASE &#39;&quot; + saveLocation + &quot;&#39; AS other;&quot;);</b>
+<i>770</i>&nbsp;        try {
+<b class="fc"><i>771</i>&nbsp;            String query = &quot;INSERT INTO other.reports SELECT &quot; +</b>
+<i>772</i>&nbsp;            &quot;id, &quot; + 
+<i>773</i>&nbsp;            &quot;date, &quot; +
+<i>774</i>&nbsp;            &quot;primary_description, &quot; +
+<i>775</i>&nbsp;            &quot;secondary_description, &quot; + 
+<i>776</i>&nbsp;            &quot;domestic, &quot; +
+<i>777</i>&nbsp;            &quot;x_coord, &quot; +
+<i>778</i>&nbsp;            &quot;y_coord, &quot; +
+<i>779</i>&nbsp;            &quot;latitude, &quot; +
+<i>780</i>&nbsp;            &quot;longitude, &quot; +
+<i>781</i>&nbsp;            &quot;location_description &quot; + 
+<i>782</i>&nbsp;            &quot;FROM crimedb WHERE &quot;;
+<b class="fc"><i>783</i>&nbsp;            query = addConditions(query, conditions, listId);</b>
+<b class="fc"><i>784</i>&nbsp;            runStatement(query);</b>
+<i>785</i>&nbsp;
+<b class="fc"><i>786</i>&nbsp;            query = &quot;INSERT INTO other.crimes SELECT &quot; +</b>
+<i>787</i>&nbsp;            &quot;report_id, &quot; + 
+<i>788</i>&nbsp;            &quot;block, &quot; +
+<i>789</i>&nbsp;            &quot;iucr, &quot; +
+<i>790</i>&nbsp;            &quot;fbicd, &quot; + 
+<i>791</i>&nbsp;            &quot;arrest, &quot; +
+<i>792</i>&nbsp;            &quot;beat, &quot; +
+<i>793</i>&nbsp;            &quot;ward &quot; + 
+<i>794</i>&nbsp;            &quot;FROM crimedb WHERE &quot;;
+<b class="fc"><i>795</i>&nbsp;            query = addConditions(query, conditions, listId);</b>
+<b class="fc"><i>796</i>&nbsp;            runStatement(query);</b>
+<b class="nc"><i>797</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>798</i>&nbsp;            throw new CustomException(&quot;Could not export entries into database&quot;, e.getMessage());</b>
+<i>799</i>&nbsp;        } finally {
+<b class="fc"><i>800</i>&nbsp;            runStatement(&quot;DETACH DATABASE other;&quot;);</b>
+<b class="fc"><i>801</i>&nbsp;        }</b>
+<b class="fc"><i>802</i>&nbsp;    }</b>
+<i>803</i>&nbsp;
+<i>804</i>&nbsp;    /**
+<i>805</i>&nbsp;     * Adds the required list to the conditions.
+<i>806</i>&nbsp;     * @param query SELECT statement to be refined.
+<i>807</i>&nbsp;     * @param conditions Filter conditions applied to query.
+<i>808</i>&nbsp;     * @param listId List to query data from.
+<i>809</i>&nbsp;     * @return  The query to be run.
+<i>810</i>&nbsp;     */
+<i>811</i>&nbsp;    private String addConditions(String query, String conditions, int listId) {
+<b class="fc"><i>812</i>&nbsp;        query += conditions;</b>
+<b class="fc"><i>813</i>&nbsp;        if (!conditions.isEmpty()) {</b>
+<b class="nc"><i>814</i>&nbsp;            query += &quot; AND&quot;;</b>
+<i>815</i>&nbsp;        }
+<b class="fc"><i>816</i>&nbsp;        query += &quot; list_id=&quot; + listId +&quot;;&quot;;</b>
+<b class="fc"><i>817</i>&nbsp;        return query;</b>
+<i>818</i>&nbsp;    }
+<i>819</i>&nbsp;
+<i>820</i>&nbsp;    /**
+<i>821</i>&nbsp;     * Creates a database for the data to be exported into at the given location.
+<i>822</i>&nbsp;     * @param location The location to create the database.
+<i>823</i>&nbsp;     * @throws CustomException  Throws an error when creating the exported data.
+<i>824</i>&nbsp;     */
+<i>825</i>&nbsp;    private void createExportDatabase(String location) throws CustomException {
+<b class="fc"><i>826</i>&nbsp;        try (Connection newdb = DriverManager.getConnection(&quot;jdbc:sqlite:&quot; + location); Statement stmt = newdb.createStatement()) {</b>
+<i>827</i>&nbsp;            
+<b class="fc"><i>828</i>&nbsp;            stmt.execute(&quot;PRAGMA foreign_keys = ON;&quot;);</b>
+<i>829</i>&nbsp;
+<b class="fc"><i>830</i>&nbsp;            stmt.execute(&quot;DROP TABLE IF EXISTS reports;&quot;);</b>
+<b class="fc"><i>831</i>&nbsp;            stmt.execute(&quot;CREATE TABLE reports (&quot; + </b>
+<i>832</i>&nbsp;                    &quot;id VARCHAR(8) NOT NULL, &quot; + 
+<i>833</i>&nbsp;                    &quot;date TIMESTAMP NOT NULL, &quot; +
+<i>834</i>&nbsp;                    &quot;primary_description VARCHAR(50) NOT NULL, &quot; +
+<i>835</i>&nbsp;                    &quot;secondary_description VARCHAR(50) NOT NULL, &quot; + 
+<i>836</i>&nbsp;                    &quot;domestic BOOLEAN, &quot; +
+<i>837</i>&nbsp;                    &quot;x_coord INT, &quot; +
+<i>838</i>&nbsp;                    &quot;y_coord INT, &quot; +
+<i>839</i>&nbsp;                    &quot;latitude FLOAT, &quot; +
+<i>840</i>&nbsp;                    &quot;longitude FLOAT, &quot; +
+<i>841</i>&nbsp;                    &quot;location_description VARCHAR(50), &quot; +
+<i>842</i>&nbsp;                    &quot;PRIMARY KEY(id) &quot; +
+<i>843</i>&nbsp;                    &quot;)&quot;);
+<b class="fc"><i>844</i>&nbsp;            stmt.execute(&quot;DROP TABLE IF EXISTS crimes;&quot;);</b>
+<b class="fc"><i>845</i>&nbsp;            stmt.execute(&quot;CREATE TABLE crimes (&quot; + </b>
+<i>846</i>&nbsp;                    &quot;report_id VARCHAR(8) NOT NULL, &quot; +
+<i>847</i>&nbsp;                    &quot;block VARCHAR(50), &quot; +
+<i>848</i>&nbsp;                    &quot;iucr VARCHAR(4), &quot; +
+<i>849</i>&nbsp;                    &quot;fbicd VARCHAR(3), &quot; + 
+<i>850</i>&nbsp;                    &quot;arrest BOOLEAN, &quot; +
+<i>851</i>&nbsp;                    &quot;beat INT, &quot; +
+<i>852</i>&nbsp;                    &quot;ward INT, &quot; +
+<i>853</i>&nbsp;                    &quot;FOREIGN KEY(report_id) REFERENCES reports(id) ON UPDATE CASCADE ON DELETE CASCADE, &quot; +
+<i>854</i>&nbsp;                    &quot;PRIMARY KEY(report_id)&quot; +
+<i>855</i>&nbsp;                    &quot;)&quot;);
+<b class="fc"><i>856</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>857</i>&nbsp;            throw new CustomException(&quot;Error while creating new database.&quot;, e.getMessage());</b>
+<b class="fc"><i>858</i>&nbsp;        }</b>
+<b class="fc"><i>859</i>&nbsp;    }</b>
+<i>860</i>&nbsp;
+<i>861</i>&nbsp;    /**
+<i>862</i>&nbsp;     * Checks what type of file is being imported and sends it to the appropriate method
+<i>863</i>&nbsp;     */
+<i>864</i>&nbsp;    public void importFile(File fileLocation, int currentList, String behavior, boolean skipBadValue) throws CustomException {
+<i>865</i>&nbsp;        // If the file chooser is exited before a file is selected it will be a NULL value and should not continue.
+<b class="fc"><i>866</i>&nbsp;        if (fileLocation != null) {</b>
+<b class="fc"><i>867</i>&nbsp;            String fileName = fileLocation.getName();</b>
+<b class="fc"><i>868</i>&nbsp;            if (fileName.endsWith(&quot;.csv&quot;)) {</b>
+<i>869</i>&nbsp;                // Reads a CSV into the database.
+<b class="fc"><i>870</i>&nbsp;                readToDB(fileLocation, currentList, behavior, skipBadValue);</b>
+<i>871</i>&nbsp;            } else {
+<i>872</i>&nbsp;                // Reads a outside database into the main database.
+<b class="fc"><i>873</i>&nbsp;                importInDB(fileLocation, currentList, behavior);</b>
+<i>874</i>&nbsp;            }
+<i>875</i>&nbsp;        }
+<i>876</i>&nbsp;
+<b class="nc"><i>877</i>&nbsp;    }</b>
+<i>878</i>&nbsp;
+<i>879</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-10-11 17:02</div>
+</div>
+</body>
+</html>

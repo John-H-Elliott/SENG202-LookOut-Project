@@ -1,0 +1,187 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Comparer</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">seng202.group7.analyses</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Comparer (seng202.group7.analyses)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Comparer</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (2/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    93.3%
+  </span>
+  <span class="absValue">
+    (42/ 45)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package seng202.group7.analyses;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import seng202.group7.data.Report;
+<i>4</i>&nbsp;import java.time.Duration;
+<i>5</i>&nbsp;import java.util.concurrent.TimeUnit;
+<i>6</i>&nbsp;import java.util.ArrayList;
+<i>7</i>&nbsp;import java.util.List;
+<i>8</i>&nbsp;import java.lang.Math;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;/**
+<i>12</i>&nbsp; * This class adds a set of static methods that allow reports to distance and time to be compared.
+<i>13</i>&nbsp; *
+<i>14</i>&nbsp; *  @author Sam McMillan
+<i>15</i>&nbsp; */
+<i>16</i>&nbsp;public final class Comparer {
+<i>17</i>&nbsp;
+<b class="nc"><i>18</i>&nbsp;    private Comparer(){}</b>
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    /**
+<i>21</i>&nbsp;     * Compares two reports and returns the time difference.
+<i>22</i>&nbsp;     *
+<i>23</i>&nbsp;     * @param reportOne     Data to be compared with &quot;reportTwo&quot;
+<i>24</i>&nbsp;     * @param reportTwo     Data to be compared with &quot;reportOne&quot;
+<i>25</i>&nbsp;     * @return              A list of long values [Minutes, Hours, Days, Years]
+<i>26</i>&nbsp;     */
+<i>27</i>&nbsp;    public static List&lt;Long&gt; timeDifference(Report reportOne, Report reportTwo) {
+<b class="fc"><i>28</i>&nbsp;        List&lt;Long&gt; timeDifferences = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>29</i>&nbsp;        Duration difference = Duration.between(reportTwo.getDate(), reportOne.getDate()); //Returns total time in seconds</b>
+<b class="fc"><i>30</i>&nbsp;        timeDifferences.add(Math.abs(TimeUnit.SECONDS.toMinutes(difference.getSeconds()) % 60));</b>
+<b class="fc"><i>31</i>&nbsp;        timeDifferences.add(Math.abs(TimeUnit.SECONDS.toHours(difference.getSeconds()) % 24));</b>
+<b class="fc"><i>32</i>&nbsp;        timeDifferences.add(Math.abs(TimeUnit.SECONDS.toDays(difference.getSeconds()) % 365));</b>
+<b class="fc"><i>33</i>&nbsp;        timeDifferences.add(Math.abs(TimeUnit.SECONDS.toDays(difference.getSeconds()) / 365));</b>
+<b class="fc"><i>34</i>&nbsp;        return timeDifferences;</b>
+<i>35</i>&nbsp;    }
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    /**
+<i>38</i>&nbsp;     *Checks for null or default values if they are then sends a value -1, -2 or -3 (-1: crime 1 missing location values,
+<i>39</i>&nbsp;     * -2: missing location values, -3: missing location values) if not then returns the displacement between the latitude and longitude values
+<i>40</i>&nbsp;     * in km
+<i>41</i>&nbsp;     *
+<i>42</i>&nbsp;     *
+<i>43</i>&nbsp;     * @param reportOne data to be compared with &quot;reportTwo&quot;
+<i>44</i>&nbsp;     * @param reportTwo data to be compared with &quot;reportOne&quot;
+<i>45</i>&nbsp;     * @return A double value corresponding the displacement between the two reports in km
+<i>46</i>&nbsp;     */
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;    public static double locationDifference(Report reportOne, Report reportTwo) {
+<b class="fc"><i>49</i>&nbsp;        double lat1 = 0;</b>
+<b class="fc"><i>50</i>&nbsp;        double lat2 = 0;</b>
+<b class="fc"><i>51</i>&nbsp;        double lon1 = 0;</b>
+<b class="fc"><i>52</i>&nbsp;        double lon2 = 0;</b>
+<i>53</i>&nbsp;
+<b class="fc"><i>54</i>&nbsp;        double checkNull = 0;</b>
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;        try { //Checking for null values
+<b class="fc"><i>57</i>&nbsp;            lat1 = reportOne.getLatitude();</b>
+<b class="fc"><i>58</i>&nbsp;            lon1 = reportOne.getLongitude();</b>
+<b class="fc"><i>59</i>&nbsp;        } catch (NullPointerException e) {</b>
+<i>60</i>&nbsp;            //Report one has no location values
+<b class="fc"><i>61</i>&nbsp;            checkNull = -1;</b>
+<b class="fc"><i>62</i>&nbsp;        } try {</b>
+<b class="fc"><i>63</i>&nbsp;            lat2 = reportTwo.getLatitude();</b>
+<b class="fc"><i>64</i>&nbsp;            lon2 = reportTwo.getLongitude();</b>
+<b class="fc"><i>65</i>&nbsp;        } catch (NullPointerException e) {</b>
+<i>66</i>&nbsp;            //Report two has no location values
+<b class="fc"><i>67</i>&nbsp;            if (checkNull == 0) {</b>
+<b class="fc"><i>68</i>&nbsp;                checkNull = -2;</b>
+<i>69</i>&nbsp;            } else {
+<i>70</i>&nbsp;                //Both reports have no location values
+<b class="fc"><i>71</i>&nbsp;                checkNull = -3;</b>
+<i>72</i>&nbsp;            }
+<b class="fc"><i>73</i>&nbsp;        }</b>
+<i>74</i>&nbsp;
+<b class="fc"><i>75</i>&nbsp;        if (lat1 == 0.0 &amp;&amp; lat2 ==0.0) { //Checking for default values</b>
+<b class="fc"><i>76</i>&nbsp;            checkNull = -3;</b>
+<b class="fc"><i>77</i>&nbsp;        } else if (lat1 == 0.0) {</b>
+<b class="fc"><i>78</i>&nbsp;            if (checkNull == -2) {</b>
+<b class="nc"><i>79</i>&nbsp;                checkNull = -3;</b>
+<i>80</i>&nbsp;            } else {
+<b class="fc"><i>81</i>&nbsp;                checkNull = -1;</b>
+<i>82</i>&nbsp;            }
+<b class="fc"><i>83</i>&nbsp;        } else if (lat2 == 0.0) {</b>
+<b class="fc"><i>84</i>&nbsp;            if (checkNull == -1) {</b>
+<b class="nc"><i>85</i>&nbsp;                checkNull = -3;</b>
+<i>86</i>&nbsp;            } else {
+<b class="fc"><i>87</i>&nbsp;                checkNull = -2;</b>
+<i>88</i>&nbsp;            }
+<i>89</i>&nbsp;        }
+<i>90</i>&nbsp;
+<b class="fc"><i>91</i>&nbsp;        if (checkNull != 0) {</b>
+<b class="fc"><i>92</i>&nbsp;            return checkNull; //If default or null then return what value(s) is null or default</b>
+<i>93</i>&nbsp;        }
+<i>94</i>&nbsp;
+<b class="fc"><i>95</i>&nbsp;        double theta = lon1 - lon2;</b>
+<b class="fc"><i>96</i>&nbsp;        double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1))</b>
+<b class="fc"><i>97</i>&nbsp;                * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));</b>
+<b class="fc"><i>98</i>&nbsp;        dist = Math.acos(dist);</b>
+<b class="fc"><i>99</i>&nbsp;        dist = Math.toDegrees(dist);</b>
+<b class="fc"><i>100</i>&nbsp;        dist = dist * 60 * 1.1515;</b>
+<b class="fc"><i>101</i>&nbsp;        dist = dist * 1.609344; //Converting to kilometers</b>
+<b class="fc"><i>102</i>&nbsp;        return (dist);</b>
+<i>103</i>&nbsp;    }
+<i>104</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-10-11 17:02</div>
+</div>
+</body>
+</html>

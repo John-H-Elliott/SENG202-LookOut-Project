@@ -1,0 +1,119 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: InputType</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">seng202.group7.controllers.data</a> ]
+</div>
+
+<h1>Coverage Summary for Class: InputType (seng202.group7.controllers.data)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">InputType</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 12)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package seng202.group7.controllers.data;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import javafx.css.PseudoClass;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;/**
+<i>6</i>&nbsp; * The types of input validators that can be applied to a Node.
+<i>7</i>&nbsp; * @author Jack McCorkindale
+<i>8</i>&nbsp; */
+<b class="nc"><i>9</i>&nbsp;public enum InputType {</b>
+<b class="nc"><i>10</i>&nbsp;    DOUBLE (PseudoClass.getPseudoClass(&quot;double&quot;)),</b>
+<b class="nc"><i>11</i>&nbsp;    INTEGER (PseudoClass.getPseudoClass(&quot;integer&quot;)), </b>
+<b class="nc"><i>12</i>&nbsp;    REQUIRED (PseudoClass.getPseudoClass(&quot;required&quot;)), </b>
+<b class="nc"><i>13</i>&nbsp;    ID (PseudoClass.getPseudoClass(&quot;id&quot;)), </b>
+<b class="nc"><i>14</i>&nbsp;    DATE (PseudoClass.getPseudoClass(&quot;dateEditor&quot;)), </b>
+<b class="nc"><i>15</i>&nbsp;    TIME (PseudoClass.getPseudoClass(&quot;time&quot;)),</b>
+<b class="nc"><i>16</i>&nbsp;    LISTNAME (PseudoClass.getPseudoClass(&quot;list_name&quot;));</b>
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    private final PseudoClass validationType;
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    /**
+<i>21</i>&nbsp;     * Sets the type of validation that will be done when applied to a Node.
+<i>22</i>&nbsp;     * @param validationType The PseudoClass that determines what validation is required.
+<i>23</i>&nbsp;     */
+<b class="nc"><i>24</i>&nbsp;    InputType(PseudoClass validationType) {</b>
+<b class="nc"><i>25</i>&nbsp;        this.validationType = validationType;</b>
+<b class="nc"><i>26</i>&nbsp;    }</b>
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    /**
+<i>29</i>&nbsp;     * Returns the validation type.
+<i>30</i>&nbsp;     *
+<i>31</i>&nbsp;     * @return type of validation that will be done when applied to a Node.
+<i>32</i>&nbsp;     */
+<i>33</i>&nbsp;    public PseudoClass getValidationType() {
+<b class="nc"><i>34</i>&nbsp;        return this.validationType;</b>
+<i>35</i>&nbsp;    }
+<i>36</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-10-11 17:02</div>
+</div>
+</body>
+</html>

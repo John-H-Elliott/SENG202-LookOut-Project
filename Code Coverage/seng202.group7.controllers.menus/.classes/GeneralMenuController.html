@@ -1,0 +1,370 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GeneralMenuController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">seng202.group7.controllers.menus</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GeneralMenuController (seng202.group7.controllers.menus)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GeneralMenuController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 134)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package seng202.group7.controllers.menus;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import javafx.application.Platform;
+<i>4</i>&nbsp;import javafx.event.ActionEvent;
+<i>5</i>&nbsp;import javafx.fxml.FXML;
+<i>6</i>&nbsp;import javafx.fxml.FXMLLoader;
+<i>7</i>&nbsp;import javafx.scene.Cursor;
+<i>8</i>&nbsp;import javafx.scene.Node;
+<i>9</i>&nbsp;import javafx.scene.Scene;
+<i>10</i>&nbsp;import javafx.scene.control.Alert;
+<i>11</i>&nbsp;import javafx.scene.control.ButtonType;
+<i>12</i>&nbsp;import javafx.scene.layout.BorderPane;
+<i>13</i>&nbsp;import javafx.scene.layout.VBox;
+<i>14</i>&nbsp;import javafx.stage.FileChooser;
+<i>15</i>&nbsp;import javafx.stage.Stage;
+<i>16</i>&nbsp;import seng202.group7.controllers.data.ControllerData;
+<i>17</i>&nbsp;import seng202.group7.controllers.views.EntryController;
+<i>18</i>&nbsp;import seng202.group7.data.CustomException;
+<i>19</i>&nbsp;import seng202.group7.data.DataAccessor;
+<i>20</i>&nbsp;import seng202.group7.view.MainScreen;
+<i>21</i>&nbsp;import java.io.File;
+<i>22</i>&nbsp;import java.io.IOException;
+<i>23</i>&nbsp;import java.util.Objects;
+<i>24</i>&nbsp;import java.util.Optional;
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;/**
+<i>27</i>&nbsp; * The controller, used by / linked to, the General Menu FXML file.
+<i>28</i>&nbsp; * It links it buttons to the main menu screen and its controller.
+<i>29</i>&nbsp; *
+<i>30</i>&nbsp; * @author Jack McCorkindale
+<i>31</i>&nbsp; * @author John Elliott
+<i>32</i>&nbsp; * @author Sam McMillan
+<i>33</i>&nbsp; */
+<b class="nc"><i>34</i>&nbsp;public class GeneralMenuController {</b>
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    @FXML
+<i>37</i>&nbsp;    private Node sideMenu;
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    /**
+<i>40</i>&nbsp;     * Gets the current side panel and replace it with the filter menu panel.
+<i>41</i>&nbsp;     */
+<i>42</i>&nbsp;    public void toFilter() {
+<b class="nc"><i>43</i>&nbsp;        BorderPane pane = (BorderPane) sideMenu.getParent();</b>
+<i>44</i>&nbsp;        try {
+<b class="nc"><i>45</i>&nbsp;            Node menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource(&quot;/gui/menus/filterMenu.fxml&quot;)));</b>
+<i>46</i>&nbsp;            // Changes side menu to the filter menu.
+<b class="nc"><i>47</i>&nbsp;            pane.setLeft(menuItems);</b>
+<b class="nc"><i>48</i>&nbsp;        } catch (IOException | NullPointerException e) {</b>
+<b class="nc"><i>49</i>&nbsp;            MainScreen.createWarnWin(new CustomException(&quot;Error caused when loading the Filter Menu screens FXML file.&quot;, e.getClass().toString()));</b>
+<b class="nc"><i>50</i>&nbsp;        }</b>
+<i>51</i>&nbsp;
+<b class="nc"><i>52</i>&nbsp;    }</b>
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    /**
+<i>55</i>&nbsp;     * Changes the menu bar to show the comparison menu.
+<i>56</i>&nbsp;     */
+<i>57</i>&nbsp;    public void toCompare() {
+<b class="nc"><i>58</i>&nbsp;        BorderPane pane = (BorderPane) sideMenu.getParent();</b>
+<i>59</i>&nbsp;        try {
+<b class="nc"><i>60</i>&nbsp;            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource(&quot;/gui/menus/compareMenu.fxml&quot;)));</b>
+<i>61</i>&nbsp;            // Changes side menu to the filter menu.
+<b class="nc"><i>62</i>&nbsp;            pane.setLeft(menuItems);</b>
+<b class="nc"><i>63</i>&nbsp;        } catch (IOException | NullPointerException e) {</b>
+<b class="nc"><i>64</i>&nbsp;            MainScreen.createWarnWin(new CustomException(&quot;Error caused when loading the Compare Menu screens FXML file.&quot;, e.getClass().toString()));</b>
+<b class="nc"><i>65</i>&nbsp;        }</b>
+<i>66</i>&nbsp;
+<b class="nc"><i>67</i>&nbsp;    }</b>
+<i>68</i>&nbsp;
+<i>69</i>&nbsp;    /**
+<i>70</i>&nbsp;     * Gets a new file to be stored in the main database.
+<i>71</i>&nbsp;     * If no file is selected the table is reloaded with the current file.
+<i>72</i>&nbsp;     *
+<i>73</i>&nbsp;     * @param event             The event action that was triggered.
+<i>74</i>&nbsp;     */
+<i>75</i>&nbsp;    public void newImport(ActionEvent event) {
+<i>76</i>&nbsp;
+<b class="nc"><i>77</i>&nbsp;        File file = ControllerData.getInstance().getFile(event);</b>
+<b class="nc"><i>78</i>&nbsp;        if (file == null) {</b>
+<b class="nc"><i>79</i>&nbsp;            return;</b>
+<i>80</i>&nbsp;        }
+<i>81</i>&nbsp;        String behavior;
+<i>82</i>&nbsp;        boolean skipBadValue;
+<b class="nc"><i>83</i>&nbsp;        if (file.getName().endsWith(&quot;.csv&quot;)) {</b>
+<b class="nc"><i>84</i>&nbsp;            behavior = duplicateSelection();</b>
+<b class="nc"><i>85</i>&nbsp;            skipBadValue = badValueSelection();</b>
+<i>86</i>&nbsp;        } else {
+<i>87</i>&nbsp;            try {
+<b class="nc"><i>88</i>&nbsp;                if (DataAccessor.getInstance().getSize(ControllerData.getInstance().getCurrentList(), &quot;&quot;) != 0){</b>
+<b class="nc"><i>89</i>&nbsp;                    behavior = duplicateSelection();</b>
+<i>90</i>&nbsp;                } else {
+<b class="nc"><i>91</i>&nbsp;                    behavior = &quot;REPLACE&quot;;</b>
+<i>92</i>&nbsp;                }
+<b class="nc"><i>93</i>&nbsp;            } catch (CustomException e) {</b>
+<b class="nc"><i>94</i>&nbsp;                MainScreen.createWarnWin(e);</b>
+<b class="nc"><i>95</i>&nbsp;                return;</b>
+<b class="nc"><i>96</i>&nbsp;            }</b>
+<b class="nc"><i>97</i>&nbsp;            skipBadValue = false;</b>
+<i>98</i>&nbsp;        }
+<b class="nc"><i>99</i>&nbsp;        Scene window = ((Node) event.getTarget()).getScene();</b>
+<b class="nc"><i>100</i>&nbsp;        BorderPane rootPane = (BorderPane) sideMenu.getParent();</b>
+<b class="nc"><i>101</i>&nbsp;        Node center = rootPane.getCenter();</b>
+<b class="nc"><i>102</i>&nbsp;        new Thread(() -&gt; {</b>
+<b class="nc"><i>103</i>&nbsp;            Platform.runLater(() -&gt;window.setCursor(Cursor.WAIT));</b>
+<i>104</i>&nbsp;
+<i>105</i>&nbsp;            try {
+<b class="nc"><i>106</i>&nbsp;                DataAccessor.getInstance().importFile(file, ControllerData.getInstance().getCurrentList(), behavior, skipBadValue);</b>
+<b class="nc"><i>107</i>&nbsp;            } catch (CustomException e) {</b>
+<b class="nc"><i>108</i>&nbsp;                if (e.getMessage().contains(&quot;busy&quot;)) {</b>
+<b class="nc"><i>109</i>&nbsp;                    return;</b>
+<b class="nc"><i>110</i>&nbsp;                } else if (e.getMessage().contains(&quot;complete&quot;)) {</b>
+<b class="nc"><i>111</i>&nbsp;                    Platform.runLater(()-&gt;MainScreen.createSuccessWin(e));</b>
+<i>112</i>&nbsp;                } else {
+<b class="nc"><i>113</i>&nbsp;                    Platform.runLater(()-&gt;MainScreen.createWarnWin(e));</b>
+<i>114</i>&nbsp;                }
+<b class="nc"><i>115</i>&nbsp;            }</b>
+<i>116</i>&nbsp;
+<i>117</i>&nbsp;            // Loads the paginator screen.
+<i>118</i>&nbsp;            try {
+<b class="nc"><i>119</i>&nbsp;                BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource(&quot;/gui/views/pageView.fxml&quot;)));</b>
+<i>120</i>&nbsp;                // Adds the data view to the center of the screen if it is the selected screen.
+<b class="nc"><i>121</i>&nbsp;                if (((BorderPane) sideMenu.getParent()).getCenter() == center) {</b>
+<b class="nc"><i>122</i>&nbsp;                    Platform.runLater(()-&gt;rootPane.setCenter(dataView));</b>
+<i>123</i>&nbsp;                }
+<b class="nc"><i>124</i>&nbsp;            } catch (IOException | NullPointerException e) {</b>
+<b class="nc"><i>125</i>&nbsp;                Platform.runLater(()-&gt;MainScreen.createWarnWin(new CustomException(&quot;Error caused when loading the Pagination screens FXML file.&quot;, e.getClass().toString())));</b>
+<b class="nc"><i>126</i>&nbsp;            }</b>
+<b class="nc"><i>127</i>&nbsp;            Platform.runLater(() -&gt;window.setCursor(Cursor.DEFAULT));            </b>
+<b class="nc"><i>128</i>&nbsp;        }).start();</b>
+<b class="nc"><i>129</i>&nbsp;    }</b>
+<i>130</i>&nbsp;
+<i>131</i>&nbsp;    /**
+<i>132</i>&nbsp;     * Gets user input on how to handle invalid data in the imported data.
+<i>133</i>&nbsp;     * @return If invalid data is skipped or reverts changes.
+<i>134</i>&nbsp;     */
+<i>135</i>&nbsp;    private static boolean badValueSelection() {
+<b class="nc"><i>136</i>&nbsp;        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);</b>
+<b class="nc"><i>137</i>&nbsp;        alert.setTitle(&quot;Invalid data response&quot;);</b>
+<b class="nc"><i>138</i>&nbsp;        alert.setHeaderText(&quot;How do you want to deal with invalid data?&quot;);</b>
+<i>139</i>&nbsp;
+<b class="nc"><i>140</i>&nbsp;        ButtonType skip = new ButtonType(&quot;Skip invalid data&quot;);</b>
+<b class="nc"><i>141</i>&nbsp;		ButtonType cancel = new ButtonType(&quot;Don&#39;t import data&quot;);</b>
+<i>142</i>&nbsp;
+<b class="nc"><i>143</i>&nbsp;        alert.getButtonTypes().clear();</b>
+<b class="nc"><i>144</i>&nbsp;		alert.getButtonTypes().addAll(skip, cancel);</b>
+<i>145</i>&nbsp;
+<b class="nc"><i>146</i>&nbsp;        Optional&lt;ButtonType&gt; option = alert.showAndWait();</b>
+<i>147</i>&nbsp;
+<b class="nc"><i>148</i>&nbsp;        return option.get() != null &amp;&amp; option.get() == skip;</b>
+<i>149</i>&nbsp;            
+<i>150</i>&nbsp;    }
+<i>151</i>&nbsp;
+<i>152</i>&nbsp;    /**
+<i>153</i>&nbsp;     * Gets user input on how to handle duplicate ID in the imported data.
+<i>154</i>&nbsp;     * @return the SQL query string for handling duplicate ids
+<i>155</i>&nbsp;     */
+<i>156</i>&nbsp;    private static String duplicateSelection() {
+<b class="nc"><i>157</i>&nbsp;        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);</b>
+<b class="nc"><i>158</i>&nbsp;        alert.setTitle(&quot;Duplicate data detected&quot;);</b>
+<b class="nc"><i>159</i>&nbsp;		alert.setHeaderText(&quot;Select a handling method for duplicate IDs.&quot;);</b>
+<i>160</i>&nbsp;
+<b class="nc"><i>161</i>&nbsp;        ButtonType overwrite = new ButtonType(&quot;Overwrite&quot;);</b>
+<b class="nc"><i>162</i>&nbsp;		ButtonType skip = new ButtonType(&quot;Skip&quot;);</b>
+<b class="nc"><i>163</i>&nbsp;		ButtonType cancel = new ButtonType(&quot;Undo&quot;);</b>
+<i>164</i>&nbsp;
+<b class="nc"><i>165</i>&nbsp;        alert.getButtonTypes().clear();</b>
+<b class="nc"><i>166</i>&nbsp;		alert.getButtonTypes().addAll(overwrite, skip, cancel);</b>
+<i>167</i>&nbsp;
+<b class="nc"><i>168</i>&nbsp;        Optional&lt;ButtonType&gt; option = alert.showAndWait();</b>
+<b class="nc"><i>169</i>&nbsp;        String behavior = &quot;ABORT&quot;;</b>
+<b class="nc"><i>170</i>&nbsp;        if (option.get() == overwrite) {</b>
+<b class="nc"><i>171</i>&nbsp;            behavior = &quot;REPLACE&quot;;</b>
+<b class="nc"><i>172</i>&nbsp;        } else if (option.get() == skip) {</b>
+<b class="nc"><i>173</i>&nbsp;            behavior = &quot;IGNORE&quot;;</b>
+<i>174</i>&nbsp;        }
+<b class="nc"><i>175</i>&nbsp;        return behavior;</b>
+<i>176</i>&nbsp;    }
+<i>177</i>&nbsp;
+<i>178</i>&nbsp;    /**
+<i>179</i>&nbsp;     * Gets the conditions the user has active and the location to save a new file before sending it to the DataAccessor to export
+<i>180</i>&nbsp;     */
+<i>181</i>&nbsp;    public void exportWithFilter() {
+<b class="nc"><i>182</i>&nbsp;        String conditions = ControllerData.getInstance().getWhereQuery();</b>
+<b class="nc"><i>183</i>&nbsp;        File saveLocation = getLocation();</b>
+<b class="nc"><i>184</i>&nbsp;        if (saveLocation == null) {</b>
+<b class="nc"><i>185</i>&nbsp;            return;</b>
+<i>186</i>&nbsp;        }
+<b class="nc"><i>187</i>&nbsp;        Scene window = sideMenu.getScene();</b>
+<b class="nc"><i>188</i>&nbsp;        new Thread(() -&gt; {</b>
+<b class="nc"><i>189</i>&nbsp;            Platform.runLater(()-&gt;window.setCursor(Cursor.WAIT));</b>
+<i>190</i>&nbsp;
+<i>191</i>&nbsp;            try {
+<b class="nc"><i>192</i>&nbsp;                DataAccessor.getInstance().export(conditions, ControllerData.getInstance().getCurrentList(), saveLocation.toString());</b>
+<b class="nc"><i>193</i>&nbsp;            } catch (CustomException e) {</b>
+<b class="nc"><i>194</i>&nbsp;                Platform.runLater(()-&gt;MainScreen.createWarnWin(e));</b>
+<b class="nc"><i>195</i>&nbsp;            }</b>
+<b class="nc"><i>196</i>&nbsp;            Platform.runLater(()-&gt;window.setCursor(Cursor.DEFAULT));</b>
+<i>197</i>&nbsp;            
+<b class="nc"><i>198</i>&nbsp;        }).start();</b>
+<b class="nc"><i>199</i>&nbsp;    }</b>
+<i>200</i>&nbsp;
+<i>201</i>&nbsp;    /**
+<i>202</i>&nbsp;     * Gets the location to save a new file before sending it to the DataAccessor to export
+<i>203</i>&nbsp;     */
+<i>204</i>&nbsp;    public void exportWithoutFilter() {
+<b class="nc"><i>205</i>&nbsp;        File saveLocation = getLocation();</b>
+<b class="nc"><i>206</i>&nbsp;        if (saveLocation == null) {</b>
+<b class="nc"><i>207</i>&nbsp;            return;</b>
+<i>208</i>&nbsp;        }
+<b class="nc"><i>209</i>&nbsp;        Scene window = sideMenu.getScene();</b>
+<b class="nc"><i>210</i>&nbsp;        new Thread(() -&gt; {</b>
+<b class="nc"><i>211</i>&nbsp;            Platform.runLater(()-&gt;window.setCursor(Cursor.WAIT));</b>
+<i>212</i>&nbsp;
+<i>213</i>&nbsp;            try {
+<b class="nc"><i>214</i>&nbsp;                DataAccessor.getInstance().export(&quot;&quot;, ControllerData.getInstance().getCurrentList(), saveLocation.toString());</b>
+<b class="nc"><i>215</i>&nbsp;            } catch (CustomException e) {</b>
+<b class="nc"><i>216</i>&nbsp;                Platform.runLater(()-&gt;MainScreen.createWarnWin(e));</b>
+<b class="nc"><i>217</i>&nbsp;            }</b>
+<b class="nc"><i>218</i>&nbsp;            Platform.runLater(()-&gt;window.setCursor(Cursor.DEFAULT));</b>
+<i>219</i>&nbsp;            
+<b class="nc"><i>220</i>&nbsp;        }).start();</b>
+<b class="nc"><i>221</i>&nbsp;    }</b>
+<i>222</i>&nbsp;
+<i>223</i>&nbsp;    /**
+<i>224</i>&nbsp;     * Allows the user to select a location to save the database they are exporting.
+<i>225</i>&nbsp;     * @return The file to be created.
+<i>226</i>&nbsp;     */
+<i>227</i>&nbsp;    private File getLocation() {
+<b class="nc"><i>228</i>&nbsp;        FileChooser fileChooser = new FileChooser();</b>
+<i>229</i>&nbsp;
+<b class="nc"><i>230</i>&nbsp;        fileChooser.setInitialDirectory(new File(&quot;./&quot;));</b>
+<b class="nc"><i>231</i>&nbsp;        FileChooser.ExtensionFilter dbFilter = new FileChooser.ExtensionFilter(&quot;Database (*.db)&quot;, &quot;*.db&quot;);</b>
+<b class="nc"><i>232</i>&nbsp;        FileChooser.ExtensionFilter csvFilter = new FileChooser.ExtensionFilter(&quot;CSV (*.csv)&quot;, &quot;*.csv&quot;);</b>
+<b class="nc"><i>233</i>&nbsp;        fileChooser.getExtensionFilters().addAll(dbFilter, csvFilter);</b>
+<i>234</i>&nbsp;
+<b class="nc"><i>235</i>&nbsp;        fileChooser.setTitle(&quot;Select save location&quot;);</b>
+<b class="nc"><i>236</i>&nbsp;        Stage stage = (Stage) sideMenu.getScene().getWindow();</b>
+<i>237</i>&nbsp;
+<i>238</i>&nbsp;        // Launches the file chooser.
+<b class="nc"><i>239</i>&nbsp;        File selectedFile = fileChooser.showSaveDialog(stage);</b>
+<i>240</i>&nbsp;        // If the file chooser is exited before a file is selected it will be a NULL value and should not continue.
+<b class="nc"><i>241</i>&nbsp;        if (selectedFile != null) {</b>
+<b class="nc"><i>242</i>&nbsp;            if ((!selectedFile.getName().endsWith(&quot;.db&quot;)) &amp;&amp; (!selectedFile.getName().endsWith(&quot;.csv&quot;))) {</b>
+<b class="nc"><i>243</i>&nbsp;                if (fileChooser.getSelectedExtensionFilter().getExtensions().get(0).equals(&quot;*.db&quot;)) {</b>
+<b class="nc"><i>244</i>&nbsp;                    selectedFile = new File(selectedFile.getAbsolutePath() + &quot;.db&quot;);</b>
+<i>245</i>&nbsp;                } else {
+<b class="nc"><i>246</i>&nbsp;                    selectedFile = new File(selectedFile.getAbsolutePath() + &quot;.csv&quot;);</b>
+<i>247</i>&nbsp;                }
+<i>248</i>&nbsp;            }
+<b class="nc"><i>249</i>&nbsp;            return selectedFile;</b>
+<i>250</i>&nbsp;        }
+<b class="nc"><i>251</i>&nbsp;        return null;</b>
+<i>252</i>&nbsp;    }
+<i>253</i>&nbsp;
+<i>254</i>&nbsp;    /**
+<i>255</i>&nbsp;     * Moves the program to an empty entry view to create a new Report object.
+<i>256</i>&nbsp;     */
+<i>257</i>&nbsp;    public void toNewEntry() {
+<b class="nc"><i>258</i>&nbsp;        BorderPane rootPane = (BorderPane) sideMenu.getParent();</b>
+<i>259</i>&nbsp;
+<i>260</i>&nbsp;        try {
+<b class="nc"><i>261</i>&nbsp;            ControllerData.getInstance().setCurrentRow(null);</b>
+<b class="nc"><i>262</i>&nbsp;            FXMLLoader loader = new FXMLLoader(getClass().getResource(&quot;/gui/views/entryView.fxml&quot;));</b>
+<i>263</i>&nbsp;
+<b class="nc"><i>264</i>&nbsp;            Node newFrame = loader.load();</b>
+<i>265</i>&nbsp;
+<b class="nc"><i>266</i>&nbsp;            ((EntryController) loader.getController()).setLastFrame(rootPane.getCenter());</b>
+<i>267</i>&nbsp;
+<b class="nc"><i>268</i>&nbsp;            rootPane.setCenter(newFrame);</b>
+<b class="nc"><i>269</i>&nbsp;        } catch (IOException | IllegalStateException e) {</b>
+<b class="nc"><i>270</i>&nbsp;            MainScreen.createWarnWin(new CustomException(&quot;Error caused when loading the Entry View screens FXML file.&quot;, e.getClass().toString()));</b>
+<b class="nc"><i>271</i>&nbsp;        }</b>
+<b class="nc"><i>272</i>&nbsp;    }</b>
+<i>273</i>&nbsp;
+<i>274</i>&nbsp;    /**
+<i>275</i>&nbsp;     * Loads the search menu into the side menu view.
+<i>276</i>&nbsp;     */
+<i>277</i>&nbsp;    public void toSearch() {
+<b class="nc"><i>278</i>&nbsp;        BorderPane rootPane = (BorderPane) sideMenu.getParent();</b>
+<i>279</i>&nbsp;        try {
+<b class="nc"><i>280</i>&nbsp;            VBox searchMenu = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource(&quot;/gui/menus/searchMenu.fxml&quot;)));</b>
+<b class="nc"><i>281</i>&nbsp;            rootPane.setLeft(searchMenu);</b>
+<b class="nc"><i>282</i>&nbsp;        } catch (IOException | NullPointerException e) {</b>
+<b class="nc"><i>283</i>&nbsp;            MainScreen.createWarnWin(new CustomException(&quot;Error caused when loading the Search Menu screens FXML file.&quot;, e.getClass().toString()));</b>
+<b class="nc"><i>284</i>&nbsp;        }</b>
+<i>285</i>&nbsp;
+<b class="nc"><i>286</i>&nbsp;    }</b>
+<i>287</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-10-11 17:02</div>
+</div>
+</body>
+</html>

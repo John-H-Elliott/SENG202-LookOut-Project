@@ -1,0 +1,170 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: MapController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">seng202.group7.controllers.views</a> ]
+</div>
+
+<h1>Coverage Summary for Class: MapController (seng202.group7.controllers.views)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MapController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 24)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package seng202.group7.controllers.views;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.net.URL;
+<i>4</i>&nbsp;import java.util.List;
+<i>5</i>&nbsp;import java.util.Objects;
+<i>6</i>&nbsp;import java.util.ResourceBundle;
+<i>7</i>&nbsp;import javafx.fxml.FXML;
+<i>8</i>&nbsp;import javafx.fxml.Initializable;
+<i>9</i>&nbsp;import javafx.scene.web.WebEngine;
+<i>10</i>&nbsp;import javafx.scene.web.WebView;
+<i>11</i>&nbsp;import seng202.group7.controllers.data.ControllerData;
+<i>12</i>&nbsp;import seng202.group7.data.Crime;
+<i>13</i>&nbsp;import seng202.group7.data.CustomException;
+<i>14</i>&nbsp;import seng202.group7.data.DataAccessor;
+<i>15</i>&nbsp;import seng202.group7.data.Report;
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;import static seng202.group7.view.MainScreen.createErrorWin;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;/**
+<i>20</i>&nbsp; * The controller class that is initialized with the map view fxml file.
+<i>21</i>&nbsp; * Also stores some static classes used to load pins and update the map itself.
+<i>22</i>&nbsp; *
+<i>23</i>&nbsp; * @author John Elliott
+<i>24</i>&nbsp; */
+<b class="nc"><i>25</i>&nbsp;public class MapController implements Initializable {</b>
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    @FXML
+<i>28</i>&nbsp;    private WebView webView;
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    /**
+<i>31</i>&nbsp;     * This method is run during the loading of the map view fxml file.
+<i>32</i>&nbsp;     *
+<i>33</i>&nbsp;     * @param location      A URL object.
+<i>34</i>&nbsp;     * @param resources     A ResourceBundle object.
+<i>35</i>&nbsp;     */
+<i>36</i>&nbsp;    @Override
+<i>37</i>&nbsp;    public void initialize(URL location, ResourceBundle resources) {
+<b class="nc"><i>38</i>&nbsp;        initMap();</b>
+<b class="nc"><i>39</i>&nbsp;    }</b>
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    /**
+<i>42</i>&nbsp;     * Initialize the map and store it in the webViews webEngine.
+<i>43</i>&nbsp;     */
+<i>44</i>&nbsp;    private void initMap() {
+<i>45</i>&nbsp;        try {
+<b class="nc"><i>46</i>&nbsp;            WebEngine webEngine = webView.getEngine();</b>
+<b class="nc"><i>47</i>&nbsp;            webEngine.load(Objects.requireNonNull(MapController.class.getResource(&quot;/networking/mapView.html&quot;)).toExternalForm());</b>
+<b class="nc"><i>48</i>&nbsp;        } catch (Exception e) {</b>
+<b class="nc"><i>49</i>&nbsp;            createErrorWin(new CustomException(&quot;Error caused caused within the google map.&quot;, e.getClass().toString()));</b>
+<b class="nc"><i>50</i>&nbsp;        }</b>
+<b class="nc"><i>51</i>&nbsp;    }</b>
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    /**
+<i>54</i>&nbsp;     * Creates a JSON array that stores the information used when creating the pins on the map.
+<i>55</i>&nbsp;     *
+<i>56</i>&nbsp;     * @param reports   The current set of loaded reports that need pins.
+<i>57</i>&nbsp;     * @return The full JSON array.
+<i>58</i>&nbsp;     */
+<i>59</i>&nbsp;    private static String toJSONArray(List&lt;Report&gt; reports) {
+<b class="nc"><i>60</i>&nbsp;        StringBuilder stringBuilder = new StringBuilder();</b>
+<b class="nc"><i>61</i>&nbsp;        stringBuilder.append(&quot;[&quot;);</b>
+<b class="nc"><i>62</i>&nbsp;        reports.forEach(report -&gt; stringBuilder.append(</b>
+<b class="nc"><i>63</i>&nbsp;                ((Crime) report).getJSONString()));</b>
+<b class="nc"><i>64</i>&nbsp;        stringBuilder.append(&quot;]&quot;);</b>
+<b class="nc"><i>65</i>&nbsp;        return stringBuilder.toString();</b>
+<i>66</i>&nbsp;    }
+<i>67</i>&nbsp;
+<i>68</i>&nbsp;    /**
+<i>69</i>&nbsp;     * Executes the script that calls the import data method in the mapView.html file.
+<i>70</i>&nbsp;     * This updates the pins on the map to match the current set of reports in the table.
+<i>71</i>&nbsp;     *
+<i>72</i>&nbsp;     * @param map   The map that needs its pins updated.
+<i>73</i>&nbsp;     */
+<i>74</i>&nbsp;    public static void updatePins(WebView map) {
+<i>75</i>&nbsp;        // Gets the current set of reports based on the pagination&#39;s current page.
+<i>76</i>&nbsp;        try {
+<b class="nc"><i>77</i>&nbsp;            ControllerData data = ControllerData.getInstance();</b>
+<b class="nc"><i>78</i>&nbsp;            List&lt;Report&gt; reports = DataAccessor.getInstance().getPageSet(data.getCurrentList(),</b>
+<b class="nc"><i>79</i>&nbsp;                data.getCurrentPage(), data.getWhereQuery());</b>
+<b class="nc"><i>80</i>&nbsp;            String scriptToExecute = &quot;importData(&quot; + toJSONArray(reports) + &quot;);&quot;;</b>
+<b class="nc"><i>81</i>&nbsp;            map.getEngine().executeScript(scriptToExecute);</b>
+<b class="nc"><i>82</i>&nbsp;        } catch (CustomException e) {</b>
+<b class="nc"><i>83</i>&nbsp;            createErrorWin(new CustomException(&quot;Error caused when loading pins into the map view.&quot;, e.getClass().toString()));</b>
+<b class="nc"><i>84</i>&nbsp;        }</b>
+<i>85</i>&nbsp;
+<b class="nc"><i>86</i>&nbsp;    }</b>
+<i>87</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-10-11 17:02</div>
+</div>
+</body>
+</html>

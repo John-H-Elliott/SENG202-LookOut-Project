@@ -1,0 +1,221 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: MainScreen</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">seng202.group7.view</a> ]
+</div>
+
+<h1>Coverage Summary for Class: MainScreen (seng202.group7.view)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MainScreen</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 49)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package seng202.group7.view;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import javafx.application.Application;
+<i>4</i>&nbsp;import javafx.fxml.FXMLLoader;
+<i>5</i>&nbsp;import javafx.scene.Parent;
+<i>6</i>&nbsp;import javafx.scene.Scene;
+<i>7</i>&nbsp;import javafx.scene.control.Alert;
+<i>8</i>&nbsp;import javafx.scene.layout.Region;
+<i>9</i>&nbsp;import javafx.scene.layout.StackPane;
+<i>10</i>&nbsp;import javafx.scene.web.WebView;
+<i>11</i>&nbsp;import javafx.stage.Stage;
+<i>12</i>&nbsp;import seng202.group7.controllers.data.ControllerData;
+<i>13</i>&nbsp;import seng202.group7.data.CustomException;
+<i>14</i>&nbsp;import seng202.group7.data.DataAccessor;
+<i>15</i>&nbsp;import javafx.scene.image.Image;
+<i>16</i>&nbsp;import java.io.IOException;
+<i>17</i>&nbsp;import java.sql.SQLException;
+<i>18</i>&nbsp;import java.util.Objects;
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;/**
+<i>21</i>&nbsp; * Initializes the GUI stage and loads the first FXML scene.
+<i>22</i>&nbsp; *
+<i>23</i>&nbsp; * @author Jack McCorkindale
+<i>24</i>&nbsp; * @author John Elliott
+<i>25</i>&nbsp; * @author Sam McMillan
+<i>26</i>&nbsp; * @author Sami Elmadani
+<i>27</i>&nbsp; * @author Shaylin Simadari
+<i>28</i>&nbsp; */
+<b class="nc"><i>29</i>&nbsp;public class MainScreen extends Application {</b>
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    private static Stage window;
+<i>32</i>&nbsp;    /**
+<i>33</i>&nbsp;     * Loads the first FXML file and sets it to the current scene for the stage.
+<i>34</i>&nbsp;     *
+<i>35</i>&nbsp;     * @param windowStage      The stage that the scene will be load onto.
+<i>36</i>&nbsp;     */
+<i>37</i>&nbsp;    @Override
+<i>38</i>&nbsp;    public void start(Stage windowStage) {
+<b class="nc"><i>39</i>&nbsp;        window = windowStage;</b>
+<b class="nc"><i>40</i>&nbsp;        windowStage.setTitle(&quot;LookOut&quot;);</b>
+<b class="nc"><i>41</i>&nbsp;        windowStage.getIcons().add(new Image(&quot;/gui/logo.png&quot;));</b>
+<i>42</i>&nbsp;        // Loads first FXML scene. Checks to ensure that the file is not NULL.
+<i>43</i>&nbsp;        try {
+<b class="nc"><i>44</i>&nbsp;            Parent view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(&quot;/gui/mainScreen.fxml&quot;)));</b>
+<b class="nc"><i>45</i>&nbsp;            Scene scene = new Scene(view);</b>
+<b class="nc"><i>46</i>&nbsp;            windowStage.setScene(scene);</b>
+<i>47</i>&nbsp;            try {
+<b class="nc"><i>48</i>&nbsp;                loadGoogleAPIs();</b>
+<b class="nc"><i>49</i>&nbsp;            } catch (CustomException e) {</b>
+<b class="nc"><i>50</i>&nbsp;                createWarnWin(e);</b>
+<b class="nc"><i>51</i>&nbsp;            }</b>
+<b class="nc"><i>52</i>&nbsp;            windowStage.show();</b>
+<b class="nc"><i>53</i>&nbsp;        } catch (IOException | NullPointerException e) {</b>
+<b class="nc"><i>54</i>&nbsp;            createErrorWin(new CustomException(&quot;Error caused when loading the Start screen&#39;s FXML file.&quot;, e.getClass().toString()));</b>
+<b class="nc"><i>55</i>&nbsp;        }</b>
+<b class="nc"><i>56</i>&nbsp;    }</b>
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    /**
+<i>59</i>&nbsp;     * Pre-Loads all the Google APIs and stores them in the controller data class to prevent
+<i>60</i>&nbsp;     * slow loading and re-loading. Also allows for the user to keep searches stored even when not focused on it.
+<i>61</i>&nbsp;     *
+<i>62</i>&nbsp;     * @throws CustomException      Error when loading the map view.
+<i>63</i>&nbsp;     */
+<i>64</i>&nbsp;    private void loadGoogleAPIs() throws CustomException {
+<b class="nc"><i>65</i>&nbsp;        ControllerData connData = ControllerData.getInstance();</b>
+<i>66</i>&nbsp;        try {
+<b class="nc"><i>67</i>&nbsp;            StackPane mapView = FXMLLoader.load(Objects.requireNonNull(MainScreen.class.getResource(&quot;/gui/views/mapView.fxml&quot;)));</b>
+<b class="nc"><i>68</i>&nbsp;            connData.setGoogleMap(mapView);</b>
+<b class="nc"><i>69</i>&nbsp;        } catch (IOException | NullPointerException e) {</b>
+<b class="nc"><i>70</i>&nbsp;            throw new CustomException(&quot;Error caused when loading the Map View screens FXML file.&quot;, e.getClass().toString());</b>
+<b class="nc"><i>71</i>&nbsp;        }</b>
+<b class="nc"><i>72</i>&nbsp;        WebView externalSearch = new WebView();</b>
+<b class="nc"><i>73</i>&nbsp;        externalSearch.getEngine().load(&quot;https://cse.google.com/cse?cx=59f99af6c7b75d889&quot;);</b>
+<b class="nc"><i>74</i>&nbsp;        connData.setGoogleSearch(externalSearch);</b>
+<b class="nc"><i>75</i>&nbsp;    }</b>
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;    /**
+<i>78</i>&nbsp;     * As connection is made at the start of the application this method ensures,
+<i>79</i>&nbsp;     * that the database is closed at the end of the application.
+<i>80</i>&nbsp;     */
+<i>81</i>&nbsp;    @Override
+<i>82</i>&nbsp;    public void stop() {
+<i>83</i>&nbsp;        try {
+<b class="nc"><i>84</i>&nbsp;            DataAccessor.getInstance().getConnection().close();</b>
+<b class="nc"><i>85</i>&nbsp;        } catch (SQLException error) {</b>
+<b class="nc"><i>86</i>&nbsp;            System.err.println(error.getMessage());</b>
+<b class="nc"><i>87</i>&nbsp;        }</b>
+<b class="nc"><i>88</i>&nbsp;    }</b>
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;    /**
+<i>91</i>&nbsp;     * Creates an error window that alerts the user to the problem and closes the application to avoid
+<i>92</i>&nbsp;     * errors with the database/other system from occurring.
+<i>93</i>&nbsp;     *
+<i>94</i>&nbsp;     * @param cause     The exception that was thrown.
+<i>95</i>&nbsp;     */
+<i>96</i>&nbsp;    public static void createErrorWin(CustomException cause) {
+<b class="nc"><i>97</i>&nbsp;        Alert alert = new Alert(Alert.AlertType.ERROR, &quot;Message: &quot; + cause.getMessage());</b>
+<b class="nc"><i>98</i>&nbsp;        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);</b>
+<b class="nc"><i>99</i>&nbsp;        alert.setTitle(cause.getInfo());</b>
+<b class="nc"><i>100</i>&nbsp;        alert.setOnHidden(event -&gt; window.close());</b>
+<b class="nc"><i>101</i>&nbsp;        alert.show();</b>
+<b class="nc"><i>102</i>&nbsp;    }</b>
+<i>103</i>&nbsp;
+<i>104</i>&nbsp;    /**
+<i>105</i>&nbsp;     * Creates a Warning window that alerts the user to the problem and continues the application.
+<i>106</i>&nbsp;     *
+<i>107</i>&nbsp;     * @param cause     The exception that was thrown.
+<i>108</i>&nbsp;     */
+<i>109</i>&nbsp;    public static void createWarnWin(CustomException cause) {
+<b class="nc"><i>110</i>&nbsp;        Alert alert = new Alert(Alert.AlertType.WARNING, &quot;Message: &quot; + cause.getMessage());</b>
+<b class="nc"><i>111</i>&nbsp;        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);</b>
+<b class="nc"><i>112</i>&nbsp;        alert.setTitle(cause.getInfo());</b>
+<b class="nc"><i>113</i>&nbsp;        alert.show();</b>
+<b class="nc"><i>114</i>&nbsp;    }</b>
+<i>115</i>&nbsp;
+<i>116</i>&nbsp;    /**
+<i>117</i>&nbsp;     * Creates a Warning window that alerts the user to the success of the operation and continues the application.
+<i>118</i>&nbsp;     *
+<i>119</i>&nbsp;     * @param cause     The exception that was thrown.
+<i>120</i>&nbsp;     */
+<i>121</i>&nbsp;    public static void createSuccessWin(CustomException cause) {
+<b class="nc"><i>122</i>&nbsp;        Alert alert = new Alert(Alert.AlertType.INFORMATION, &quot;Message: &quot; + cause.getMessage());</b>
+<b class="nc"><i>123</i>&nbsp;        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);</b>
+<b class="nc"><i>124</i>&nbsp;        alert.setTitle(cause.getInfo());</b>
+<b class="nc"><i>125</i>&nbsp;        alert.show();</b>
+<b class="nc"><i>126</i>&nbsp;    }</b>
+<i>127</i>&nbsp;
+<i>128</i>&nbsp;    /**
+<i>129</i>&nbsp;     * Launches the application with the provided arguments passed through.
+<i>130</i>&nbsp;     * Uses the launch method which is inherited from this class&#39;s parent Application.
+<i>131</i>&nbsp;     *
+<i>132</i>&nbsp;     * @param args      The arguments given when running the compiled source code.
+<i>133</i>&nbsp;     */
+<i>134</i>&nbsp;    public static void main(String[] args) {
+<b class="nc"><i>135</i>&nbsp;        launch(args);</b>
+<b class="nc"><i>136</i>&nbsp;    }</b>
+<i>137</i>&nbsp;
+<i>138</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-10-11 17:02</div>
+</div>
+</body>
+</html>

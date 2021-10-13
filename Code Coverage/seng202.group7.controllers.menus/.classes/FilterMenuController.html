@@ -1,0 +1,405 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: FilterMenuController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">seng202.group7.controllers.menus</a> ]
+</div>
+
+<h1>Coverage Summary for Class: FilterMenuController (seng202.group7.controllers.menus)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FilterMenuController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 135)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package seng202.group7.controllers.menus;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.io.File;
+<i>4</i>&nbsp;import java.io.IOException;
+<i>5</i>&nbsp;import java.net.URL;
+<i>6</i>&nbsp;import java.time.LocalDate;
+<i>7</i>&nbsp;import java.time.format.DateTimeFormatter;
+<i>8</i>&nbsp;import java.time.format.DateTimeParseException;
+<i>9</i>&nbsp;import java.util.List;
+<i>10</i>&nbsp;import java.util.Arrays;
+<i>11</i>&nbsp;import java.util.Objects;
+<i>12</i>&nbsp;import java.util.ResourceBundle;
+<i>13</i>&nbsp;import javafx.fxml.FXML;
+<i>14</i>&nbsp;import javafx.fxml.FXMLLoader;
+<i>15</i>&nbsp;import javafx.fxml.Initializable;
+<i>16</i>&nbsp;import javafx.scene.Node;
+<i>17</i>&nbsp;import javafx.scene.control.ComboBox;
+<i>18</i>&nbsp;import javafx.scene.control.DatePicker;
+<i>19</i>&nbsp;import javafx.scene.control.TextField;
+<i>20</i>&nbsp;import javafx.scene.layout.BorderPane;
+<i>21</i>&nbsp;import javafx.scene.layout.StackPane;
+<i>22</i>&nbsp;import javafx.scene.web.WebView;
+<i>23</i>&nbsp;import javafx.stage.FileChooser;
+<i>24</i>&nbsp;import javafx.stage.Stage;
+<i>25</i>&nbsp;import javafx.event.ActionEvent;
+<i>26</i>&nbsp;import seng202.group7.controllers.views.MapController;
+<i>27</i>&nbsp;import seng202.group7.data.CustomException;
+<i>28</i>&nbsp;import seng202.group7.data.DataAccessor;
+<i>29</i>&nbsp;import seng202.group7.data.QueryBuilder;
+<i>30</i>&nbsp;import seng202.group7.data.FilterConditions;
+<i>31</i>&nbsp;import seng202.group7.data.Serializer;
+<i>32</i>&nbsp;import seng202.group7.view.MainScreen;
+<i>33</i>&nbsp;import seng202.group7.controllers.data.ControllerData;
+<i>34</i>&nbsp;import seng202.group7.controllers.data.InputType;
+<i>35</i>&nbsp;import seng202.group7.controllers.data.InputValidator;
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;/**
+<i>38</i>&nbsp; * Controller class. Linked to filter menu FXML.
+<i>39</i>&nbsp; * Handles initialization of filter type boxes.
+<i>40</i>&nbsp; * Links GUI to filter class.
+<i>41</i>&nbsp; *
+<i>42</i>&nbsp; * @author Sami Elmadani
+<i>43</i>&nbsp; * @author Shaylin Simadari
+<i>44</i>&nbsp; * @author John Elliott
+<i>45</i>&nbsp; */
+<b class="nc"><i>46</i>&nbsp;public class FilterMenuController implements Initializable {</b>
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;    @FXML
+<i>49</i>&nbsp;    private DatePicker datePicker;
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    @FXML
+<i>52</i>&nbsp;    private DatePicker datePicker2;
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    @FXML
+<i>55</i>&nbsp;    private ComboBox&lt;String&gt; primaryBox;
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;    @FXML
+<i>58</i>&nbsp;    private ComboBox&lt;String&gt; locationBox;
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    @FXML
+<i>61</i>&nbsp;    private TextField wardField;
+<i>62</i>&nbsp;
+<i>63</i>&nbsp;    @FXML
+<i>64</i>&nbsp;    private TextField beatField;
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;    @FXML
+<i>67</i>&nbsp;    private ComboBox&lt;String&gt; arrestBox;
+<i>68</i>&nbsp;
+<i>69</i>&nbsp;    @FXML
+<i>70</i>&nbsp;    private ComboBox&lt;String&gt; domesticBox;
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    private List&lt;Node&gt; allValues;
+<i>73</i>&nbsp;
+<i>74</i>&nbsp;    private static FilterConditions filterConditions;
+<i>75</i>&nbsp;
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;    /**
+<i>78</i>&nbsp;     * This method is run during the loading of the data view fxml file.
+<i>79</i>&nbsp;     * It generates what values will be stored in the columns.
+<i>80</i>&nbsp;     *
+<i>81</i>&nbsp;     * @param location      A URL object.
+<i>82</i>&nbsp;     * @param resources     A ResourceBundle object.
+<i>83</i>&nbsp;     */
+<i>84</i>&nbsp;    @Override
+<i>85</i>&nbsp;    public void initialize(URL location, ResourceBundle resources) {
+<i>86</i>&nbsp;        try {
+<b class="nc"><i>87</i>&nbsp;            List&lt;String&gt; crimeTypes = DataAccessor.getInstance().getColumnString(&quot;primary_description&quot;, &quot;&quot;);</b>
+<b class="nc"><i>88</i>&nbsp;            for (String type: crimeTypes) {</b>
+<b class="nc"><i>89</i>&nbsp;                primaryBox.getItems().add(type);</b>
+<b class="nc"><i>90</i>&nbsp;            }</b>
+<b class="nc"><i>91</i>&nbsp;            primaryBox.getItems().sort(null);</b>
+<b class="nc"><i>92</i>&nbsp;            primaryBox.getItems().add(0, null);</b>
+<b class="nc"><i>93</i>&nbsp;            List&lt;String&gt; locationTypes = DataAccessor.getInstance().getColumnString(&quot;location_description&quot;, &quot;&quot;);</b>
+<b class="nc"><i>94</i>&nbsp;            for (String type: locationTypes) {</b>
+<b class="nc"><i>95</i>&nbsp;                locationBox.getItems().add(type);</b>
+<b class="nc"><i>96</i>&nbsp;            }</b>
+<b class="nc"><i>97</i>&nbsp;            locationBox.getItems().sort(null);</b>
+<b class="nc"><i>98</i>&nbsp;            locationBox.getItems().add(0, null);</b>
+<i>99</i>&nbsp;
+<b class="nc"><i>100</i>&nbsp;        } catch (CustomException e) {</b>
+<b class="nc"><i>101</i>&nbsp;            MainScreen.createWarnWin(e);</b>
+<b class="nc"><i>102</i>&nbsp;            return;</b>
+<b class="nc"><i>103</i>&nbsp;        }</b>
+<b class="nc"><i>104</i>&nbsp;        arrestBox.getItems().addAll(null, &quot;Y&quot;, &quot;N&quot;);</b>
+<i>105</i>&nbsp;
+<b class="nc"><i>106</i>&nbsp;        domesticBox.getItems().addAll(null, &quot;Y&quot;, &quot;N&quot;);</b>
+<i>107</i>&nbsp;
+<b class="nc"><i>108</i>&nbsp;        prepareValidation();</b>
+<i>109</i>&nbsp;
+<b class="nc"><i>110</i>&nbsp;        loadGUIFields();</b>
+<b class="nc"><i>111</i>&nbsp;    }</b>
+<i>112</i>&nbsp;
+<i>113</i>&nbsp;    /**
+<i>114</i>&nbsp;     * Sets the types of validation required on each input node
+<i>115</i>&nbsp;     */
+<i>116</i>&nbsp;    private void prepareValidation() {
+<b class="nc"><i>117</i>&nbsp;        TextField dateText = datePicker.getEditor();</b>
+<b class="nc"><i>118</i>&nbsp;        TextField dateText2 = datePicker2.getEditor();</b>
+<i>119</i>&nbsp;
+<b class="nc"><i>120</i>&nbsp;        allValues = Arrays.asList(datePicker, dateText, primaryBox, locationBox, wardField, beatField,</b>
+<i>121</i>&nbsp;        arrestBox, domesticBox);
+<i>122</i>&nbsp;        
+<b class="nc"><i>123</i>&nbsp;        dateText.textProperty().addListener((observable, oldValue, newValue) -&gt; {</b>
+<i>124</i>&nbsp;            try {
+<b class="nc"><i>125</i>&nbsp;                DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern(&quot;d/M/yyyy&quot;);</b>
+<b class="nc"><i>126</i>&nbsp;                LocalDate date = LocalDate.parse(dateText.getText(), dateTimeFormat);</b>
+<b class="nc"><i>127</i>&nbsp;                datePicker.setValue(date);</b>
+<b class="nc"><i>128</i>&nbsp;            } catch (DateTimeParseException ignored) {}</b>
+<b class="nc"><i>129</i>&nbsp;        });</b>
+<i>130</i>&nbsp;
+<b class="nc"><i>131</i>&nbsp;        dateText2.textProperty().addListener((observable, oldValue, newValue) -&gt; {</b>
+<i>132</i>&nbsp;            try {
+<b class="nc"><i>133</i>&nbsp;                DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern(&quot;d/M/yyyy&quot;);</b>
+<b class="nc"><i>134</i>&nbsp;                LocalDate date = LocalDate.parse(dateText2.getText(), dateTimeFormat);</b>
+<b class="nc"><i>135</i>&nbsp;                datePicker2.setValue(date);</b>
+<b class="nc"><i>136</i>&nbsp;            } catch (DateTimeParseException ignored) {}</b>
+<b class="nc"><i>137</i>&nbsp;        });</b>
+<i>138</i>&nbsp;
+<b class="nc"><i>139</i>&nbsp;        InputValidator.addValidation(wardField, InputType.INTEGER);</b>
+<b class="nc"><i>140</i>&nbsp;        InputValidator.addValidation(beatField, InputType.INTEGER);</b>
+<b class="nc"><i>141</i>&nbsp;        InputValidator.addValidation(dateText, InputType.DATE);</b>
+<b class="nc"><i>142</i>&nbsp;        InputValidator.addValidation(dateText2, InputType.DATE);</b>
+<b class="nc"><i>143</i>&nbsp;    }</b>
+<i>144</i>&nbsp;
+<i>145</i>&nbsp;    /**
+<i>146</i>&nbsp;     * Loads a filter from a file
+<i>147</i>&nbsp;     * @param event   The event action that was triggered.
+<i>148</i>&nbsp;     */
+<i>149</i>&nbsp;    public void loadFilter(ActionEvent event) {
+<b class="nc"><i>150</i>&nbsp;        FileChooser fileChooser = new FileChooser();</b>
+<b class="nc"><i>151</i>&nbsp;        fileChooser.setInitialDirectory(new File(&quot;./&quot;));</b>
+<b class="nc"><i>152</i>&nbsp;        fileChooser.setTitle(&quot;Select filter&quot;);</b>
+<b class="nc"><i>153</i>&nbsp;        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(&quot;filters&quot;, &quot;*.ser&quot;));</b>
+<b class="nc"><i>154</i>&nbsp;        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();</b>
+<b class="nc"><i>155</i>&nbsp;        File file = fileChooser.showOpenDialog(stage);</b>
+<b class="nc"><i>156</i>&nbsp;        if(file != null) {</b>
+<i>157</i>&nbsp;            try {
+<b class="nc"><i>158</i>&nbsp;                filterConditions = Serializer.deserialize(file);</b>
+<b class="nc"><i>159</i>&nbsp;                loadGUIFields();</b>
+<b class="nc"><i>160</i>&nbsp;            } catch (CustomException e) {</b>
+<b class="nc"><i>161</i>&nbsp;                MainScreen.createWarnWin(e);</b>
+<b class="nc"><i>162</i>&nbsp;            }</b>
+<i>163</i>&nbsp;        }
+<b class="nc"><i>164</i>&nbsp;    }</b>
+<i>165</i>&nbsp;
+<i>166</i>&nbsp;    /**
+<i>167</i>&nbsp;     * Clears the current filter fields and clears filter from table
+<i>168</i>&nbsp;     * @param event   The event action that was triggered.
+<i>169</i>&nbsp;     */
+<i>170</i>&nbsp;    public void clearFilter(ActionEvent event) {
+<b class="nc"><i>171</i>&nbsp;        datePicker.setValue(null);</b>
+<b class="nc"><i>172</i>&nbsp;        datePicker2.setValue(null);</b>
+<b class="nc"><i>173</i>&nbsp;        primaryBox.setValue(null);</b>
+<b class="nc"><i>174</i>&nbsp;        locationBox.setValue(null);</b>
+<b class="nc"><i>175</i>&nbsp;        wardField.setText(&quot;&quot;);</b>
+<b class="nc"><i>176</i>&nbsp;        beatField.setText(&quot;&quot;);</b>
+<b class="nc"><i>177</i>&nbsp;        arrestBox.setValue(null);</b>
+<b class="nc"><i>178</i>&nbsp;        domesticBox.setValue(null);</b>
+<b class="nc"><i>179</i>&nbsp;        applyFilter(event);</b>
+<b class="nc"><i>180</i>&nbsp;    }</b>
+<i>181</i>&nbsp;
+<i>182</i>&nbsp;    /**
+<i>183</i>&nbsp;     * Saves the current filter to a file
+<i>184</i>&nbsp;     * @param event   The event action that was triggered.
+<i>185</i>&nbsp;     */
+<i>186</i>&nbsp;    public void saveFilter(ActionEvent event) {
+<b class="nc"><i>187</i>&nbsp;        FileChooser fileChooser = new FileChooser();</b>
+<b class="nc"><i>188</i>&nbsp;        fileChooser.setInitialDirectory(new File(&quot;./&quot;));</b>
+<b class="nc"><i>189</i>&nbsp;        fileChooser.setTitle(&quot;Save filter&quot;);</b>
+<b class="nc"><i>190</i>&nbsp;        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(&quot;filters&quot;, &quot;*.ser&quot;));</b>
+<b class="nc"><i>191</i>&nbsp;        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();</b>
+<b class="nc"><i>192</i>&nbsp;        File file = fileChooser.showSaveDialog(stage);</b>
+<b class="nc"><i>193</i>&nbsp;        if (file != null) {</b>
+<i>194</i>&nbsp;            try {
+<b class="nc"><i>195</i>&nbsp;                saveGUIFields();</b>
+<b class="nc"><i>196</i>&nbsp;                Serializer.serialize(file, filterConditions);</b>
+<b class="nc"><i>197</i>&nbsp;            } catch (CustomException e) {</b>
+<b class="nc"><i>198</i>&nbsp;                MainScreen.createWarnWin(e);</b>
+<b class="nc"><i>199</i>&nbsp;            }</b>
+<i>200</i>&nbsp;        }
+<b class="nc"><i>201</i>&nbsp;    }</b>
+<i>202</i>&nbsp;
+<i>203</i>&nbsp;    /**
+<i>204</i>&nbsp;     * Applies the current filter values to the table
+<i>205</i>&nbsp;     * @param event   The event action that was triggered.
+<i>206</i>&nbsp;     */
+<i>207</i>&nbsp;    public void applyFilter(ActionEvent event){
+<b class="nc"><i>208</i>&nbsp;        for (Node node : allValues) {</b>
+<b class="nc"><i>209</i>&nbsp;            if (!InputValidator.validate(node)) {</b>
+<b class="nc"><i>210</i>&nbsp;                return;</b>
+<i>211</i>&nbsp;            }
+<b class="nc"><i>212</i>&nbsp;        }</b>
+<b class="nc"><i>213</i>&nbsp;        saveGUIFields();</b>
+<b class="nc"><i>214</i>&nbsp;        String query = QueryBuilder.where(filterConditions);</b>
+<i>215</i>&nbsp;
+<i>216</i>&nbsp;        // By setting this where query when the paginator is generated the data accessor will apply it to the search.
+<b class="nc"><i>217</i>&nbsp;        ControllerData.getInstance().setFilterQuery(query);</b>
+<i>218</i>&nbsp;        // As the side panels root is the main border panel we use .getRoot().
+<b class="nc"><i>219</i>&nbsp;        BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();</b>
+<i>220</i>&nbsp;
+<b class="nc"><i>221</i>&nbsp;        if (pane.getCenter().getId().equals(&quot;mapViewPane&quot;)) {</b>
+<i>222</i>&nbsp;            try {
+<i>223</i>&nbsp;                // Changes side menu to the filter menu.
+<b class="nc"><i>224</i>&nbsp;                StackPane mapView = ControllerData.getInstance().getGoogleMap();</b>
+<b class="nc"><i>225</i>&nbsp;                pane.setCenter(mapView);</b>
+<i>226</i>&nbsp;                //reLoad pins.
+<b class="nc"><i>227</i>&nbsp;                WebView map = (WebView) mapView.getChildren().get(0);</b>
+<b class="nc"><i>228</i>&nbsp;                MapController.updatePins(map);</b>
+<b class="nc"><i>229</i>&nbsp;            } catch (NullPointerException e) {</b>
+<b class="nc"><i>230</i>&nbsp;                MainScreen.createErrorWin(new CustomException(&quot;Error caused when loading the Map View screens FXML file.&quot;, e.getClass().toString()));</b>
+<b class="nc"><i>231</i>&nbsp;            }</b>
+<i>232</i>&nbsp;        } else {
+<i>233</i>&nbsp;            try {
+<b class="nc"><i>234</i>&nbsp;                BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource(&quot;/gui/views/pageView.fxml&quot;)));</b>
+<i>235</i>&nbsp;                // Changes side menu to the filter menu.
+<b class="nc"><i>236</i>&nbsp;                pane.setCenter(tableView);</b>
+<b class="nc"><i>237</i>&nbsp;            } catch (IOException | NullPointerException e) {</b>
+<b class="nc"><i>238</i>&nbsp;                MainScreen.createErrorWin(new CustomException(&quot;Error caused when loading the Pagination screens FXML file.&quot;, e.getClass().toString()));</b>
+<b class="nc"><i>239</i>&nbsp;            }</b>
+<i>240</i>&nbsp;        }
+<b class="nc"><i>241</i>&nbsp;    }</b>
+<i>242</i>&nbsp;
+<i>243</i>&nbsp;    /**
+<i>244</i>&nbsp;     * Clears the date stored in the date picker.
+<i>245</i>&nbsp;     */
+<i>246</i>&nbsp;    public void clearDate(){
+<b class="nc"><i>247</i>&nbsp;        datePicker.setValue(null);</b>
+<b class="nc"><i>248</i>&nbsp;    }</b>
+<i>249</i>&nbsp;
+<i>250</i>&nbsp;    /**
+<i>251</i>&nbsp;     * Clears the date stored in the date picker 2.
+<i>252</i>&nbsp;     */
+<i>253</i>&nbsp;    public void clearDate2(){
+<b class="nc"><i>254</i>&nbsp;        datePicker2.setValue(null);</b>
+<b class="nc"><i>255</i>&nbsp;    }</b>
+<i>256</i>&nbsp;
+<i>257</i>&nbsp;    /**
+<i>258</i>&nbsp;     * Returns the user to the general menu
+<i>259</i>&nbsp;     * Gets the current side panel and replaces it with the general menu panel.
+<i>260</i>&nbsp;     * @param event             The event action that was triggered.
+<i>261</i>&nbsp;     */
+<i>262</i>&nbsp;    public void toMenu(ActionEvent event) {
+<b class="nc"><i>263</i>&nbsp;        saveGUIFields();</b>
+<i>264</i>&nbsp;        // As the side panels root is the main border panel we use .getRoot().
+<i>265</i>&nbsp;        try {
+<b class="nc"><i>266</i>&nbsp;            BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();</b>
+<b class="nc"><i>267</i>&nbsp;            Node menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource(&quot;/gui/menus/generalMenu.fxml&quot;)));</b>
+<i>268</i>&nbsp;            // Changes side menu to the filter menu.
+<b class="nc"><i>269</i>&nbsp;            pane.setLeft(menuItems);</b>
+<b class="nc"><i>270</i>&nbsp;        } catch (IOException | NullPointerException e) {</b>
+<b class="nc"><i>271</i>&nbsp;            MainScreen.createErrorWin(new CustomException(&quot;Error caused when loading the General Menu screens FXML file.&quot;, e.getClass().toString()));</b>
+<b class="nc"><i>272</i>&nbsp;        }</b>
+<i>273</i>&nbsp;
+<b class="nc"><i>274</i>&nbsp;    }</b>
+<i>275</i>&nbsp;
+<i>276</i>&nbsp;    /**
+<i>277</i>&nbsp;     * Loads the fields in from a file.
+<i>278</i>&nbsp;     */
+<i>279</i>&nbsp;    private void loadGUIFields(){
+<b class="nc"><i>280</i>&nbsp;        if(filterConditions == null){</b>
+<b class="nc"><i>281</i>&nbsp;            return;</b>
+<i>282</i>&nbsp;        }
+<b class="nc"><i>283</i>&nbsp;        datePicker.setValue(filterConditions.getDateFrom());</b>
+<b class="nc"><i>284</i>&nbsp;        datePicker2.setValue(filterConditions.getDateTo());</b>
+<b class="nc"><i>285</i>&nbsp;        primaryBox.setValue(filterConditions.getPrimaryDescription());</b>
+<b class="nc"><i>286</i>&nbsp;        locationBox.setValue(filterConditions.getLocationDescription());</b>
+<b class="nc"><i>287</i>&nbsp;        wardField.setText(filterConditions.getWard() == null ? &quot;&quot; : filterConditions.getWard().toString());</b>
+<b class="nc"><i>288</i>&nbsp;        beatField.setText(filterConditions.getBeat() == null ? &quot;&quot; : filterConditions.getBeat().toString());</b>
+<b class="nc"><i>289</i>&nbsp;        arrestBox.setValue(filterConditions.getArrest() == null ? null : filterConditions.getArrest() ? &quot;Y&quot; : &quot;N&quot;);</b>
+<b class="nc"><i>290</i>&nbsp;        domesticBox.setValue(filterConditions.getDomestic() == null ? null : filterConditions.getDomestic() ? &quot;Y&quot; : &quot;N&quot;);</b>
+<b class="nc"><i>291</i>&nbsp;    }</b>
+<i>292</i>&nbsp;
+<i>293</i>&nbsp;    /**
+<i>294</i>&nbsp;     * Saves the fields to a file.
+<i>295</i>&nbsp;     */
+<i>296</i>&nbsp;    private void saveGUIFields(){
+<b class="nc"><i>297</i>&nbsp;        filterConditions = new FilterConditions(</b>
+<b class="nc"><i>298</i>&nbsp;                datePicker.getValue(),</b>
+<b class="nc"><i>299</i>&nbsp;                datePicker2.getValue(),</b>
+<b class="nc"><i>300</i>&nbsp;                primaryBox.getValue(),</b>
+<b class="nc"><i>301</i>&nbsp;                locationBox.getValue(),</b>
+<b class="nc"><i>302</i>&nbsp;                getIntegerFromString(wardField.getText()),</b>
+<b class="nc"><i>303</i>&nbsp;                getIntegerFromString(beatField.getText()),</b>
+<b class="nc"><i>304</i>&nbsp;                getBooleanFromString(arrestBox.getValue()),</b>
+<b class="nc"><i>305</i>&nbsp;                getBooleanFromString(domesticBox.getValue())</b>
+<i>306</i>&nbsp;        );
+<b class="nc"><i>307</i>&nbsp;    }</b>
+<i>308</i>&nbsp;
+<i>309</i>&nbsp;    /**
+<i>310</i>&nbsp;     * Gets the integer value from the string and ensures if the string is empty it returns a null value.
+<i>311</i>&nbsp;     */
+<i>312</i>&nbsp;    private Integer getIntegerFromString(String str) {
+<b class="nc"><i>313</i>&nbsp;        return str.equals(&quot;&quot;) ? null : Integer.parseInt(str);</b>
+<i>314</i>&nbsp;    }
+<i>315</i>&nbsp;
+<i>316</i>&nbsp;    /**
+<i>317</i>&nbsp;     * Determines if a value in the ComboBox corresponds to a true or false value.
+<i>318</i>&nbsp;     */
+<i>319</i>&nbsp;    private Boolean getBooleanFromString(String str) {
+<b class="nc"><i>320</i>&nbsp;        return str == null ? null : str.equals(&quot;Y&quot;);</b>
+<i>321</i>&nbsp;    }
+<i>322</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-10-11 17:02</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,222 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: QueryBuilder</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">seng202.group7.data</a> ]
+</div>
+
+<h1>Coverage Summary for Class: QueryBuilder (seng202.group7.data)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">QueryBuilder</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    88.9%
+  </span>
+  <span class="absValue">
+    (8/ 9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91.7%
+  </span>
+  <span class="absValue">
+    (33/ 36)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package seng202.group7.data;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import seng202.group7.controllers.data.ControllerData;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import java.sql.Timestamp;
+<i>6</i>&nbsp;import java.time.LocalDate;
+<i>7</i>&nbsp;import java.util.List;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * Builds queries based on parameters and returns them as Strings
+<i>11</i>&nbsp; * @author Shaylin Simadari
+<i>12</i>&nbsp; * @author Sam McMillan
+<i>13</i>&nbsp; */
+<i>14</i>&nbsp;public final class QueryBuilder {
+<i>15</i>&nbsp;
+<b class="nc"><i>16</i>&nbsp;    private QueryBuilder(){}</b>
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     * builds an SQL where statement for data that meets the conditions of the supplied parameters.
+<i>20</i>&nbsp;     * null parameters are ignored.
+<i>21</i>&nbsp;     * conditions are connected by the AND connective
+<i>22</i>&nbsp;     * @return      A String representation of an SQL where statement
+<i>23</i>&nbsp;     */
+<i>24</i>&nbsp;    public static String where(FilterConditions fc){
+<b class="fc"><i>25</i>&nbsp;        String query = &quot;&quot;;</b>
+<i>26</i>&nbsp;
+<b class="fc"><i>27</i>&nbsp;        if (fc.getDateFrom() != null &amp;&amp; fc.getDateTo() != null){</b>
+<b class="fc"><i>28</i>&nbsp;            query += dateRangeCondition(&quot;date&quot;, fc.getDateFrom(), fc.getDateTo());</b>
+<i>29</i>&nbsp;        }
+<b class="fc"><i>30</i>&nbsp;        if (fc.getPrimaryDescription() != null){</b>
+<b class="fc"><i>31</i>&nbsp;            query += equalityCondition(&quot;primary_description&quot;, fc.getPrimaryDescription());</b>
+<i>32</i>&nbsp;        }
+<b class="fc"><i>33</i>&nbsp;        if (fc.getLocationDescription() != null){</b>
+<b class="nc"><i>34</i>&nbsp;            query += equalityCondition(&quot;location_description&quot;, fc.getLocationDescription());</b>
+<i>35</i>&nbsp;        }
+<b class="fc"><i>36</i>&nbsp;        if (fc.getWard() != null){</b>
+<b class="fc"><i>37</i>&nbsp;            query += equalityCondition(&quot;ward&quot;, fc.getWard());</b>
+<i>38</i>&nbsp;        }
+<b class="fc"><i>39</i>&nbsp;        if (fc.getBeat() != null){</b>
+<b class="fc"><i>40</i>&nbsp;            query += equalityCondition(&quot;beat&quot;, fc.getBeat());</b>
+<i>41</i>&nbsp;        }
+<b class="fc"><i>42</i>&nbsp;        if (fc.getArrest() != null){</b>
+<b class="fc"><i>43</i>&nbsp;            query += equalityCondition(&quot;arrest&quot;, fc.getArrest());</b>
+<i>44</i>&nbsp;        }
+<b class="fc"><i>45</i>&nbsp;        if (fc.getDomestic() != null){</b>
+<b class="nc"><i>46</i>&nbsp;            query += equalityCondition(&quot;domestic&quot;, fc.getDomestic());</b>
+<i>47</i>&nbsp;        }
+<i>48</i>&nbsp;
+<b class="fc"><i>49</i>&nbsp;        if (query.equals(&quot;&quot;)) {</b>
+<b class="fc"><i>50</i>&nbsp;            return &quot;&quot;;</b>
+<i>51</i>&nbsp;        }
+<b class="fc"><i>52</i>&nbsp;        return query.substring(0, query.length()-5);</b>
+<i>53</i>&nbsp;    }
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;    /**
+<i>56</i>&nbsp;     * Is a builder that adds an and condition. For a boolean value.
+<i>57</i>&nbsp;     * @param field     The name of the column in the database
+<i>58</i>&nbsp;     * @param value     The value that the filed must be to meet the condition
+<i>59</i>&nbsp;     * @return          A String to append to a where query
+<i>60</i>&nbsp;     */
+<i>61</i>&nbsp;    private static String equalityCondition(String field, boolean value) {
+<b class="fc"><i>62</i>&nbsp;        return field + &quot;=&quot; + (value ? 1:0) + &quot; AND &quot;;</b>
+<i>63</i>&nbsp;    }
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;    /**
+<i>66</i>&nbsp;     *  Is a builder that adds an and condition. For an integer value.
+<i>67</i>&nbsp;     * @param field     The name of the column in the database
+<i>68</i>&nbsp;     * @param value     The value that the filed must be to meet the condition
+<i>69</i>&nbsp;     * @return          A String to append to a where query
+<i>70</i>&nbsp;     */
+<i>71</i>&nbsp;    private static String equalityCondition(String field, int value) {
+<b class="fc"><i>72</i>&nbsp;        return field + &quot;=&quot; + value + &quot; AND &quot;;</b>
+<i>73</i>&nbsp;    }
+<i>74</i>&nbsp;
+<i>75</i>&nbsp;    /**
+<i>76</i>&nbsp;     *  Is a builder that adds an and condition. For a string value.
+<i>77</i>&nbsp;     * @param field     The name of the column in the database
+<i>78</i>&nbsp;     * @param value     The value that the filed must be to meet the condition
+<i>79</i>&nbsp;     * @return          A String to append to a where query
+<i>80</i>&nbsp;     */
+<i>81</i>&nbsp;    private static String equalityCondition(String field, String value) {
+<b class="fc"><i>82</i>&nbsp;        return field + &quot;=&#39;&quot; + value + &quot;&#39; AND &quot;;</b>
+<i>83</i>&nbsp;    }
+<i>84</i>&nbsp;
+<i>85</i>&nbsp;    /**
+<i>86</i>&nbsp;     *  Is a builder that adds an and condition. For a string value.
+<i>87</i>&nbsp;     * @param field     The name of the column in the database
+<i>88</i>&nbsp;     * @param dateFrom  The beginning date value for date range
+<i>89</i>&nbsp;     * @param dateTo    The ending date value for date range
+<i>90</i>&nbsp;     * @return          A String to append to a where query
+<i>91</i>&nbsp;     */
+<i>92</i>&nbsp;    private static String dateRangeCondition(String field, LocalDate dateFrom, LocalDate dateTo) {
+<b class="fc"><i>93</i>&nbsp;        return field + &quot; &gt;= &quot; + Timestamp.valueOf(dateFrom.atStartOfDay()).getTime() + &quot; AND &quot;</b>
+<b class="fc"><i>94</i>&nbsp;                + field + &quot; &lt; &quot; + Timestamp.valueOf(dateTo.plusDays(1).atStartOfDay()).getTime() + &quot; AND &quot;;</b>
+<i>95</i>&nbsp;    }
+<i>96</i>&nbsp;
+<i>97</i>&nbsp;    /**
+<i>98</i>&nbsp;     * builds an SQL where statement for rows that contain the keyword.
+<i>99</i>&nbsp;     * @return      A String representation of an SQL where statement
+<i>100</i>&nbsp;     */
+<i>101</i>&nbsp;    public static String search(String keyword){
+<i>102</i>&nbsp;        // keyword = keyword.replace(&quot;/&quot;, &quot;//&quot;);
+<b class="fc"><i>103</i>&nbsp;        keyword = keyword.replace(&quot;&#39;&quot;, &quot;&#39;&#39;&quot;);</b>
+<b class="fc"><i>104</i>&nbsp;        return &quot;(primary_description LIKE &#39;%&quot; + keyword + &quot;%&#39; OR &quot;</b>
+<i>105</i>&nbsp;        + &quot;secondary_description LIKE &#39;%&quot; + keyword + &quot;%&#39; OR &quot;
+<i>106</i>&nbsp;        + &quot;location_description LIKE &#39;%&quot; + keyword + &quot;%&#39; OR &quot;
+<i>107</i>&nbsp;        + &quot;id LIKE &#39;%&quot; + keyword + &quot;%&#39; OR &quot;
+<i>108</i>&nbsp;        + &quot;fbicd LIKE &#39;%&quot; + keyword + &quot;%&#39; OR &quot;
+<i>109</i>&nbsp;        + &quot;iucr LIKE &#39;%&quot; + keyword + &quot;%&#39;)&quot;;
+<i>110</i>&nbsp;    }
+<i>111</i>&nbsp;
+<i>112</i>&nbsp;    /**
+<i>113</i>&nbsp;     * Uses the strings from choices from graph menu controller and the where method to create the correct query
+<i>114</i>&nbsp;     * @return query, a string value query
+<i>115</i>&nbsp;     */
+<i>116</i>&nbsp;    public static String constructGraphQuery(List&lt;String&gt; choices) {
+<b class="fc"><i>117</i>&nbsp;        String query = &quot;SELECT * FROM crimedb WHERE list_id=&quot; + ControllerData.getInstance().getCurrentList();</b>
+<b class="fc"><i>118</i>&nbsp;        String restrictions = where(new FilterConditions(null, null, choices.get(0), null,</b>
+<b class="fc"><i>119</i>&nbsp;                getIntegerFromString(choices.get(1)), getIntegerFromString(choices.get(2)), null, null));</b>
+<b class="fc"><i>120</i>&nbsp;        if (!restrictions.equals(&quot;&quot;)) {</b>
+<b class="fc"><i>121</i>&nbsp;            query += &quot; AND &quot; + restrictions;</b>
+<i>122</i>&nbsp;        }
+<b class="fc"><i>123</i>&nbsp;        query += &quot; ORDER BY date ASC;&quot;;</b>
+<b class="fc"><i>124</i>&nbsp;        return query;</b>
+<i>125</i>&nbsp;    }
+<i>126</i>&nbsp;
+<i>127</i>&nbsp;    /**
+<i>128</i>&nbsp;     * Gets the integer value from the string and ensures if the string is empty it returnsS a null value.
+<i>129</i>&nbsp;     *
+<i>130</i>&nbsp;     * @param str       The choice selected.
+<i>131</i>&nbsp;     * @return value    The integer result.
+<i>132</i>&nbsp;     */
+<i>133</i>&nbsp;    public static Integer getIntegerFromString(String str) {
+<b class="fc"><i>134</i>&nbsp;        if(&quot;&quot;.equals(str) || str == null){</b>
+<b class="fc"><i>135</i>&nbsp;            return null;</b>
+<i>136</i>&nbsp;        }
+<b class="fc"><i>137</i>&nbsp;        return Integer.parseInt(str);</b>
+<i>138</i>&nbsp;    }
+<i>139</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-10-11 17:02</div>
+</div>
+</body>
+</html>

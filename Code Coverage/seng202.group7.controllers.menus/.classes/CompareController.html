@@ -1,0 +1,353 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: CompareController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">seng202.group7.controllers.menus</a> ]
+</div>
+
+<h1>Coverage Summary for Class: CompareController (seng202.group7.controllers.menus)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CompareController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 92)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package seng202.group7.controllers.menus;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.io.IOException;
+<i>4</i>&nbsp;import java.net.URL;
+<i>5</i>&nbsp;import java.util.List;
+<i>6</i>&nbsp;import java.util.Objects;
+<i>7</i>&nbsp;import java.util.ResourceBundle;
+<i>8</i>&nbsp;import javafx.css.PseudoClass;
+<i>9</i>&nbsp;import javafx.event.ActionEvent;
+<i>10</i>&nbsp;import javafx.fxml.FXML;
+<i>11</i>&nbsp;import javafx.fxml.FXMLLoader;
+<i>12</i>&nbsp;import javafx.fxml.Initializable;
+<i>13</i>&nbsp;import javafx.scene.Node;
+<i>14</i>&nbsp;import javafx.scene.control.Button;
+<i>15</i>&nbsp;import javafx.scene.control.Label;
+<i>16</i>&nbsp;import javafx.scene.control.Pagination;
+<i>17</i>&nbsp;import javafx.scene.control.TableView;
+<i>18</i>&nbsp;import javafx.scene.control.TextField;
+<i>19</i>&nbsp;import javafx.scene.layout.BorderPane;
+<i>20</i>&nbsp;import javafx.scene.layout.GridPane;
+<i>21</i>&nbsp;import javafx.scene.layout.StackPane;
+<i>22</i>&nbsp;import javafx.scene.layout.VBox;
+<i>23</i>&nbsp;import seng202.group7.data.Crime;
+<i>24</i>&nbsp;import seng202.group7.data.CustomException;
+<i>25</i>&nbsp;import seng202.group7.data.DataAccessor;
+<i>26</i>&nbsp;import seng202.group7.data.Report;
+<i>27</i>&nbsp;import seng202.group7.analyses.Comparer;
+<i>28</i>&nbsp;import seng202.group7.controllers.data.ControllerData;
+<i>29</i>&nbsp;import seng202.group7.controllers.menus.MenuController;
+<i>30</i>&nbsp;import seng202.group7.view.MainScreen;
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;/**
+<i>33</i>&nbsp; * The controller, used by / linked to, the compares FXML file.
+<i>34</i>&nbsp; * Handles the comparisons of two crime objects.
+<i>35</i>&nbsp; *
+<i>36</i>&nbsp; * @author Jack McCorkindale
+<i>37</i>&nbsp; * @author Shaylin Simadari
+<i>38</i>&nbsp; * @author Sam McMillan
+<i>39</i>&nbsp; */
+<b class="nc"><i>40</i>&nbsp;public class CompareController implements Initializable {</b>
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    @FXML
+<i>43</i>&nbsp;    private TextField reportOneText;
+<i>44</i>&nbsp;    
+<i>45</i>&nbsp;    @FXML
+<i>46</i>&nbsp;    private TextField reportTwoText;
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;    @FXML
+<i>49</i>&nbsp;    private Label resultText;
+<i>50</i>&nbsp;    
+<i>51</i>&nbsp;    @FXML
+<i>52</i>&nbsp;    private VBox sideMenu;
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    private static String report1;
+<i>55</i>&nbsp;    private static String report2;
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;    /**
+<i>58</i>&nbsp;     * A style class that can be added to a node to add error formatting.
+<i>59</i>&nbsp;     */
+<i>60</i>&nbsp;    private PseudoClass errorClass;
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;    /**
+<i>63</i>&nbsp;     * This method is run during the loading of the compare menu fxml.
+<i>64</i>&nbsp;     *
+<i>65</i>&nbsp;     * @param location      A URL object.
+<i>66</i>&nbsp;     * @param resources     A ResourceBundle object.
+<i>67</i>&nbsp;     */
+<i>68</i>&nbsp;    @Override
+<i>69</i>&nbsp;    public void initialize(URL location, ResourceBundle resources) {
+<i>70</i>&nbsp;
+<b class="nc"><i>71</i>&nbsp;        errorClass = PseudoClass.getPseudoClass(&quot;error&quot;);</b>
+<i>72</i>&nbsp;
+<b class="nc"><i>73</i>&nbsp;        loadGUIFields();</b>
+<b class="nc"><i>74</i>&nbsp;    }</b>
+<i>75</i>&nbsp;
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;    /**
+<i>78</i>&nbsp;     * Gets the current side panel and replaces it with the general menu panel.
+<i>79</i>&nbsp;     */
+<i>80</i>&nbsp;    public void toMenu() {
+<b class="nc"><i>81</i>&nbsp;        saveGUIFields();</b>
+<b class="nc"><i>82</i>&nbsp;        BorderPane pane = (BorderPane) sideMenu.getParent();</b>
+<i>83</i>&nbsp;        try {
+<b class="nc"><i>84</i>&nbsp;            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource(&quot;/gui/menus/generalMenu.fxml&quot;)));</b>
+<i>85</i>&nbsp;            // Changes side menu to the filter menu.
+<b class="nc"><i>86</i>&nbsp;            pane.setLeft(menuItems);</b>
+<b class="nc"><i>87</i>&nbsp;        } catch (IOException | NullPointerException e) {</b>
+<b class="nc"><i>88</i>&nbsp;            MainScreen.createErrorWin(new CustomException(&quot;Error caused when loading the General Menu screens FXML file.&quot;, e.getClass().toString()));</b>
+<b class="nc"><i>89</i>&nbsp;        }</b>
+<i>90</i>&nbsp;
+<b class="nc"><i>91</i>&nbsp;    }</b>
+<i>92</i>&nbsp;
+<i>93</i>&nbsp;    /**
+<i>94</i>&nbsp;     * Gets the two pieces of data and creates a string based on the distance and time comparison between the two values
+<i>95</i>&nbsp;     * If the two values are the same feedback will notify the user to select two distinct values
+<i>96</i>&nbsp;     */
+<i>97</i>&nbsp;    public void compareReports() {
+<b class="nc"><i>98</i>&nbsp;        DataAccessor data = DataAccessor.getInstance();</b>
+<b class="nc"><i>99</i>&nbsp;        resultText.setText(&quot;&quot;);</b>
+<b class="nc"><i>100</i>&nbsp;        int list = ControllerData.getInstance().getCurrentList();</b>
+<b class="nc"><i>101</i>&nbsp;        String resultTextString = &quot;&quot;;</b>
+<b class="nc"><i>102</i>&nbsp;        Crime reportOne = null;</b>
+<b class="nc"><i>103</i>&nbsp;        Crime reportTwo = null;</b>
+<i>104</i>&nbsp;        try {
+<b class="nc"><i>105</i>&nbsp;            reportOne = data.getCrime(reportOneText.getText(), list);</b>
+<b class="nc"><i>106</i>&nbsp;            reportTwo = data.getCrime(reportTwoText.getText(), list);</b>
+<b class="nc"><i>107</i>&nbsp;        } catch (CustomException e) {</b>
+<b class="nc"><i>108</i>&nbsp;            MainScreen.createWarnWin(e);</b>
+<b class="nc"><i>109</i>&nbsp;        }</b>
+<b class="nc"><i>110</i>&nbsp;        reportOneText.pseudoClassStateChanged(errorClass, reportOne == null);</b>
+<b class="nc"><i>111</i>&nbsp;        reportTwoText.pseudoClassStateChanged(errorClass, reportTwo == null);</b>
+<b class="nc"><i>112</i>&nbsp;        if (reportOne == null || reportTwo == null) { //Checks if ether of the reports are not if so doesnt compare</b>
+<b class="nc"><i>113</i>&nbsp;            return;</b>
+<i>114</i>&nbsp;        } else {
+<b class="nc"><i>115</i>&nbsp;            if (reportOne.getId().equals(reportTwo.getId())) { //Checks if the reports are the same value if so informs the user</b>
+<b class="nc"><i>116</i>&nbsp;                resultTextString += &quot;The two crimes are the same value, please select two different values.&quot;;</b>
+<i>117</i>&nbsp;            } else {
+<b class="nc"><i>118</i>&nbsp;                resultTextString += &quot;Distance:&quot;;</b>
+<b class="nc"><i>119</i>&nbsp;                resultTextString += compareDistance(reportOne, reportTwo); //Adds the distance between the reports</b>
+<b class="nc"><i>120</i>&nbsp;                resultTextString += &quot;\n\nTime Difference:&quot;;</b>
+<b class="nc"><i>121</i>&nbsp;                resultTextString += compareTime(reportOne, reportTwo); //Adds the time difference between the reports</b>
+<i>122</i>&nbsp;                }
+<i>123</i>&nbsp;        }
+<b class="nc"><i>124</i>&nbsp;        resultText.setText(resultTextString);</b>
+<b class="nc"><i>125</i>&nbsp;    }</b>
+<i>126</i>&nbsp;
+<i>127</i>&nbsp;    /**
+<i>128</i>&nbsp;     * Compares the distance between the two reports and returns a string representing this value
+<i>129</i>&nbsp;     *
+<i>130</i>&nbsp;     * @param reportOne     The first report to be compared
+<i>131</i>&nbsp;     * @param reportTwo     The second report to be compared
+<i>132</i>&nbsp;     */
+<i>133</i>&nbsp;    private String compareDistance(Report reportOne, Report reportTwo) {
+<b class="nc"><i>134</i>&nbsp;        double distance = Comparer.locationDifference(reportOne, reportTwo);</b>
+<b class="nc"><i>135</i>&nbsp;        if (distance == -1) {</b>
+<b class="nc"><i>136</i>&nbsp;            return String.format(&quot; Crime %s has no location values.&quot;, reportOneText.getText());</b>
+<b class="nc"><i>137</i>&nbsp;        } else if(distance == -2) {</b>
+<b class="nc"><i>138</i>&nbsp;            return String.format(&quot; Crime %s has no location values.&quot;, reportTwoText.getText());</b>
+<b class="nc"><i>139</i>&nbsp;        } else if(distance == -3) {</b>
+<b class="nc"><i>140</i>&nbsp;            return String.format(&quot; Crime %s and Crime %s have no location values.&quot;, reportOneText.getText(), reportTwoText.getText());</b>
+<i>141</i>&nbsp;        } else {
+<b class="nc"><i>142</i>&nbsp;            return String.format(&quot; %.2fkm.&quot;, distance);</b>
+<i>143</i>&nbsp;        }
+<i>144</i>&nbsp;    }
+<i>145</i>&nbsp;
+<i>146</i>&nbsp;    /**
+<i>147</i>&nbsp;     * Compares the time difference between the two reports and returns a string representing this value
+<i>148</i>&nbsp;     *
+<i>149</i>&nbsp;     * @param reportOne     The first report to be compared
+<i>150</i>&nbsp;     * @param reportTwo     The second report to be compared
+<i>151</i>&nbsp;     */
+<i>152</i>&nbsp;    private String compareTime(Report reportOne, Report reportTwo) {
+<b class="nc"><i>153</i>&nbsp;        List&lt;Long&gt; time = Comparer.timeDifference(reportOne, reportTwo);</b>
+<b class="nc"><i>154</i>&nbsp;        String timeString = &quot;&quot;;</b>
+<b class="nc"><i>155</i>&nbsp;        if (time.get(3) &gt; 0) {</b>
+<b class="nc"><i>156</i>&nbsp;            timeString += String.format(&quot;%d year(s) &quot;, time.get(3)); //Time in years</b>
+<i>157</i>&nbsp;        }
+<b class="nc"><i>158</i>&nbsp;        if (time.get(2) &gt; 0) {</b>
+<b class="nc"><i>159</i>&nbsp;            timeString += String.format(&quot;%d day(s) &quot;, time.get(2)); //Time in months</b>
+<i>160</i>&nbsp;        }
+<b class="nc"><i>161</i>&nbsp;        if (time.get(1) &gt; 0) {</b>
+<b class="nc"><i>162</i>&nbsp;            timeString += String.format(&quot;%d hour(s) &quot;, time.get(1)); //Time in hours</b>
+<i>163</i>&nbsp;        }
+<b class="nc"><i>164</i>&nbsp;        if (time.get(0) &gt; 0) {</b>
+<b class="nc"><i>165</i>&nbsp;            timeString += String.format(&quot;%d minute(s) &quot;, time.get(0)); //Time in minutes</b>
+<i>166</i>&nbsp;        }
+<b class="nc"><i>167</i>&nbsp;        if (timeString.equals(&quot;&quot;)) {</b>
+<b class="nc"><i>168</i>&nbsp;            return (&quot; Occurred at the same time.&quot;); //If they occured at the same time</b>
+<i>169</i>&nbsp;        } else {
+<b class="nc"><i>170</i>&nbsp;            return String.format(&quot; %sapart.&quot;, timeString);</b>
+<i>171</i>&nbsp;        }
+<i>172</i>&nbsp;    }
+<i>173</i>&nbsp;
+<i>174</i>&nbsp;    /**
+<i>175</i>&nbsp;     * Will check to see if the data is being viewed through the table or data entry. It will then run the respective
+<i>176</i>&nbsp;     * methods to get the case number of the crime and insert the value into the appropriate table based on the button clicked.
+<i>177</i>&nbsp;     *
+<i>178</i>&nbsp;     * @param event         The button event that triggered this method.
+<i>179</i>&nbsp;     */
+<i>180</i>&nbsp;    public void addSelected(ActionEvent event) {
+<i>181</i>&nbsp;        String selectedCrime;
+<i>182</i>&nbsp;        // Starts with getting the root panel.
+<b class="nc"><i>183</i>&nbsp;        BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();</b>
+<i>184</i>&nbsp;        try {
+<i>185</i>&nbsp;            // Then it gets the pagination node from the centre.
+<b class="nc"><i>186</i>&nbsp;            Node centreNode = ((BorderPane) pane.getCenter()).getCenter();</b>
+<b class="nc"><i>187</i>&nbsp;            if (centreNode instanceof Pagination) {</b>
+<b class="nc"><i>188</i>&nbsp;                selectedCrime = getFromPages(centreNode);</b>
+<i>189</i>&nbsp;            } else {
+<b class="nc"><i>190</i>&nbsp;                selectedCrime = getFromEntry(centreNode);</b>
+<i>191</i>&nbsp;            }
+<b class="nc"><i>192</i>&nbsp;        } catch (Exception ignore) {</b>
+<b class="nc"><i>193</i>&nbsp;            selectedCrime = null; // No correct data loaded so no value can be selected.</b>
+<b class="nc"><i>194</i>&nbsp;        }</b>
+<i>195</i>&nbsp;
+<b class="nc"><i>196</i>&nbsp;        if (selectedCrime != null) {</b>
+<b class="nc"><i>197</i>&nbsp;            Button addButton = (Button) event.getSource();</b>
+<i>198</i>&nbsp;            // Checks to see which add button was clicked so that it can be added to the right text field.
+<b class="nc"><i>199</i>&nbsp;            if (Objects.equals(addButton.getId(), &quot;addR1&quot;)) {</b>
+<b class="nc"><i>200</i>&nbsp;                reportOneText.setText(selectedCrime);</b>
+<i>201</i>&nbsp;            } else {
+<b class="nc"><i>202</i>&nbsp;                reportTwoText.setText(selectedCrime);</b>
+<i>203</i>&nbsp;            }
+<i>204</i>&nbsp;        }
+<b class="nc"><i>205</i>&nbsp;    }</b>
+<i>206</i>&nbsp;
+<i>207</i>&nbsp;    /**
+<i>208</i>&nbsp;     * Gets given a node which corresponding to a Pagination node and from this it gets the table and the currently
+<i>209</i>&nbsp;     * selected value of the table which it then returns.
+<i>210</i>&nbsp;     *
+<i>211</i>&nbsp;     * @param centreNode    The Pagination node.
+<i>212</i>&nbsp;     * @return  The case number.
+<i>213</i>&nbsp;     */
+<i>214</i>&nbsp;    private String getFromPages(Node centreNode) {
+<b class="nc"><i>215</i>&nbsp;        Pagination pagination = (Pagination) centreNode;</b>
+<i>216</i>&nbsp;        // From currentStakePane being stored in the Pagination class the children (which is the dataView FXML file) are retrieved.
+<b class="nc"><i>217</i>&nbsp;        BorderPane tablePane = ((BorderPane) ((StackPane) pagination.getChildrenUnmodifiable().get(0)).getChildren().get(0));</b>
+<i>218</i>&nbsp;        // Uses the &quot;?&quot; as the casting is happening during the runtime of the application and so it can not check the type held within the classes.
+<i>219</i>&nbsp;        // Instead, now when retrieving items from the table we have to cast them to crime objects.
+<b class="nc"><i>220</i>&nbsp;        TableView&lt;?&gt; tableView = (TableView&lt;?&gt;) tablePane.getCenter();</b>
+<b class="nc"><i>221</i>&nbsp;        Crime crime = (Crime) tableView.getSelectionModel().getSelectedItem();</b>
+<b class="nc"><i>222</i>&nbsp;        if (crime != null) {</b>
+<b class="nc"><i>223</i>&nbsp;            return crime.getId();</b>
+<i>224</i>&nbsp;        } else {
+<b class="nc"><i>225</i>&nbsp;            return null;</b>
+<i>226</i>&nbsp;        }
+<i>227</i>&nbsp;    }
+<i>228</i>&nbsp;
+<i>229</i>&nbsp;    /**
+<i>230</i>&nbsp;     * Gets given a node which corresponding to a GridPane which holds a set of VBoxes with TextFields inside them.
+<i>231</i>&nbsp;     * It uses the lookup method on first the GridPane to get the VBox needed and then the VBox to find the TextField.
+<i>232</i>&nbsp;     * It then returns the string within the textField.
+<i>233</i>&nbsp;     *
+<i>234</i>&nbsp;     * @param centreNode    The GridPane node.
+<i>235</i>&nbsp;     * @return  The case number.
+<i>236</i>&nbsp;     */
+<i>237</i>&nbsp;    private String getFromEntry(Node centreNode) {
+<b class="nc"><i>238</i>&nbsp;        GridPane gridEntry = (GridPane) centreNode;</b>
+<b class="nc"><i>239</i>&nbsp;        String selectedCrime = ((TextField) gridEntry.lookup(&quot;#generalInformation&quot;).lookup(&quot;#cNoText&quot;)).getText();</b>
+<b class="nc"><i>240</i>&nbsp;        if (Objects.equals(selectedCrime, &quot;&quot;)) {</b>
+<b class="nc"><i>241</i>&nbsp;            return null;</b>
+<i>242</i>&nbsp;        } else {
+<b class="nc"><i>243</i>&nbsp;            return selectedCrime;</b>
+<i>244</i>&nbsp;        }
+<i>245</i>&nbsp;    }
+<i>246</i>&nbsp;
+<i>247</i>&nbsp;    /**
+<i>248</i>&nbsp;     * Saves the current compared results so that they are stored when changing menus.
+<i>249</i>&nbsp;     */
+<i>250</i>&nbsp;    private void saveGUIFields(){
+<b class="nc"><i>251</i>&nbsp;        if(!reportOneText.getText().equals(&quot;&quot;)) {</b>
+<b class="nc"><i>252</i>&nbsp;            report1 = reportOneText.getText();</b>
+<i>253</i>&nbsp;        }
+<b class="nc"><i>254</i>&nbsp;        if(!reportTwoText.getText().equals(&quot;&quot;)) {</b>
+<b class="nc"><i>255</i>&nbsp;            report2 = reportTwoText.getText();</b>
+<i>256</i>&nbsp;        }
+<b class="nc"><i>257</i>&nbsp;    }</b>
+<i>258</i>&nbsp;
+<i>259</i>&nbsp;    /**
+<i>260</i>&nbsp;     * Loads the current compared results so that they are stored when changing menus.
+<i>261</i>&nbsp;     */
+<i>262</i>&nbsp;    private void loadGUIFields(){
+<b class="nc"><i>263</i>&nbsp;        if(report1 != null) {</b>
+<b class="nc"><i>264</i>&nbsp;            reportOneText.setText(report1);</b>
+<i>265</i>&nbsp;        }
+<b class="nc"><i>266</i>&nbsp;        if(report2 != null) {</b>
+<b class="nc"><i>267</i>&nbsp;            reportTwoText.setText(report2);</b>
+<i>268</i>&nbsp;        }
+<b class="nc"><i>269</i>&nbsp;    }</b>
+<i>270</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-10-11 17:02</div>
+</div>
+</body>
+</html>

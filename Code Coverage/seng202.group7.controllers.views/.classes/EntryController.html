@@ -1,0 +1,470 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: EntryController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">seng202.group7.controllers.views</a> ]
+</div>
+
+<h1>Coverage Summary for Class: EntryController (seng202.group7.controllers.views)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">EntryController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 149)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package seng202.group7.controllers.views;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import javafx.fxml.FXML;
+<i>4</i>&nbsp;import javafx.fxml.Initializable;
+<i>5</i>&nbsp;import javafx.scene.Node;
+<i>6</i>&nbsp;import javafx.scene.control.CheckBox;
+<i>7</i>&nbsp;import javafx.scene.control.DatePicker;
+<i>8</i>&nbsp;import javafx.scene.control.TextArea;
+<i>9</i>&nbsp;import javafx.scene.control.TextField;
+<i>10</i>&nbsp;import javafx.scene.layout.BorderPane;
+<i>11</i>&nbsp;import seng202.group7.data.Report;
+<i>12</i>&nbsp;import seng202.group7.controllers.data.ControllerData;
+<i>13</i>&nbsp;import seng202.group7.controllers.data.InputType;
+<i>14</i>&nbsp;import seng202.group7.controllers.data.InputValidator;
+<i>15</i>&nbsp;import seng202.group7.data.Crime;
+<i>16</i>&nbsp;import seng202.group7.data.CustomException;
+<i>17</i>&nbsp;import seng202.group7.data.DataAccessor;
+<i>18</i>&nbsp;import seng202.group7.view.MainScreen;
+<i>19</i>&nbsp;import java.net.URL;
+<i>20</i>&nbsp;import java.time.LocalDate;
+<i>21</i>&nbsp;import java.time.LocalDateTime;
+<i>22</i>&nbsp;import java.time.LocalTime;
+<i>23</i>&nbsp;import java.time.format.DateTimeFormatter;
+<i>24</i>&nbsp;import java.time.format.DateTimeParseException;
+<i>25</i>&nbsp;import java.util.List;
+<i>26</i>&nbsp;import java.util.Arrays;
+<i>27</i>&nbsp;import java.util.ResourceBundle;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;/**
+<i>31</i>&nbsp; * The controller, used by / linked to, the crime edit FXML file.
+<i>32</i>&nbsp; * Makes a detailed view of the data retrieved from the current row selected in the ControllerData object.
+<i>33</i>&nbsp; *
+<i>34</i>&nbsp; * @author Jack McCorkindale
+<i>35</i>&nbsp; * @author John Elliott
+<i>36</i>&nbsp; */
+<b class="nc"><i>37</i>&nbsp;public class EntryController implements Initializable {</b>
+<i>38</i>&nbsp;    /**
+<i>39</i>&nbsp;     * The current selected rows crime object.
+<i>40</i>&nbsp;     */
+<i>41</i>&nbsp;    Report data;
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    @FXML
+<i>44</i>&nbsp;    private TextField cNoText;
+<i>45</i>&nbsp;    @FXML
+<i>46</i>&nbsp;    private TextField iucrText;
+<i>47</i>&nbsp;    @FXML
+<i>48</i>&nbsp;    private TextField fbiText;
+<i>49</i>&nbsp;    @FXML
+<i>50</i>&nbsp;    private TextField blockText;
+<i>51</i>&nbsp;    @FXML
+<i>52</i>&nbsp;    private TextField beatText;
+<i>53</i>&nbsp;    @FXML
+<i>54</i>&nbsp;    private TextField wardText;
+<i>55</i>&nbsp;    @FXML
+<i>56</i>&nbsp;    private TextField xCoordText;
+<i>57</i>&nbsp;    @FXML
+<i>58</i>&nbsp;    private TextField yCoordText;
+<i>59</i>&nbsp;    @FXML
+<i>60</i>&nbsp;    private TextField latText;
+<i>61</i>&nbsp;    @FXML
+<i>62</i>&nbsp;    private TextField longText;
+<i>63</i>&nbsp;    @FXML
+<i>64</i>&nbsp;    private TextField priText;
+<i>65</i>&nbsp;    @FXML
+<i>66</i>&nbsp;    private TextField timeText;
+<i>67</i>&nbsp;    @FXML
+<i>68</i>&nbsp;    private TextArea secText;
+<i>69</i>&nbsp;    @FXML
+<i>70</i>&nbsp;    private TextArea locAreaText;
+<i>71</i>&nbsp;    @FXML
+<i>72</i>&nbsp;    private DatePicker datePicker;
+<i>73</i>&nbsp;    @FXML
+<i>74</i>&nbsp;    private CheckBox arrestCheck;
+<i>75</i>&nbsp;    @FXML
+<i>76</i>&nbsp;    private CheckBox domesticCheck;
+<i>77</i>&nbsp;    @FXML
+<i>78</i>&nbsp;    private Node editButton;
+<i>79</i>&nbsp;    @FXML
+<i>80</i>&nbsp;    private Node deleteButton;
+<i>81</i>&nbsp;    @FXML
+<i>82</i>&nbsp;    private Node saveButton;
+<i>83</i>&nbsp;    @FXML
+<i>84</i>&nbsp;    private Node cancelButton;
+<i>85</i>&nbsp;    @FXML
+<i>86</i>&nbsp;    private Node frame;
+<i>87</i>&nbsp;
+<i>88</i>&nbsp;    private TextField dateText;
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;    private List&lt;Node&gt; allInputs;
+<i>91</i>&nbsp;    private List&lt;Node&gt; editableInputs;
+<i>92</i>&nbsp;
+<i>93</i>&nbsp;    private Node lastFrame;
+<i>94</i>&nbsp;
+<i>95</i>&nbsp;
+<i>96</i>&nbsp;    /**
+<i>97</i>&nbsp;     * This method is run during the loading of the crime edit fxml file.
+<i>98</i>&nbsp;     * It initializes the value validation classes before running methods to get
+<i>99</i>&nbsp;     * and store values in the text fields of the screen.
+<i>100</i>&nbsp;     *
+<i>101</i>&nbsp;     * @param location      A URL object.
+<i>102</i>&nbsp;     * @param resources     A ResourceBundle object.
+<i>103</i>&nbsp;     */
+<i>104</i>&nbsp;    @Override
+<i>105</i>&nbsp;    public void initialize(URL location, ResourceBundle resources) {
+<b class="nc"><i>106</i>&nbsp;        ControllerData master = ControllerData.getInstance();</b>
+<b class="nc"><i>107</i>&nbsp;        dateText = datePicker.getEditor();</b>
+<i>108</i>&nbsp;
+<b class="nc"><i>109</i>&nbsp;        prepareValidation();</b>
+<i>110</i>&nbsp;    
+<b class="nc"><i>111</i>&nbsp;        allInputs = Arrays.asList(cNoText, iucrText, fbiText, blockText, beatText, wardText, xCoordText, yCoordText, latText, longText,</b>
+<i>112</i>&nbsp;        priText, secText, locAreaText, dateText, datePicker, arrestCheck, domesticCheck, timeText);
+<b class="nc"><i>113</i>&nbsp;        editableInputs = Arrays.asList(iucrText, fbiText, blockText, beatText, wardText, xCoordText, yCoordText, latText, longText,</b>
+<i>114</i>&nbsp;        priText, secText, locAreaText, dateText, datePicker, arrestCheck, domesticCheck, timeText);
+<i>115</i>&nbsp;
+<b class="nc"><i>116</i>&nbsp;        data = master.getCurrentRow();</b>
+<b class="nc"><i>117</i>&nbsp;        if (data != null) {</b>
+<b class="nc"><i>118</i>&nbsp;            setData();</b>
+<i>119</i>&nbsp;        } else {
+<b class="nc"><i>120</i>&nbsp;            editEntry();</b>
+<i>121</i>&nbsp;        }
+<b class="nc"><i>122</i>&nbsp;    }</b>
+<i>123</i>&nbsp;
+<i>124</i>&nbsp;    /**
+<i>125</i>&nbsp;     * Sets the types of validation required on each input node
+<i>126</i>&nbsp;     */
+<i>127</i>&nbsp;    private void prepareValidation() {
+<b class="nc"><i>128</i>&nbsp;        dateText.textProperty().addListener((observable, oldValue, newValue) -&gt; {</b>
+<i>129</i>&nbsp;            try {
+<b class="nc"><i>130</i>&nbsp;                DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern(&quot;d/M/yyyy&quot;);</b>
+<b class="nc"><i>131</i>&nbsp;                LocalDate date = LocalDate.parse(dateText.getText(), dateTimeFormat);</b>
+<b class="nc"><i>132</i>&nbsp;                datePicker.setValue(date);</b>
+<b class="nc"><i>133</i>&nbsp;            } catch (DateTimeParseException ignored) {}</b>
+<b class="nc"><i>134</i>&nbsp;        });</b>
+<i>135</i>&nbsp;
+<b class="nc"><i>136</i>&nbsp;        InputValidator.addValidation(cNoText, InputType.REQUIRED);</b>
+<b class="nc"><i>137</i>&nbsp;        InputValidator.addValidation(cNoText, InputType.ID);</b>
+<i>138</i>&nbsp;        
+<b class="nc"><i>139</i>&nbsp;        InputValidator.addValidation(dateText, InputType.REQUIRED);</b>
+<b class="nc"><i>140</i>&nbsp;        InputValidator.addValidation(dateText, InputType.DATE);</b>
+<i>141</i>&nbsp;
+<b class="nc"><i>142</i>&nbsp;        InputValidator.addValidation(timeText, InputType.REQUIRED);</b>
+<b class="nc"><i>143</i>&nbsp;        InputValidator.addValidation(timeText, InputType.TIME);</b>
+<i>144</i>&nbsp;
+<b class="nc"><i>145</i>&nbsp;        InputValidator.addValidation(priText, InputType.REQUIRED);</b>
+<i>146</i>&nbsp;
+<b class="nc"><i>147</i>&nbsp;        InputValidator.addValidation(secText, InputType.REQUIRED);</b>
+<i>148</i>&nbsp;
+<b class="nc"><i>149</i>&nbsp;        InputValidator.addValidation(locAreaText, InputType.REQUIRED);</b>
+<i>150</i>&nbsp;
+<b class="nc"><i>151</i>&nbsp;        InputValidator.addValidation(beatText, InputType.REQUIRED);</b>
+<b class="nc"><i>152</i>&nbsp;        InputValidator.addValidation(beatText, InputType.INTEGER);</b>
+<i>153</i>&nbsp;
+<b class="nc"><i>154</i>&nbsp;        InputValidator.addValidation(wardText, InputType.REQUIRED);</b>
+<b class="nc"><i>155</i>&nbsp;        InputValidator.addValidation(wardText, InputType.INTEGER);</b>
+<i>156</i>&nbsp;
+<b class="nc"><i>157</i>&nbsp;        InputValidator.addValidation(iucrText, InputType.REQUIRED);</b>
+<i>158</i>&nbsp;        
+<b class="nc"><i>159</i>&nbsp;        InputValidator.addValidation(fbiText, InputType.REQUIRED);</b>
+<i>160</i>&nbsp;        
+<b class="nc"><i>161</i>&nbsp;        InputValidator.addValidation(blockText, InputType.REQUIRED);</b>
+<i>162</i>&nbsp;        
+<b class="nc"><i>163</i>&nbsp;        InputValidator.addValidation(xCoordText, InputType.INTEGER);</b>
+<b class="nc"><i>164</i>&nbsp;        InputValidator.addValidation(yCoordText, InputType.INTEGER);</b>
+<i>165</i>&nbsp;
+<b class="nc"><i>166</i>&nbsp;        InputValidator.addValidation(latText, InputType.DOUBLE);</b>
+<b class="nc"><i>167</i>&nbsp;        InputValidator.addValidation(longText, InputType.DOUBLE);</b>
+<i>168</i>&nbsp;
+<b class="nc"><i>169</i>&nbsp;    }</b>
+<i>170</i>&nbsp;
+<i>171</i>&nbsp;    /**
+<i>172</i>&nbsp;     *  This method gets all the related data from the crime object and set it as the default text in its relevant field.
+<i>173</i>&nbsp;     */
+<i>174</i>&nbsp;    private void setData() {
+<b class="nc"><i>175</i>&nbsp;        if (data instanceof Crime) {</b>
+<b class="nc"><i>176</i>&nbsp;            Crime temp = (Crime) data;</b>
+<i>177</i>&nbsp;            // CheckBoxes:
+<b class="nc"><i>178</i>&nbsp;            arrestCheck.setSelected(temp.getArrest());</b>
+<i>179</i>&nbsp;            // General Information:
+<b class="nc"><i>180</i>&nbsp;            cNoText.setText(temp.getId());</b>
+<b class="nc"><i>181</i>&nbsp;            iucrText.setText(temp.getIucr());</b>
+<b class="nc"><i>182</i>&nbsp;            fbiText.setText(temp.getFbiCD());</b>
+<i>183</i>&nbsp;            // Location Information:
+<b class="nc"><i>184</i>&nbsp;            blockText.setText(temp.getBlock());</b>
+<b class="nc"><i>185</i>&nbsp;            beatText.setText(String.valueOf(temp.getBeat()));</b>
+<b class="nc"><i>186</i>&nbsp;            wardText.setText(String.valueOf(temp.getWard()));</b>
+<i>187</i>&nbsp;        }
+<i>188</i>&nbsp;        
+<b class="nc"><i>189</i>&nbsp;        domesticCheck.setSelected(data.getDomestic());</b>
+<b class="nc"><i>190</i>&nbsp;        LocalDateTime date = data.getDate();</b>
+<b class="nc"><i>191</i>&nbsp;        if (date == null) {</b>
+<b class="nc"><i>192</i>&nbsp;            datePicker.setValue(null);</b>
+<b class="nc"><i>193</i>&nbsp;            timeText.setText(null);</b>
+<i>194</i>&nbsp;        } else {
+<b class="nc"><i>195</i>&nbsp;            datePicker.setValue(date.toLocalDate());</b>
+<b class="nc"><i>196</i>&nbsp;            String time = date.getHour() + &quot;:&quot; + String.format(&quot;%02d&quot;, date.getMinute());</b>
+<b class="nc"><i>197</i>&nbsp;            timeText.setText(time);</b>
+<i>198</i>&nbsp;        }
+<b class="nc"><i>199</i>&nbsp;        if (data.getXCoord() != null) {</b>
+<b class="nc"><i>200</i>&nbsp;            xCoordText.setText(String.valueOf(data.getXCoord()));</b>
+<i>201</i>&nbsp;        }
+<b class="nc"><i>202</i>&nbsp;        if (data.getYCoord() != null) {</b>
+<b class="nc"><i>203</i>&nbsp;            yCoordText.setText(String.valueOf(data.getYCoord()));</b>
+<i>204</i>&nbsp;        }
+<b class="nc"><i>205</i>&nbsp;        if (data.getLatitude() != null) {</b>
+<b class="nc"><i>206</i>&nbsp;            latText.setText(String.valueOf(data.getLatitude()));</b>
+<i>207</i>&nbsp;        }
+<b class="nc"><i>208</i>&nbsp;        if (data.getLongitude() != null) {</b>
+<b class="nc"><i>209</i>&nbsp;            longText.setText(String.valueOf(data.getLongitude()));</b>
+<i>210</i>&nbsp;        }
+<i>211</i>&nbsp;
+<i>212</i>&nbsp;        // Case Description:
+<b class="nc"><i>213</i>&nbsp;        priText.setText(data.getPrimaryDescription());</b>
+<b class="nc"><i>214</i>&nbsp;        secText.setText(data.getSecondaryDescription());</b>
+<b class="nc"><i>215</i>&nbsp;        locAreaText.setText(data.getLocationDescription());</b>
+<i>216</i>&nbsp;
+<b class="nc"><i>217</i>&nbsp;        for (Node node : allInputs) {</b>
+<b class="nc"><i>218</i>&nbsp;            node.setDisable(true);</b>
+<b class="nc"><i>219</i>&nbsp;        }</b>
+<i>220</i>&nbsp;
+<b class="nc"><i>221</i>&nbsp;    }</b>
+<i>222</i>&nbsp;
+<i>223</i>&nbsp;    /**
+<i>224</i>&nbsp;     * Returns to the stored table state by retrieving it from the ControllerData object and setting it on the root pane.
+<i>225</i>&nbsp;     */
+<i>226</i>&nbsp;    public void returnView() {
+<b class="nc"><i>227</i>&nbsp;        BorderPane pane = (BorderPane) frame.getParent();</b>
+<i>228</i>&nbsp;
+<b class="nc"><i>229</i>&nbsp;        pane.setCenter(lastFrame);</b>
+<i>230</i>&nbsp;
+<b class="nc"><i>231</i>&nbsp;    }</b>
+<i>232</i>&nbsp;
+<i>233</i>&nbsp;    /**
+<i>234</i>&nbsp;     * Allows the user to edit the values in value boxes by enabling them all. Also changes to save/cancel buttons.
+<i>235</i>&nbsp;     */
+<i>236</i>&nbsp;    public void editEntry() {
+<b class="nc"><i>237</i>&nbsp;        editButton.setVisible(false);</b>
+<b class="nc"><i>238</i>&nbsp;        editButton.setManaged(false);</b>
+<b class="nc"><i>239</i>&nbsp;        deleteButton.setVisible(false);</b>
+<b class="nc"><i>240</i>&nbsp;        deleteButton.setManaged(false);</b>
+<i>241</i>&nbsp;
+<b class="nc"><i>242</i>&nbsp;        saveButton.setVisible(true);</b>
+<b class="nc"><i>243</i>&nbsp;        saveButton.setManaged(true);</b>
+<b class="nc"><i>244</i>&nbsp;        cancelButton.setVisible(true);</b>
+<b class="nc"><i>245</i>&nbsp;        cancelButton.setManaged(true);</b>
+<i>246</i>&nbsp;
+<b class="nc"><i>247</i>&nbsp;        for (Node node : editableInputs) {</b>
+<b class="nc"><i>248</i>&nbsp;            node.setDisable(false);</b>
+<b class="nc"><i>249</i>&nbsp;        }</b>
+<b class="nc"><i>250</i>&nbsp;    }</b>
+<i>251</i>&nbsp;
+<i>252</i>&nbsp;    /**
+<i>253</i>&nbsp;     * Checks if there is valid data, if there is, modifies the visible buttons and calls the method
+<i>254</i>&nbsp;     * to fill all fields with the data. Otherwise, returns to previous view.
+<i>255</i>&nbsp;     */
+<i>256</i>&nbsp;    public void finishEdit() {
+<b class="nc"><i>257</i>&nbsp;        if (data == null) {</b>
+<b class="nc"><i>258</i>&nbsp;            returnView();</b>
+<b class="nc"><i>259</i>&nbsp;            return;</b>
+<i>260</i>&nbsp;        }
+<b class="nc"><i>261</i>&nbsp;        editButton.setVisible(true);</b>
+<b class="nc"><i>262</i>&nbsp;        editButton.setManaged(true);</b>
+<b class="nc"><i>263</i>&nbsp;        deleteButton.setVisible(true);</b>
+<b class="nc"><i>264</i>&nbsp;        deleteButton.setManaged(true);</b>
+<i>265</i>&nbsp;
+<b class="nc"><i>266</i>&nbsp;        saveButton.setVisible(false);</b>
+<b class="nc"><i>267</i>&nbsp;        saveButton.setManaged(false);</b>
+<b class="nc"><i>268</i>&nbsp;        cancelButton.setVisible(false);</b>
+<b class="nc"><i>269</i>&nbsp;        cancelButton.setManaged(false);</b>
+<b class="nc"><i>270</i>&nbsp;        setData();</b>
+<b class="nc"><i>271</i>&nbsp;    }</b>
+<i>272</i>&nbsp;
+<i>273</i>&nbsp;    /**
+<i>274</i>&nbsp;     * Checks if all the data is valid, then modifies the existing data object to reflect the changes the user made.
+<i>275</i>&nbsp;     */
+<i>276</i>&nbsp;    public void saveEdit() {
+<b class="nc"><i>277</i>&nbsp;        boolean valid = true;</b>
+<b class="nc"><i>278</i>&nbsp;        for (Node node : allInputs) {</b>
+<b class="nc"><i>279</i>&nbsp;            if (!InputValidator.validate(node)) {</b>
+<b class="nc"><i>280</i>&nbsp;                valid = false;</b>
+<i>281</i>&nbsp;            }
+<b class="nc"><i>282</i>&nbsp;        }</b>
+<b class="nc"><i>283</i>&nbsp;        if (!valid) {</b>
+<b class="nc"><i>284</i>&nbsp;            return;</b>
+<i>285</i>&nbsp;        } 
+<i>286</i>&nbsp;
+<i>287</i>&nbsp;        // CheckBoxes:
+<b class="nc"><i>288</i>&nbsp;        Boolean arrest = arrestCheck.isSelected();</b>
+<b class="nc"><i>289</i>&nbsp;        Boolean domestic = domesticCheck.isSelected();</b>
+<i>290</i>&nbsp;        // General Information:
+<i>291</i>&nbsp;        
+<b class="nc"><i>292</i>&nbsp;        String caseNumber = cNoText.getText();</b>
+<b class="nc"><i>293</i>&nbsp;        LocalDateTime date = getDateTime();</b>
+<b class="nc"><i>294</i>&nbsp;        String iucr = iucrText.getText();</b>
+<b class="nc"><i>295</i>&nbsp;        String fbiCD = fbiText.getText();</b>
+<i>296</i>&nbsp;
+<i>297</i>&nbsp;        // Location Information:
+<b class="nc"><i>298</i>&nbsp;        String block = blockText.getText();</b>
+<i>299</i>&nbsp;
+<b class="nc"><i>300</i>&nbsp;        Integer beat = getInt(beatText);</b>
+<b class="nc"><i>301</i>&nbsp;        Integer ward = getInt(wardText);</b>
+<b class="nc"><i>302</i>&nbsp;        Integer xCoord = getInt(xCoordText);</b>
+<b class="nc"><i>303</i>&nbsp;        Integer yCoord = getInt(yCoordText);</b>
+<i>304</i>&nbsp; 
+<b class="nc"><i>305</i>&nbsp;        Double latitude = getDouble(latText);</b>
+<b class="nc"><i>306</i>&nbsp;        Double longitude = getDouble(longText);</b>
+<i>307</i>&nbsp;
+<i>308</i>&nbsp;        // Case Description:
+<b class="nc"><i>309</i>&nbsp;        String primaryDescription = priText.getText();</b>
+<b class="nc"><i>310</i>&nbsp;        String secondaryDescription = secText.getText();</b>
+<b class="nc"><i>311</i>&nbsp;        String locationDescription = locAreaText.getText();</b>
+<i>312</i>&nbsp;
+<b class="nc"><i>313</i>&nbsp;        DataAccessor dataAccessor = DataAccessor.getInstance();</b>
+<i>314</i>&nbsp;
+<b class="nc"><i>315</i>&nbsp;        data = new Crime(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);</b>
+<i>316</i>&nbsp;        
+<i>317</i>&nbsp;        try {
+<b class="nc"><i>318</i>&nbsp;            dataAccessor.editCrime((Crime) data, ControllerData.getInstance().getCurrentList());</b>
+<b class="nc"><i>319</i>&nbsp;        } catch (CustomException e) {</b>
+<b class="nc"><i>320</i>&nbsp;            MainScreen.createWarnWin(e);</b>
+<b class="nc"><i>321</i>&nbsp;        }</b>
+<i>322</i>&nbsp;
+<b class="nc"><i>323</i>&nbsp;        finishEdit();</b>
+<b class="nc"><i>324</i>&nbsp;    }</b>
+<i>325</i>&nbsp;
+<i>326</i>&nbsp;    /**
+<i>327</i>&nbsp;     * Converts the LocalDate and LocalTime values from datePicker and timeText into a LocalDateTime object.
+<i>328</i>&nbsp;     *
+<i>329</i>&nbsp;     * @return LocalDateTime combination of datePicker and timeText
+<i>330</i>&nbsp;     */
+<i>331</i>&nbsp;    private LocalDateTime getDateTime() {
+<b class="nc"><i>332</i>&nbsp;        if (dateText.getText() != null &amp;&amp; timeText.getText() != null) {</b>
+<b class="nc"><i>333</i>&nbsp;            DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern(&quot;H:mm&quot;);</b>
+<b class="nc"><i>334</i>&nbsp;            LocalTime time = LocalTime.parse(timeText.getText(), timeFormat);</b>
+<b class="nc"><i>335</i>&nbsp;            return LocalDateTime.of(datePicker.getValue(), time);</b>
+<i>336</i>&nbsp;        }
+<b class="nc"><i>337</i>&nbsp;        return null;</b>
+<i>338</i>&nbsp;    }
+<i>339</i>&nbsp;
+<i>340</i>&nbsp;    /**
+<i>341</i>&nbsp;     * Turns a TextField node into an integer value.
+<i>342</i>&nbsp;     *
+<i>343</i>&nbsp;     * @param node      A TextField to convert to an Integer
+<i>344</i>&nbsp;     * @return          The integer value.
+<i>345</i>&nbsp;     */
+<i>346</i>&nbsp;    private Integer getInt(TextField node) {
+<b class="nc"><i>347</i>&nbsp;        if (!node.getText().isEmpty()) {</b>
+<b class="nc"><i>348</i>&nbsp;            return Integer.parseInt(node.getText());</b>
+<i>349</i>&nbsp;        }
+<b class="nc"><i>350</i>&nbsp;        return null;</b>
+<i>351</i>&nbsp;    }
+<i>352</i>&nbsp;
+<i>353</i>&nbsp;    /**
+<i>354</i>&nbsp;     * Turns a TextField node into a Double value.
+<i>355</i>&nbsp;     *
+<i>356</i>&nbsp;     * @param node      A TextField to convert to a Double
+<i>357</i>&nbsp;     * @return          The double value.
+<i>358</i>&nbsp;     */
+<i>359</i>&nbsp;    private Double getDouble(TextField node) {
+<b class="nc"><i>360</i>&nbsp;        if (!node.getText().isEmpty()) {</b>
+<b class="nc"><i>361</i>&nbsp;            return Double.parseDouble(node.getText());</b>
+<i>362</i>&nbsp;        }
+<b class="nc"><i>363</i>&nbsp;        return null;</b>
+<i>364</i>&nbsp;    }
+<i>365</i>&nbsp;
+<i>366</i>&nbsp;    /**
+<i>367</i>&nbsp;     * Deletes the entry that is currently being viewed.
+<i>368</i>&nbsp;     */
+<i>369</i>&nbsp;    public void deleteEntry() {
+<b class="nc"><i>370</i>&nbsp;        DataAccessor dataAccessor = DataAccessor.getInstance();</b>
+<i>371</i>&nbsp;        try {
+<b class="nc"><i>372</i>&nbsp;            dataAccessor.deleteReport(cNoText.getText(), ControllerData.getInstance().getCurrentList());</b>
+<b class="nc"><i>373</i>&nbsp;        } catch (CustomException e) {</b>
+<b class="nc"><i>374</i>&nbsp;            MainScreen.createWarnWin(e);</b>
+<b class="nc"><i>375</i>&nbsp;        }</b>
+<b class="nc"><i>376</i>&nbsp;        returnView();</b>
+<b class="nc"><i>377</i>&nbsp;    }</b>
+<i>378</i>&nbsp;
+<i>379</i>&nbsp;    /**
+<i>380</i>&nbsp;     * Sets the last frame the application was on.
+<i>381</i>&nbsp;     * @param lastFrame The last frame to return to when the bck button is pressed.
+<i>382</i>&nbsp;     */
+<i>383</i>&nbsp;    public void setLastFrame(Node lastFrame) {
+<b class="nc"><i>384</i>&nbsp;        this.lastFrame = lastFrame;</b>
+<b class="nc"><i>385</i>&nbsp;    }</b>
+<i>386</i>&nbsp;
+<i>387</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-10-11 17:02</div>
+</div>
+</body>
+</html>

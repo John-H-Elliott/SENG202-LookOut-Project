@@ -1,0 +1,208 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: PSTypes</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">seng202.group7.data</a> ]
+</div>
+
+<h1>Coverage Summary for Class: PSTypes (seng202.group7.data)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PSTypes</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87.5%
+  </span>
+  <span class="absValue">
+    (7/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    82.8%
+  </span>
+  <span class="absValue">
+    (24/ 29)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package seng202.group7.data;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.sql.PreparedStatement;
+<i>4</i>&nbsp;import java.sql.SQLException;
+<i>5</i>&nbsp;import java.sql.Types;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;/**
+<i>8</i>&nbsp; * This class adds a set of static methods that are used when checking if a CSV
+<i>9</i>&nbsp; * is null which is &quot;&quot; inserting the corrected null value into the database.
+<i>10</i>&nbsp; *
+<i>11</i>&nbsp; * @author Jack McCorkindale
+<i>12</i>&nbsp; * @author John Elliott
+<i>13</i>&nbsp; * @author Shaylin Simadari
+<i>14</i>&nbsp; */
+<i>15</i>&nbsp;public final class PSTypes {
+<b class="nc"><i>16</i>&nbsp;    private PSTypes(){}</b>
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     * Checks if an &quot;integer&quot; is &quot;&quot; or null and sets the PreparedStatement to null-Types.INTEGER instead.
+<i>20</i>&nbsp;     *
+<i>21</i>&nbsp;     * @param ps                    The PreparedStatement being used.
+<i>22</i>&nbsp;     * @param parameterIndex        The index in the PreparedStatement.
+<i>23</i>&nbsp;     * @param x                     The string being checked.
+<i>24</i>&nbsp;     */
+<i>25</i>&nbsp;    public static void setPSInteger(PreparedStatement ps, int parameterIndex, String x) throws SQLException {
+<b class="fc"><i>26</i>&nbsp;        if (x.equals(&quot;&quot;)) {</b>
+<b class="fc"><i>27</i>&nbsp;            ps.setNull(parameterIndex, Types.INTEGER);</b>
+<i>28</i>&nbsp;        } else {
+<b class="fc"><i>29</i>&nbsp;            ps.setInt(parameterIndex, Integer.parseInt(x));</b>
+<i>30</i>&nbsp;        }
+<i>31</i>&nbsp;
+<b class="fc"><i>32</i>&nbsp;    }</b>
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    /**
+<i>35</i>&nbsp;     * Checks if an &quot;integer&quot; null and sets the PreparedStatement to null-Types.INTEGER instead.
+<i>36</i>&nbsp;     *
+<i>37</i>&nbsp;     * @param ps                    The PreparedStatement being used.
+<i>38</i>&nbsp;     * @param parameterIndex        The index in the PreparedStatement.
+<i>39</i>&nbsp;     * @param x                     The Integer being checked.
+<i>40</i>&nbsp;     */
+<i>41</i>&nbsp;    public static void setPSInteger(PreparedStatement ps, int parameterIndex, Integer x) throws SQLException {
+<b class="fc"><i>42</i>&nbsp;        if (x == null) {</b>
+<b class="fc"><i>43</i>&nbsp;            ps.setNull(parameterIndex, Types.INTEGER);</b>
+<i>44</i>&nbsp;        } else {
+<b class="fc"><i>45</i>&nbsp;            ps.setInt(parameterIndex, x);</b>
+<i>46</i>&nbsp;        }
+<b class="fc"><i>47</i>&nbsp;    }</b>
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;    /**
+<i>50</i>&nbsp;     * Checks if a &quot;double&quot; is &quot;&quot; or null and sets the PreparedStatement to null-Types.DOUBLE instead.
+<i>51</i>&nbsp;     *
+<i>52</i>&nbsp;     * @param ps                    The PreparedStatement being used.
+<i>53</i>&nbsp;     * @param parameterIndex        The index in the PreparedStatement.
+<i>54</i>&nbsp;     * @param x                     The string being checked.
+<i>55</i>&nbsp;     */
+<i>56</i>&nbsp;    public static void setPSDouble(PreparedStatement ps, int parameterIndex, String x) throws SQLException {
+<b class="fc"><i>57</i>&nbsp;        if (x.equals(&quot;&quot;)) {</b>
+<b class="fc"><i>58</i>&nbsp;            ps.setNull(parameterIndex, Types.DOUBLE);</b>
+<i>59</i>&nbsp;        } else {
+<b class="nc"><i>60</i>&nbsp;            ps.setDouble(parameterIndex, Double.parseDouble(x));</b>
+<i>61</i>&nbsp;        }
+<i>62</i>&nbsp;
+<b class="fc"><i>63</i>&nbsp;    }</b>
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;    /**
+<i>66</i>&nbsp;     * Checks if a double is null and sets the PreparedStatement to null-Types.DOUBLE instead.
+<i>67</i>&nbsp;     *
+<i>68</i>&nbsp;     * @param ps                    The PreparedStatement being used.
+<i>69</i>&nbsp;     * @param parameterIndex        The index in the PreparedStatement.
+<i>70</i>&nbsp;     * @param x                     The Double being checked.
+<i>71</i>&nbsp;     */
+<i>72</i>&nbsp;    public static void setPSDouble(PreparedStatement ps, int parameterIndex, Double x) throws SQLException {
+<b class="fc"><i>73</i>&nbsp;        if (x == null) {</b>
+<b class="fc"><i>74</i>&nbsp;            ps.setNull(parameterIndex, Types.DOUBLE);</b>
+<i>75</i>&nbsp;        } else {
+<b class="fc"><i>76</i>&nbsp;            ps.setDouble(parameterIndex, x);</b>
+<i>77</i>&nbsp;        }
+<b class="fc"><i>78</i>&nbsp;    }</b>
+<i>79</i>&nbsp;
+<i>80</i>&nbsp;    /**
+<i>81</i>&nbsp;     * Checks if a &quot;string&quot; is &quot;&quot; or null and sets the PreparedStatement to null-Types.VARCHAR instead.
+<i>82</i>&nbsp;     *
+<i>83</i>&nbsp;     * @param ps                    The PreparedStatement being used.
+<i>84</i>&nbsp;     * @param parameterIndex        The index in the PreparedStatement.
+<i>85</i>&nbsp;     * @param x                     The string being checked.
+<i>86</i>&nbsp;     */
+<i>87</i>&nbsp;    public static void setPSString(PreparedStatement ps, int parameterIndex, String x) throws SQLException {
+<b class="fc"><i>88</i>&nbsp;        if (x == null || x.equals(&quot;&quot;)) {</b>
+<b class="nc"><i>89</i>&nbsp;            ps.setNull(parameterIndex, Types.VARCHAR);</b>
+<i>90</i>&nbsp;        } else {
+<b class="fc"><i>91</i>&nbsp;            ps.setString(parameterIndex, x);</b>
+<i>92</i>&nbsp;        }
+<b class="fc"><i>93</i>&nbsp;    }</b>
+<i>94</i>&nbsp;
+<i>95</i>&nbsp;    /**
+<i>96</i>&nbsp;     * Checks if a &quot;boolean&quot; is &quot;&quot; or null and sets the PreparedStatement to null-Types.BOOLEAN instead.
+<i>97</i>&nbsp;     *
+<i>98</i>&nbsp;     * @param ps                    The PreparedStatement being used.
+<i>99</i>&nbsp;     * @param parameterIndex        The index in the PreparedStatement.
+<i>100</i>&nbsp;     * @param x                     The string being checked.
+<i>101</i>&nbsp;     */
+<i>102</i>&nbsp;    public static void setPSBoolean(PreparedStatement ps, int parameterIndex, String x) throws SQLException {
+<b class="fc"><i>103</i>&nbsp;        if (x.equals(&quot;&quot;)) {</b>
+<b class="nc"><i>104</i>&nbsp;            ps.setNull(parameterIndex, Types.BOOLEAN);</b>
+<i>105</i>&nbsp;        } else {
+<b class="fc"><i>106</i>&nbsp;            ps.setBoolean(parameterIndex, x.equalsIgnoreCase(&quot;Y&quot;));</b>
+<i>107</i>&nbsp;        }
+<b class="fc"><i>108</i>&nbsp;    }</b>
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;    /**
+<i>111</i>&nbsp;     * Checks if a &quot;boolean&quot; is null and sets the PreparedStatement to null-Types.BOOLEAN instead.
+<i>112</i>&nbsp;     *
+<i>113</i>&nbsp;     * @param ps                    The PreparedStatement being used.
+<i>114</i>&nbsp;     * @param parameterIndex        The index in the PreparedStatement.
+<i>115</i>&nbsp;     * @param x                     The Boolean being checked.
+<i>116</i>&nbsp;     * @throws SQLException         Error setting Prepared Statement.
+<i>117</i>&nbsp;     */
+<i>118</i>&nbsp;    public static void setPSBoolean(PreparedStatement ps, int parameterIndex, Boolean x) throws SQLException {
+<b class="fc"><i>119</i>&nbsp;        if (x == null) {</b>
+<b class="nc"><i>120</i>&nbsp;            ps.setNull(parameterIndex, Types.BOOLEAN);</b>
+<i>121</i>&nbsp;        } else {
+<b class="fc"><i>122</i>&nbsp;            ps.setBoolean(parameterIndex, x);</b>
+<i>123</i>&nbsp;        }
+<b class="fc"><i>124</i>&nbsp;    }</b>
+<i>125</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-10-11 17:02</div>
+</div>
+</body>
+</html>
