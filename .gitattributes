@@ -1,2 +1,3 @@
+# Stops the generated files from showing in git detect language.
 JavaDoc/** linguist-documentation
 Code-Coverage/** linguist-generated
