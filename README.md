@@ -29,7 +29,7 @@
 ---
 
 1.
-    Navigating to the **["Source Code"](Source&#32;Code/)** folder which should contain the **["src"]("Source Code"/src/)** directory.
+    Navigating to the **["Source Code"](Source&#32;Code/)** folder which should contain the **["src"](Source&#32;Code/src/)** directory.
 
 2.
     In IntelliJ IDEA click **"Open"** and then find the source code folder location and click **"OK"**.  
@@ -40,7 +40,7 @@
 ---
 
 1.
-    Navigate to the **["src/main/java/seng202/group7"]("Source Code"/src/main/java/seng202/group7/)** package.
+    Navigate to the **["src/main/java/seng202/group7"](Source&#32;Code/src/main/java/seng202/group7/)** package.
 
 2.
     Click on the App class. This class starts the application.
@@ -63,7 +63,7 @@ If there are any issues with building the maven project when running the App.
 ---
 
 1.
-    Navigating to the **"Source Code"** folder which should contain the **"src"** directory.
+    Navigating to the **["Source Code"](Source&#32;Code/)** folder which should contain the **["src"](Source&#32;Code/src/)** directory.
 
 2.
     In eclipse under **"File"** click **"Import"** and then click **"Maven/Existing Maven Projects"**.
@@ -79,7 +79,7 @@ If there are any issues with building the maven project when running the App.
 ---
 
 1.
-    Navigate to the **"src/main/java/seng202/group7"** package.
+    Navigate to the **["src/main/java/seng202/group7"](Source&#32;Code/src/main/java/seng202/group7/)** package.
 
 2.
     Click on the App class. This class starts the application.
@@ -94,6 +94,6 @@ If there are any issues with building the maven project when running the App.
 If there are any issues with building the maven project when importing.
 
 1.
-    Right click on the project folder **"Source Code"** and select **"Run As"** and then select **"Maven Install"**.
+    Right click on the project folder **["Source Code"](Source&#32;Code/)** and select **"Run As"** and then select **"Maven Install"**.
 
 [javaWebsite]: https://www.oracle.com/java/technologies/javase/jdk14-archive-downloads.html "Java-14 Archive Download"
