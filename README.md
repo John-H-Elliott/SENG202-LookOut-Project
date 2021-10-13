@@ -9,7 +9,7 @@
     If problems exist ensure your system is using the correct version.
 
 2.
-    In the terminal navigate to the .jar files location.
+    In the terminal navigate to the [.jar](LookOut.jar) files location.
 
 3.
     When inside the can project directory. Run the following code, for Windows:
@@ -29,7 +29,7 @@
 ---
 
 1.
-    Navigating to the **"Source Code"** folder which should contain the **"src"** directory.
+    Navigating to the **["Source Code"]("Source Code"/)** folder which should contain the **["src"]("Source Code"/src/)** directory.
 
 2.
     In IntelliJ IDEA click **"Open"** and then find the source code folder location and click **"OK"**.  
@@ -40,7 +40,7 @@
 ---
 
 1.
-    Navigate to the **"src/main/java/seng202/group7"** package.
+    Navigate to the **["src/main/java/seng202/group7"]("Source Code"/src/main/java/seng202/group7/)** package.
 
 2.
     Click on the App class. This class starts the application.
