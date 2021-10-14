@@ -12,7 +12,7 @@
     In the terminal navigate to the [.jar](LookOut.jar) files location.
 
 3.
-    When inside the can project directory. Run the following code, for Windows:
+    Once inside the directory. Run the following code, for Windows:
 
     ```Console
     java -jar LookOut.jar
