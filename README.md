@@ -6,6 +6,8 @@
 
 This project focused on making a crime analysis system that allowed users to import crime data into a database and provided filtering, searching, mapping and graphing features. This was a **Java** based project. Therefore, the GUI used the **JavaFX** module. Other languages used were **SQLite** for connecting to the database and **HTML** which was used in the mapping system. Information on the design process of the application can be found in [Documents](./Documents).
 
+> Note: The API key for the google map has been removed from the .HTML file of the current and past commits.
+
 ---
 
 ## How to run the .jar file from the command line
