@@ -106,3 +106,13 @@ If there are any issues with building the maven project when importing.
     Right click on the project folder **["Source Code"](Source&#32;Code/)** and select **"Run As"** and then select **"Maven Install"**.
 
 [javaWebsite]: https://www.oracle.com/java/technologies/javase/jdk14-archive-downloads.html "Java-14 Archive Download"
+
+---
+
+### **Authors**
+
+- Jack McCorkindale
+- John Elliott
+- Sam McMillan
+- Shaylin Simadari
+- Sami Elmadani
